@@ -88,7 +88,7 @@ export default function SellerProductList() {
       <div>
         <h2 className="text-xl font-semibold mb-2">Your Products</h2>
         <ul className="space-y-2">
-          {products.map((p) => (
+          {Array.isArray(products) && products.map((p) => (
             <li
               key={p.id}
               className="border rounded p-3 flex justify-between items-center"

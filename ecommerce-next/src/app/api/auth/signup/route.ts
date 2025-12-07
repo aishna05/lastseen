@@ -1,8 +1,8 @@
 // POST /api/auth/signup
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 import { NextResponse } from "next/server";
+import jwt from "jsonwebtoken";
 
 
 export async function POST(req: Request) {
@@ -62,14 +62,14 @@ export async function POST(req: Request) {
           email: user.email,
           role: user.role,
         },
-        token, // 👈 Token here
+        token,
       },
       { status: 201 }
     );
-  } catch (err) {
-    console.error(err);
+  } catch (err: any) {
+    console.error("Signup error:", err?.message, err);
     return NextResponse.json(
-      { message: "Server error" },
+      { message: "Server error", error: err?.message },
       { status: 500 }
     );
   }

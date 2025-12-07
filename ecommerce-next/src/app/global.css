@@ -1,0 +1,330 @@
+/* globals.css – themed to match the dark velvet + antique gold logo */
+
+/* 1. Root design tokens */
+:root {
+  --bg-page: #090504;
+  --bg-elevated: #1a100b;
+  --bg-soft: #130a07;
+
+  --primary: #d2a45a;       /* logo gold */
+  --primary-soft: rgba(210, 164, 90, 0.14);
+  --primary-strong: #e2b96a;
+
+  --text-main: #f4e7d0;
+  --text-muted: #c0aa8a;
+  --text-soft: #8c7560;
+
+  --border-subtle: #3a2618;
+  --border-strong: #705137;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-pill: 999px;
+
+  --shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.85);
+  --transition-fast: 180ms ease-out;
+  --transition-med: 240ms ease-out;
+}
+
+/* 2. Reset-ish base */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background:
+    radial-gradient(circle at top, #1d0f08 0, transparent 55%),
+    radial-gradient(circle at bottom, #180b06 0, transparent 55%),
+    linear-gradient(135deg, #080302, #120806);
+  color: var(--text-main);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Optional: load a serif for headings similar to the logo vibe
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&display=swap"); */
+
+/* 3. Typography */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Cinzel", serif;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--primary-strong);
+}
+
+h1 {
+  font-size: clamp(2.2rem, 3vw, 2.8rem);
+}
+h2 {
+  font-size: clamp(1.7rem, 2.4vw, 2rem);
+}
+h3 {
+  font-size: 1.3rem;
+}
+
+p {
+  margin: 0 0 0.75rem;
+  line-height: 1.6;
+  color: var(--text-main);
+}
+
+small {
+  font-size: 0.8rem;
+  color: var(--text-soft);
+}
+
+/* 4. Layout helpers */
+main {
+  min-height: 100vh;
+  padding: 1.5rem;
+}
+
+.page-shell {
+  max-width: 1120px;
+  margin: 0 auto;
+}
+
+/* 5. Links */
+a {
+  color: var(--primary-strong);
+  text-decoration: none;
+  position: relative;
+  transition: color var(--transition-fast);
+}
+
+a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -0.2rem;
+  width: 0;
+  height: 1px;
+  background: linear-gradient(90deg, var(--primary), var(--primary-strong));
+  transition: width var(--transition-med);
+}
+
+a:hover::after {
+  width: 100%;
+}
+
+a:hover {
+  color: #f6dca3;
+}
+
+/* 6. Buttons */
+button,
+.btn {
+  border: 0;
+  outline: 0;
+  cursor: pointer;
+  font: inherit;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  padding: 0.7rem 1.6rem;
+  border-radius: var(--radius-pill);
+  background: radial-gradient(circle at 20% 0%, #f0db98 0, #d2a45a 40%, #9a7035 100%);
+  color: #201108;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  box-shadow: var(--shadow-soft);
+  transition:
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast),
+    filter var(--transition-fast);
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.07);
+  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.95);
+}
+
+.btn-primary:active {
+  transform: translateY(1px) scale(0.99);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9);
+}
+
+.btn-ghost {
+  padding: 0.6rem 1.4rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--border-strong);
+  background: transparent;
+  color: var(--text-main);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.8rem;
+  transition:
+    background var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.btn-ghost:hover {
+  background: var(--primary-soft);
+  border-color: var(--primary);
+  color: var(--primary-strong);
+}
+
+/* 7. Cards & surfaces */
+.card {
+  background: radial-gradient(circle at top left, #22140b 0, #150b06 40%, #0c0503 100%);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(138, 89, 48, 0.4);
+  padding: 1.4rem 1.6rem;
+  box-shadow: var(--shadow-soft);
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at top, rgba(255, 224, 147, 0.06), transparent 55%),
+    radial-gradient(circle at bottom, rgba(97, 56, 26, 0.2), transparent 55%);
+  opacity: 0.95;
+  pointer-events: none;
+}
+
+/* 8. Form elements */
+input,
+textarea,
+select {
+  width: 100%;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  padding: 0.65rem 0.9rem;
+  background: rgba(10, 5, 3, 0.9);
+  color: var(--text-main);
+  font: inherit;
+  outline: none;
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    background var(--transition-fast);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-soft);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 1px rgba(210, 164, 90, 0.45);
+  background: #140906;
+}
+
+/* 9. Navigation bar */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  backdrop-filter: blur(18px);
+  background: linear-gradient(to bottom, rgba(5, 2, 1, 0.96), rgba(5, 2, 1, 0.8));
+  border-bottom: 1px solid rgba(114, 79, 45, 0.5);
+}
+
+.site-header-inner {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.site-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: "Cinzel", serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--primary-strong);
+  font-size: 0.95rem;
+}
+
+/* 10. Tables (for product lists / orders) */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: rgba(13, 6, 4, 0.96);
+}
+
+thead {
+  background: linear-gradient(90deg, #3a2414, #22140c);
+}
+
+th,
+td {
+  padding: 0.75rem 1rem;
+  font-size: 0.9rem;
+  border-bottom: 1px solid rgba(74, 48, 28, 0.7);
+}
+
+th {
+  text-align: left;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--primary-strong);
+}
+
+tbody tr:nth-child(even) {
+  background: rgba(19, 11, 7, 0.8);
+}
+
+tbody tr:hover {
+  background: rgba(40, 21, 12, 0.9);
+}
+
+/* 11. Scrollbar (desktop aesthetics) */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #060302;
+}
+::-webkit-scrollbar-thumb {
+  background: #3e2614;
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #5b361b;
+}
+
+/* 12. Text selection */
+::selection {
+  background: rgba(210, 164, 90, 0.4);
+  color: var(--text-main);
+}
