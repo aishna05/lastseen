@@ -63,5 +63,31 @@ Models included:
 
 ---
 
+## 🛒 Cart & Order Management – Newly Added
+
+Customers can add products to cart
+
+Cart stored in database (CartItem model)
+
+View cart page: /cart
+
+Shows products, quantities, computed pricing (with discount)
+
+Remove from cart option
+
+Checkout system implemented
+
+Creates order records via /api/order/create
+
+Transfers items from cart → Order + OrderItem tables
+
+Stores snapshot price at the moment of purchase
+
+Clears cart after successful order
+
+Order Status workflow ready (currently defaults to PENDING)
+
+Status enum: PENDING, PAID, SHIPPED, DELIVERED, CANCELLED
+
 ## 🛣️ Project Structure (Important Folders)
 

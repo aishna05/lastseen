@@ -1,23 +1,14 @@
 datasource db {
   provider = "sqlite"
+  url      = "file:./dev.db"
 }
+
 
 generator client {
   provider = "prisma-client-js"
 }
 
-enum Role {
-  SELLER
-  CUSTOMER
-}
 
-enum OrderStatus {
-  PENDING
-  PAID
-  SHIPPED
-  DELIVERED
-  CANCELLED
-}
 
 model User {
   id        Int       @id @default(autoincrement()) @map("id")
@@ -27,7 +18,7 @@ model User {
   name     String    @map("name")
   email    String    @unique @map("email")
   password String    @map("password")
-  role     Role      @default(CUSTOMER) @map("role")
+  role     String    @default("CUSTOMER") @map("role")
 
   products  Product[]  @relation("SellerProducts")
   cartItems CartItem[]
@@ -89,7 +80,7 @@ model Order {
 
   items     OrderItem[]
   total     Float    @map("total")
-  status    OrderStatus @default(PENDING) @map("status")
+  status    String @default("PENDING") @map("status")
 
   @@map("orders")
 }

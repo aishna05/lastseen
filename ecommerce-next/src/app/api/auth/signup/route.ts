@@ -1,6 +1,7 @@
 // POST /api/auth/signup
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 import { NextResponse } from "next/server";
 
 
@@ -34,9 +35,35 @@ export async function POST(req: Request) {
         role, // "SELLER" or "CUSTOMER"
       },
     });
+    const secret = process.env.JWT_SECRET;
+    if (!secret) {
+      console.error("JWT_SECRET is not set");
+      return NextResponse.json(
+        { message: "Server config error" },
+        { status: 500 }
+      );
+    }
+
+    const token = jwt.sign(
+      {
+        userId: user.id,
+        email: user.email,
+        role: user.role,
+      },
+      secret,
+      { expiresIn: "7d" }
+    );
 
     return NextResponse.json(
-      { id: user.id, email: user.email, role: user.role },
+      {
+        user: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+        },
+        token, // 👈 Token here
+      },
       { status: 201 }
     );
   } catch (err) {
@@ -47,3 +74,4 @@ export async function POST(req: Request) {
     );
   }
 }
+

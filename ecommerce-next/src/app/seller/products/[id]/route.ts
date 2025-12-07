@@ -1,55 +1,108 @@
+// src/app/api/seller/products/[id]/route.ts
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { getServerSession } from "next-auth";
-import { authOptions } from "../../../auth/[...nextauth]/route";
-import { NextResponse } from "next/server";
+import { verifySellerAuth } from "@/lib/auth"; // Import from the auth file
 
-type Params = { params: { id: string } };
+type RouteParams = {
+  params: { id: string };
+};
 
-export async function PUT(req: Request, { params }: Params) {
-  const session = await getServerSession(authOptions);
-  if (!session || (session.user as any).role !== "SELLER") {
-    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+// GET /api/seller/products/:id
+export async function GET(req: NextRequest, { params }: RouteParams) {
+  try {
+    const authHeader = req.headers.get("authorization");
+    const auth = verifySellerAuth(authHeader);
+
+    if (!auth.valid || !("decoded" in auth) || !auth.decoded) {
+      const status = auth.error === "Forbidden: Not a seller" ? 403 : 401;
+      return NextResponse.json({ message: auth.error }, { status });
+    }
+
+    // Convert URL param to Number for Prisma Query (assuming Product.id is an Int)
+    const productId = Number(params.id); 
+
+    const product = await prisma.product.findFirst({
+      where: {
+        id: productId,
+        // Ensure this matches the type of sellerId in your schema (String or Number)
+        sellerId: Number(auth.decoded.userId), 
+      },
+    });
+
+    if (!product) {
+      return NextResponse.json({ message: "Product not found" }, { status: 404 });
+    }
+
+    return NextResponse.json(product);
+  } catch (error) {
+    console.error("GET Product Error:", error);
+    return NextResponse.json({ message: "Server error" }, { status: 500 });
   }
-
-  const sellerId = Number((session.user as any).id);
-  const id = Number(params.id);
-  const body = await req.json();
-  const { title, description, price, discount, imageUrl } = body;
-
-  const existing = await prisma.product.findUnique({ where: { id } });
-  if (!existing || existing.sellerId !== sellerId) {
-    return NextResponse.json({ message: "Not found" }, { status: 404 });
-  }
-
-  const updated = await prisma.product.update({
-    where: { id },
-    data: {
-      title,
-      description,
-      price,
-      discount: discount ?? null,
-      imageUrl,
-    },
-  });
-
-  return NextResponse.json(updated);
 }
 
-export async function DELETE(req: Request, { params }: Params) {
-  const session = await getServerSession(authOptions);
-  if (!session || (session.user as any).role !== "SELLER") {
-    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+// PUT /api/seller/products/:id
+export async function PUT(req: NextRequest, { params }: RouteParams) {
+  try {
+    const authHeader = req.headers.get("authorization");
+    const auth = verifySellerAuth(authHeader);
+
+    if (!auth.valid || !("decoded" in auth) || !auth.decoded) {
+      const status = auth.error === "Forbidden: Not a seller" ? 403 : 401;
+      return NextResponse.json({ message: auth.error }, { status });
+    }
+
+    const sellerId = String(auth.decoded.userId);
+    const id = Number(params.id);
+    const body = await req.json();
+    const { title, description, price, discount, imageUrl } = body;
+
+    const existing = await prisma.product.findUnique({ where: { id } });
+    if (!existing || String(existing.sellerId) !== sellerId) {
+      return NextResponse.json({ message: "Not found or unauthorized" }, { status: 404 });
+    }
+
+    const updated = await prisma.product.update({
+      where: { id },
+      data: {
+        title,
+        description,
+        price,
+        discount: discount ?? null,
+        imageUrl,
+      },
+    });
+
+    return NextResponse.json(updated);
+  } catch (error) {
+    console.error("PUT Product Error:", error);
+    return NextResponse.json({ message: "Server error" }, { status: 500 });
   }
+}
 
-  const sellerId = Number((session.user as any).id);
-  const id = Number(params.id);
+// DELETE /api/seller/products/:id
+export async function DELETE(req: NextRequest, { params }: RouteParams) {
+  try {
+    const authHeader = req.headers.get("authorization");
+    const auth = verifySellerAuth(authHeader);
 
-  const existing = await prisma.product.findUnique({ where: { id } });
-  if (!existing || existing.sellerId !== sellerId) {
-    return NextResponse.json({ message: "Not found" }, { status: 404 });
+    if (!auth.valid || !("decoded" in auth) || !auth.decoded) {
+      const status = auth.error === "Forbidden: Not a seller" ? 403 : 401;
+      return NextResponse.json({ message: auth.error }, { status });
+    }
+
+    const sellerId = Number(auth.decoded.userId);
+    const id = Number(params.id);
+
+    const existing = await prisma.product.findUnique({ where: { id } });
+    if (!existing || existing.sellerId !== sellerId) {
+      return NextResponse.json({ message: "Not found or unauthorized" }, { status: 404 });
+    }
+
+    await prisma.product.delete({ where: { id } });
+
+    return NextResponse.json({ message: "Deleted" });
+  } catch (error) {
+    console.error("DELETE Product Error:", error);
+    return NextResponse.json({ message: "Server error" }, { status: 500 });
   }
-
-  await prisma.product.delete({ where: { id } });
-
-  return NextResponse.json({ message: "Deleted" });
 }
