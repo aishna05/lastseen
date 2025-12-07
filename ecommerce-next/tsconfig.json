@@ -13,13 +13,16 @@
     "isolatedModules": true,
     "jsx": "react-jsx",
     "incremental": true,
+    "baseUrl": ".",
     "plugins": [
       {
         "name": "next"
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/components/*": ["src/components/*"],
+      "@/lib/*": ["src/lib/*"], // <--- Make sure this line exists!
+      "@/*": ["src/*"]
     },
     "types": ["next-auth"] // add this
   },

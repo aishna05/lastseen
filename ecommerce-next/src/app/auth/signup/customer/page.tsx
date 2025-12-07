@@ -9,6 +9,7 @@ export default function CustomerSignupPage() {
   const [password, setPassword] = useState("");
   const router = useRouter();
 
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const res = await fetch("/api/auth/signup", {
