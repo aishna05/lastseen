@@ -1,63 +1,130 @@
 import { prisma } from "@/lib/prisma";
-import { getServerSession } from "next-auth";
-import { authOptions } from "../../auth/[...nextauth]/route";
 import { NextResponse } from "next/server";
+import jwt from "jsonwebtoken";
 
-interface Params {
-  params: { id: string };
-}
-
-// GET subcategory by ID
-export async function GET(req: Request, { params }: Params) {
-  const id = Number(params.id);
-  if (!id) return NextResponse.json({ error: "ID required" }, { status: 400 });
-
+export async function GET(
+  req: Request,
+  context: { params: Promise<{ id: string }> }
+) {
   try {
+    const params = await context.params;
+    const id = Number(params.id);
+
+    if (isNaN(id)) {
+      return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
+    }
+
     const subcategory = await prisma.subcategory.findUnique({
       where: { id },
-      include: { category: true },
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        categoryId: true,
+        category: {
+          select: {
+            id: true,
+            name: true,
+            description: true,
+          },
+        },
+      },
     });
-    if (!subcategory) return NextResponse.json({ error: "Not found" }, { status: 404 });
+
+    if (!subcategory) {
+      return NextResponse.json({ error: "Subcategory not found" }, { status: 404 });
+    }
 
     return NextResponse.json(subcategory);
-  } catch {
-    return NextResponse.json({ error: "Failed to fetch subcategory" }, { status: 500 });
+  } catch (error: any) {
+    return NextResponse.json(
+      { error: "Failed to fetch subcategory", details: error.message },
+      { status: 500 }
+    );
   }
 }
 
-// PUT update subcategory
-export async function PUT(req: Request, { params }: Params) {
-  const session = await getServerSession(authOptions);
-  if (!session) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-
-  const id = Number(params.id);
-  if (!id) return NextResponse.json({ error: "ID required" }, { status: 400 });
-
-  const data = await req.json();
-
+export async function PUT(
+  req: Request,
+  context: { params: Promise<{ id: string }> }
+) {
   try {
+    const params = await context.params;
+    const id = Number(params.id);
+
+    if (isNaN(id)) {
+      return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
+    }
+
+    // 1. Token check
+    const authHeader = req.headers.get("authorization");
+    if (!authHeader) return NextResponse.json({ message: "No token provided" }, { status: 401 });
+
+    const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : authHeader;
+    const secret = process.env.JWT_SECRET;
+    if (!secret) return NextResponse.json({ message: "JWT secret not set" }, { status: 500 });
+
+    const decoded = jwt.verify(token, secret) as { userId: number; email: string; role: string };
+
+    // 2. SELLER ONLY
+    if (decoded.role !== "SELLER") {
+      return NextResponse.json({ message: "Only SELLER can update subcategory" }, { status: 403 });
+    }
+
+    const { name, description, categoryId } = await req.json();
+
     const updated = await prisma.subcategory.update({
       where: { id },
-      data,
+      data: { name, description, categoryId },
+      select: { id: true, name: true, description: true, categoryId: true },
     });
-    return NextResponse.json(updated);
-  } catch {
-    return NextResponse.json({ error: "Failed to update subcategory" }, { status: 404 });
+
+    return NextResponse.json({ message: "Subcategory updated successfully", updated });
+  } catch (error: any) {
+    return NextResponse.json(
+      { error: "Failed to update subcategory", message: error.message },
+      { status: 400 }
+    );
   }
 }
 
-// DELETE subcategory
-export async function DELETE(req: Request, { params }: Params) {
-  const session = await getServerSession(authOptions);
-  if (!session) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-
-  const id = Number(params.id);
-  if (!id) return NextResponse.json({ error: "ID required" }, { status: 400 });
-
+export async function DELETE(
+  req: Request,
+  context: { params: Promise<{ id: string }> }
+) {
   try {
-    const deleted = await prisma.subcategory.delete({ where: { id } });
-    return NextResponse.json(deleted);
-  } catch {
-    return NextResponse.json({ error: "Failed to delete subcategory" }, { status: 404 });
+    const params = await context.params;
+    const id = Number(params.id);
+
+    if (isNaN(id)) {
+      return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
+    }
+
+    // 1. Token check
+    const authHeader = req.headers.get("authorization");
+    if (!authHeader) return NextResponse.json({ message: "No token provided" }, { status: 401 });
+
+    const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : authHeader;
+    const secret = process.env.JWT_SECRET;
+    if (!secret) return NextResponse.json({ message: "JWT secret not set" }, { status: 500 });
+
+    const decoded = jwt.verify(token, secret) as { userId: number; email: string; role: string };
+
+    // 2. SELLER ONLY
+    if (decoded.role !== "SELLER") {
+      return NextResponse.json({ message: "Only SELLER can delete subcategory" }, { status: 403 });
+    }
+
+    const deleted = await prisma.subcategory.delete({
+      where: { id },
+      select: { id: true, name: true, description: true, categoryId: true },
+    });
+
+    return NextResponse.json({ message: "Subcategory deleted successfully", deleted });
+  } catch (error: any) {
+    return NextResponse.json(
+      { error: "Failed to delete subcategory", message: error.message },
+      { status: 400 }
+    );
   }
 }

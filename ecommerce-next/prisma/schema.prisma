@@ -23,6 +23,7 @@ model User {
   products  Product[]  @relation("SellerProducts")
   cartItems CartItem[]
   orders    Order[]
+  CustomerAddress CustomerAddress[]
 
   @@map("users")
 }
@@ -123,4 +124,20 @@ model Subcategory {
   categoryId   Int          @map("category_id")
   products     Product[]
   @@map("subcategories")
+}
+
+model CustomerAddress {
+  id        Int     @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  userId  Int @map("user_id")
+  address   String @map("address")
+  city      String @map("city")
+  state     String @map("state")
+  country   String @map("country")
+  zipcode   String @map("zipcode")
+  
+
+  customer    User      @relation(fields: [userId], references: [id])
 }

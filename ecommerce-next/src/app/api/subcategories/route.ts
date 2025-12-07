@@ -1,40 +1,101 @@
+// src/app/api/subcategories/route.ts
 import { prisma } from "@/lib/prisma";
-import { getServerSession } from "next-auth";
-import { authOptions } from "../../auth/[...nextauth]/route";
 import { NextResponse } from "next/server";
+import jwt from "jsonwebtoken";
 
-// GET all subcategories
+// GET all subcategories (no auth)
 export async function GET() {
   try {
     const subcategories = await prisma.subcategory.findMany({
-      include: { category: true },
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        category: {        // include category details here
+          select: {
+            id: true,
+            name: true,
+            description: true,
+          },
+        },
+      },
     });
     return NextResponse.json(subcategories);
-  } catch (error) {
-    return NextResponse.json({ error: "Failed to fetch subcategories" }, { status: 500 });
+  } catch (error: any) {
+    return NextResponse.json(
+      { error: "Failed to fetch subcategories", details: error.message },
+      { status: 500 }
+    );
   }
 }
 
-// POST create a new subcategory (auth required)
+// POST create a new subcategory (SELLER ONLY + JWT)
 export async function POST(req: Request) {
-  const session = await getServerSession(authOptions);
-  if (!session) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-
-  const { name, description, categoryId } = await req.json();
-
-  if (!name || !description || !categoryId) {
-    return NextResponse.json(
-      { error: "Name, description, and categoryId are required" },
-      { status: 400 }
-    );
-  }
-
   try {
+    // 1. Get token from header
+    const authHeader = req.headers.get("authorization");
+    if (!authHeader) {
+      return NextResponse.json(
+        { message: "No token provided" },
+        { status: 401 }
+      );
+    }
+
+    const token = authHeader.startsWith("Bearer ")
+      ? authHeader.slice(7)
+      : authHeader;
+
+    // 2. Verify token
+    const secret = process.env.JWT_SECRET;
+    if (!secret) {
+      return NextResponse.json(
+        { message: "JWT secret not set" },
+        { status: 500 }
+      );
+    }
+
+    const decoded = jwt.verify(token, secret) as {
+      userId: number;
+      email: string;
+      role: string;
+    };
+
+    // 3. SELLER only
+    if (decoded.role !== "SELLER") {
+      return NextResponse.json(
+        { message: "Only SELLER can create subcategory" },
+        { status: 403 }
+      );
+    }
+
+    // 4. Get request body
+    const { name, description, categoryId } = await req.json();
+    if (!name || !description || !categoryId) {
+      return NextResponse.json(
+        { error: "Name, description, and categoryId are required" },
+        { status: 400 }
+      );
+    }
+
+    // 5. Create subcategory
     const subcategory = await prisma.subcategory.create({
       data: { name, description, categoryId },
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        categoryId: true,
+      },
     });
-    return NextResponse.json(subcategory, { status: 201 });
-  } catch (error) {
-    return NextResponse.json({ error: "Failed to create subcategory" }, { status: 500 });
+
+    return NextResponse.json(
+      { message: "Subcategory created successfully", subcategory },
+      { status: 201 }
+    );
+  } catch (error: any) {
+    return NextResponse.json(
+      { message: "Failed to create subcategory", error: error.message },
+      { status: 400 }
+    );
   }
 }
