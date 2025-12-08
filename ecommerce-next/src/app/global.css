@@ -319,7 +319,11 @@ select {
 }
 
 /* Logo styling */
+/* Logo styling */
 .site-logo {
+  display: inline-flex; /* ensures it wraps the image correctly */
+  align-items: center;
+  gap: 0.5rem; /* optional if you have text next to logo */
   font-family: "Cinzel", serif;
   font-weight: 700;
   font-size: clamp(1.4rem, 2.5vw, 2rem);
@@ -327,6 +331,15 @@ select {
   text-transform: uppercase;
   letter-spacing: 0.1em;
 }
+
+/* Ensure the image inside logo fits */
+.site-logo img {
+  display: block;
+  width: auto;
+  height: 50px; /* adjust as needed */
+  object-fit: contain;
+}
+
 
 /* Nav links */
 .site-header nav {
