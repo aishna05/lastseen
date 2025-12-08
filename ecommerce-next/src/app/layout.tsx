@@ -16,11 +16,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <GlobalLoader />
+      {/* <GlobalLoader /> */}
       <body>
         <header><Header /></header>
         <Providers>{children}</Providers>
-        <GlobalLoader />
+        {/* <GlobalLoader /> */}
       </body>
     </html>
   );
