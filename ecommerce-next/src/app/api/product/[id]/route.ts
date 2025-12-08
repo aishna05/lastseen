@@ -2,14 +2,19 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import jwt from "jsonwebtoken";
 
-interface Params {
-  params: Promise<{ id: string }>;
+// 👇 no Promise here
+interface RouteContext {
+  params: { id: string };
 }
 
 // GET single product (public)
-export async function GET(req: NextRequest, context: Params) {
+export async function GET(
+  req: NextRequest,
+  { params }: RouteContext
+) {
   try {
-    const { id } = await context.params;
+    const { id } = params;
+
     const product = await prisma.product.findUnique({
       where: { id: Number(id) },
       include: {
@@ -40,25 +45,35 @@ export async function GET(req: NextRequest, context: Params) {
 }
 
 // UPDATE product (SELLER ONLY)
-export async function PUT(req: NextRequest, context: Params) {
+export async function PUT(
+  req: NextRequest,
+  { params }: RouteContext
+) {
   try {
-    const { id } = await context.params;
+    const { id } = params;
 
-    // 1. Token check
     const authHeader = req.headers.get("authorization");
     if (!authHeader)
       return NextResponse.json({ message: "No token provided" }, { status: 401 });
 
-    const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : authHeader;
+    const token = authHeader.startsWith("Bearer ")
+      ? authHeader.slice(7)
+      : authHeader;
+
     const secret = process.env.JWT_SECRET;
     if (!secret)
       return NextResponse.json({ message: "JWT secret not set" }, { status: 500 });
 
-    const decoded = jwt.verify(token, secret) as { userId: number; role: string };
+    const decoded = jwt.verify(token, secret) as {
+      userId: number;
+      role: string;
+    };
 
-    // 2. SELLER only
     if (decoded.role !== "SELLER")
-      return NextResponse.json({ message: "Only SELLER can update product" }, { status: 403 });
+      return NextResponse.json(
+        { message: "Only SELLER can update product" },
+        { status: 403 }
+      );
 
     const data = await req.json();
     if (data.imageUrls) data.imageUrls = JSON.stringify(data.imageUrls);
@@ -80,32 +95,45 @@ export async function PUT(req: NextRequest, context: Params) {
       },
     });
 
-    return NextResponse.json({ message: "Product updated successfully", updatedProduct });
+    return NextResponse.json({
+      message: "Product updated successfully",
+      updatedProduct,
+    });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
 
 // DELETE product (SELLER ONLY)
-export async function DELETE(req: NextRequest, context: Params) {
+export async function DELETE(
+  req: NextRequest,
+  { params }: RouteContext
+) {
   try {
-    const { id } = await context.params;
+    const { id } = params;
 
-    // 1. Token check
     const authHeader = req.headers.get("authorization");
     if (!authHeader)
       return NextResponse.json({ message: "No token provided" }, { status: 401 });
 
-    const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : authHeader;
+    const token = authHeader.startsWith("Bearer ")
+      ? authHeader.slice(7)
+      : authHeader;
+
     const secret = process.env.JWT_SECRET;
     if (!secret)
       return NextResponse.json({ message: "JWT secret not set" }, { status: 500 });
 
-    const decoded = jwt.verify(token, secret) as { userId: number; role: string };
+    const decoded = jwt.verify(token, secret) as {
+      userId: number;
+      role: string;
+    };
 
-    // 2. SELLER only
     if (decoded.role !== "SELLER")
-      return NextResponse.json({ message: "Only SELLER can delete product" }, { status: 403 });
+      return NextResponse.json(
+        { message: "Only SELLER can delete product" },
+        { status: 403 }
+      );
 
     await prisma.product.delete({ where: { id: Number(id) } });
 
