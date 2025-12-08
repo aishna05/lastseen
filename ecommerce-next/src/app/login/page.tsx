@@ -36,6 +36,9 @@ export default function LoginPage() {
 
       if (data.token) {
         localStorage.setItem("token", data.token);
+        
+        // Dispatch custom event to trigger useAuth update
+        window.dispatchEvent(new Event('tokenChange'));
       }
 
       setSuccess("Login successful! Redirecting...");
@@ -51,7 +54,6 @@ export default function LoginPage() {
   };
 
   return (
-    
     <div className="auth-page">
       <div className="auth-card">
         <h2 className="auth-title">Welcome Back</h2>
@@ -65,6 +67,7 @@ export default function LoginPage() {
             <label>Email Address</label>
             <input
               type="email"
+              value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
             />
@@ -74,6 +77,7 @@ export default function LoginPage() {
             <label>Password</label>
             <input
               type="password"
+              value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
             />
