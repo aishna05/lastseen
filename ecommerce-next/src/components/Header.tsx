@@ -1,24 +1,40 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useAuth } from '@/lib/hooks/useAuth'; // your auth hook
-
-const handleLogout = () => {
-    console.log("User logged out!");
-    window.location.href = '/login';
-};
-
-const ProfileIcon = (props: React.SVGProps<SVGSVGElement>) => (
-    <svg {...props} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
-        <circle cx="12" cy="7" r="4"></circle>
-    </svg>
-);
+import { useAuth } from '@/lib/hooks/useAuth';
+import { useRouter } from 'next/navigation';
+import { User, Package, LogOut } from 'lucide-react';
 
 const Header: React.FC = () => {
     const { user, isLoading } = useAuth();
+    const router = useRouter();
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
+
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        window.dispatchEvent(new Event('tokenChange'));
+        setIsDropdownOpen(false);
+        router.push('/login');
+    };
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setIsDropdownOpen(false);
+            }
+        };
+
+        if (isDropdownOpen) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [isDropdownOpen]);
 
     const navLinks = [
         { href: "/products", label: "Products" },
@@ -29,11 +45,13 @@ const Header: React.FC = () => {
     return (
         <header className="site-header">
             <div className="site-header-inner">
-                {/* Site Logo */}
                 <Link href="/" className="site-logo">
                     <Image 
                         src="/media/logo.png" 
                         alt="Site Logo" 
+                        width={150} 
+                        height={50} 
+                        priority
                         width={200} 
                         height={100} 
                         priority // ensures logo loads fast
@@ -41,10 +59,9 @@ const Header: React.FC = () => {
                     />
                 </Link>
 
-                {/* Navigation Links */}
-                <nav className="flex space-x-6 items-center">
+                <nav className="site-nav">
                     {navLinks.map(link => (
-                        <Link key={link.href} href={link.href}>
+                        <Link key={link.href} href={link.href} className="nav-link">
                             {link.label}
                         </Link>
                     ))}
@@ -52,23 +69,40 @@ const Header: React.FC = () => {
                     {!isLoading && (
                         <>
                             {user?.isLoggedIn ? (
-                                <>
-                                    <Link 
-                                        href="/profile" 
-                                        title="View Profile"
-                                        className="p-1 rounded-full border border-transparent hover:border-white transition-all"
-                                    >
-                                        <ProfileIcon className="w-6 h-6" style={{ color: 'var(--primary-strong)' }} />
-                                    </Link>
-                                    
+                                <div className="profile-dropdown-container" ref={dropdownRef}>
                                     <button
-                                        onClick={handleLogout}
-                                        className="btn-ghost"
-                                        style={{padding: '0.4rem 0.8rem', fontSize: '0.75rem', letterSpacing: '0.1em'}}
+                                        onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                                        className="profile-icon-btn"
+                                        title="Profile Menu"
+                                        aria-label="Profile Menu"
                                     >
-                                        Logout
+                                        <User size={24} strokeWidth={2.5} color="#D4BC84" />
                                     </button>
-                                </>
+
+                                    {isDropdownOpen && (
+                                        <div className="profile-dropdown">
+                                            <Link
+                                                href="/profile"
+                                                onClick={() => setIsDropdownOpen(false)}
+                                            >
+                                                <User size={18} color="#A68A55" />
+                                                <span>View Profile</span>
+                                            </Link>
+                                            <Link
+                                                href="/orders"
+                                                onClick={() => setIsDropdownOpen(false)}
+                                            >
+                                                <Package size={18} color="#A68A55" />
+                                                <span>My Orders</span>
+                                            </Link>
+                                            <hr />
+                                            <button onClick={handleLogout}>
+                                                <LogOut size={18} color="#ff8866" />
+                                                <span>Logout</span>
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
                             ) : (
                                 <Link href="/login" className="btn-primary" style={{padding: '0.6rem 1.4rem', fontSize: '0.8rem'}}>
                                     Login
