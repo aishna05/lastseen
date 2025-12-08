@@ -16,11 +16,45 @@ interface ProductListingClientProps {
 }
 
 // Define the client-side event handler here
-const handleAddToCart = (productId: number) => {
-    // This function can use state, context, or client-side API calls
-    console.log(`[CLIENT ACTION]: Add Product ${productId} to cart.`);
-    alert(`Product ${productId} added to cart! (Placeholder action)`);
-    // In a real app, you would dispatch a cart context update or call an API route.
+const handleAddToCart = async (productId: number) => {
+    // 1. Get the Auth Token (Crucial for your API's JWT check)
+    const token = localStorage.getItem('auth_token'); // Assuming token is stored here
+    
+    if (!token) {
+        alert("Please log in to add items to your cart.");
+        // Redirect to login page
+        window.location.href = '/login'; 
+        return;
+    }
+
+    try {
+        const response = await fetch('/api/cart', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                // 2. Pass the token in the Authorization header
+                'Authorization': `Bearer ${token}`, 
+            },
+            // 3. Send the necessary data in the request body
+            body: JSON.stringify({ productId: productId, quantity: 1 }), 
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            // Success: Item was created or quantity was updated
+            alert(`Success! "${data.item.product?.title || 'Item'}" added to cart.`);
+            
+            // Optional: You may want to trigger a cart icon refresh here 
+            // via a global context or state management solution.
+        } else {
+            // Failure (e.g., 403 Forbidden, 401 Unauthorized, 400 Bad Request)
+            alert(`Failed to add item: ${data.message || data.error}`);
+        }
+    } catch (error) {
+        console.error('Network or system error adding to cart:', error);
+        alert('An unexpected error occurred. Please try again.');
+    }
 };
 
 const ProductListingClient: React.FC<ProductListingClientProps> = ({ products }) => {

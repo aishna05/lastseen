@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useSession } from "next-auth/react";
@@ -16,14 +17,8 @@ export default function RequireSeller({ children }: { children: ReactNode }) {
     }
   }, [session, status, router]);
 
-  if (status === "loading") {
-    return <p className="p-4">Loading...</p>;
-  }
-
+  if (status === "loading") return <p className="p-4">Loading...</p>;
   const role = (session?.user as any)?.role;
-  if (!session || role !== "SELLER") {
-    return null;
-  }
-
+  if (!session || role !== "SELLER") return null;
   return <>{children}</>;
 }

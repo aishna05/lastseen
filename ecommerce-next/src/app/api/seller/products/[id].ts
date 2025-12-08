@@ -1,30 +1,30 @@
-// File: pages/api/seller/products/index.ts
+// File: pages/api/seller/products/[id].ts
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/react';
-import  { prisma } from '@/lib/prisma'; // create a prisma client in lib/prisma.ts
+import { prisma } from '@/lib/prisma';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const session = await getSession({ req });
   if (!session) return res.status(401).json({ error: 'Unauthorized' });
   const role = (session.user as any).role;
   if (role !== 'SELLER') return res.status(403).json({ error: 'Forbidden' });
-
   const userId = (session.user as any).id;
+  const { id } = req.query;
+  const pid = Number(id);
 
-  if (req.method === 'GET') {
-    // return products for this seller
-    const products = await prisma.product.findMany({ where: { sellerId: Number(userId) } });
-    return res.status(200).json(products);
-  }
+  // verify seller owns product
+  const product = await prisma.product.findUnique({ where: { id: pid } });
+  if (!product) return res.status(404).json({ error: 'Not found' });
+  if (product.sellerId !== Number(userId)) return res.status(403).json({ error: 'Not your product' });
 
-  if (req.method === 'POST') {
+  if (req.method === 'PUT') {
     try {
       const body = req.body;
-      const product = await prisma.product.create({
+      const updated = await prisma.product.update({
+        where: { id: pid },
         data: {
           title: body.title,
           description: body.description || '',
-          details: body.details || null,
           price: Number(body.price),
           discount: body.discount ?? 0,
           brand: body.brand || null,
@@ -42,19 +42,29 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           dimensions: body.dimensions ?? null,
           returnPolicy: body.returnPolicy ?? null,
           sellerNotes: body.sellerNotes ?? null,
-          sellerId: Number(userId),
-          categoryId: body.categoryId ?? 1,
-          subcategoryId: body.subcategoryId ?? 1,
         }
       });
-      return res.status(201).json(product);
-    } catch (err: any) {
+      return res.status(200).json(updated);
+    } catch (err) {
       console.error(err);
-      return res.status(500).json({ error: 'Create failed' });
+      return res.status(500).json({ error: 'Update failed' });
     }
+  }
+
+  if (req.method === 'DELETE') {
+    try {
+      await prisma.product.delete({ where: { id: pid } });
+      return res.status(204).end();
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({ error: 'Delete failed' });
+    }
+  }
+
+  if (req.method === 'GET') {
+    return res.status(200).json(product);
   }
 
   return res.status(405).end();
 }
-
 

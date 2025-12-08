@@ -35,8 +35,8 @@ const Header: React.FC = () => {
         <header className="site-header">
             <div className="site-header-inner">
                 {/* Site Logo */}
-                <Link href="/" className="site-logo">
-                    LastSeen
+                <Link href="Logo.JPG" className="site-logo">
+                   
                 </Link>
 
                 {/* Navigation Links */}
