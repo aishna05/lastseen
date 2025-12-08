@@ -1,14 +1,17 @@
 // app/product/[id]/page.tsx
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
+import Link from "next/link";
+import AddToCartButton from "@/components/AddToCartButton"; // Client component for Add to Cart
 
 interface ProductPageProps {
-   params: Promise<{ id: string }>;
+  params: Promise<{ id: string }>;
 }
 
 export default async function ProductPage({ params }: ProductPageProps) {
   const { id } = await params;
-const productId = Number(id);
+  const productId = Number(id);
+
   if (!productId || Number.isNaN(productId)) return notFound();
 
   const product = await prisma.product.findUnique({
@@ -27,7 +30,6 @@ const productId = Number(id);
         try {
           return JSON.parse(product.imageUrls);
         } catch {
-          // if it's not valid JSON, fall back to single URL
           return [product.imageUrls];
         }
       })()
@@ -71,9 +73,7 @@ const productId = Number(id);
           <div className="product-detail-header">
             <p className="product-detail-eyebrow">
               {product.category?.name || "Curated Piece"}
-              {product.subcategory?.name
-                ? ` • ${product.subcategory.name}`
-                : ""}
+              {product.subcategory?.name ? ` • ${product.subcategory.name}` : ""}
             </p>
             <h1 className="product-detail-title">{product.title}</h1>
           </div>
@@ -109,9 +109,16 @@ const productId = Number(id);
               <p>{product.description}</p>
             </div>
           )}
-          <button className="btn-primary">Add to Cart</button>
-          <button className="btn-primary">Buy Now </button>
-          {/* You can later add size / color / CTA buttons here */}
+
+          {/* ✅ CLIENT-SIDE ADD TO CART BUTTON */}
+          <AddToCartButton productId={productId} />
+
+          {/* BUY NOW */}
+          <Link href={`/order/${productId}`} className="w-full mt-2">
+            <button type="button" className="btn-primary w-full">
+              Buy Now
+            </button>
+          </Link>
         </div>
       </section>
     </main>
