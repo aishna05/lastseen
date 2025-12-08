@@ -49,12 +49,9 @@ const Header: React.FC = () => {
                     <Image 
                         src="/media/logo.png" 
                         alt="Site Logo" 
-                        width={150} 
-                        height={50} 
                         priority
-                        width={200} 
-                        height={100} 
-                        priority // ensures logo loads fast
+                        width={150} 
+                        height={75}
                         style={{ objectFit: 'contain' }}
                     />
                 </Link>

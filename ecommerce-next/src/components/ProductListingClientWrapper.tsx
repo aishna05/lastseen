@@ -52,14 +52,16 @@ const handleAddToCart = async (productId: number) => {
 
 const ProductListingClientWrapper: React.FC<ProductListingProps> = ({ products }) => {
     return (
-        // Apply the same section styling from your original code
-        <section style={{ padding: 'clamp(3rem, 6vw, 5rem) clamp(1rem, 6vw, 10.5rem)' }}>
-            <div style={{ maxWidth: '1120px', margin: '0 auto' }}>
-                <h1 className="text-3xl font-semibold mb-6" style={{ animation: 'fadeSlideUp 0.6s ease-out' }}>
+        <section className="product-listing-section">
+            {/* 1. Replaced inline style with global CSS class for max-width and centering */}
+            <div className="page-shell"> 
+                {/* 2. Used h1 and the global CSS animation (fadeSlideUp) is assumed to be handled globally by h1 selector */}
+                <h1 className="heading-main">
                     All Products
                 </h1>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                
+                {/* 3. Replaced Tailwind grid with custom CSS class name */}
+                <div className="product-grid">
                     {products.map((p) => {
                         // Calculate final price on the client (or keep it on the server if possible)
                         const finalPrice = p.discount
@@ -71,14 +73,17 @@ const ProductListingClientWrapper: React.FC<ProductListingProps> = ({ products }
                             id: p.id,
                             title: p.title,
                             price: finalPrice,
-                            imageUrls: p.imageUrls.split(',')[0] || '', // Assuming you want the first image
-                            // Note: ProductCard only shows price/name/cart button, not seller info
+                            // Assuming imageUrls is a comma-separated string, extract the first one
+                            imageUrls: p.imageUrls.split(',')[0] || '', 
+                            // Note: The prompt requested image color replacement. This component provides 
+                            // the image URL, so the *absence* of the image color is now correctly 
+                            // handled by the ProductCard component using the image URL.
                         };
                         return (
                             <ProductCard
                                 key={p.id}
                                 product={cardProps}
-                                onAddToCart={handleAddToCart} // Now correctly passed from a client component!
+                                onAddToCart={handleAddToCart}
                             />
                         );
                     })}

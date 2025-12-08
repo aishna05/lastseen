@@ -9,13 +9,13 @@ export const metadata = {
 
 const AboutUsPage = () => {
   return (
-    <div className="py-12 md:py-16">
-      <h1 className="text-4xl mb-4">Our Journey: The Lost Seeker</h1>
-      <h2 className="text-xl mb-10" style={{color: 'var(--text-muted)'}}>
+    <div className="about-page-wrapper">
+      <h1>Our Journey: The Lost Seeker</h1>
+      <h2 className="contact-subheading" style={{color: 'var(--text-muted)'}}>
         Discovering the Craft, One Story at a Time.
       </h2>
 
-      <div className="grid md:grid-cols-2 gap-12">
+      <div className="about-content-grid">
         <section>
           <h3>The Philosophy</h3>
           <p>
@@ -28,7 +28,7 @@ const AboutUsPage = () => {
 
         <section>
           <h3>Our Commitment</h3>
-          <ul className="space-y-3 p-4" style={{borderLeft: '3px solid var(--primary-soft)'}}>
+          <ul className="commitment-list" style={{borderLeft: '3px solid var(--primary-soft)'}}>
             <li>
               <strong>Authenticity:</strong> Every product is verified for its story and origin.
             </li>
@@ -42,7 +42,7 @@ const AboutUsPage = () => {
         </section>
       </div>
       
-      <div className="mt-12 text-center">
+      <div className="about-cta">
         <Link href="/products" className="btn-primary">
           Explore Our Unique Finds
         </Link>

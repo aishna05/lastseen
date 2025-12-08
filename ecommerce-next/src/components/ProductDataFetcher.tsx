@@ -1,6 +1,6 @@
 // /src/components/products/ProductDataFetcher.tsx
 import { prisma } from "@/lib/prisma";
-import ProductListingClient from "./ProductListingClient";
+import ProductListingClient from "./ProductListingClientWrapper";
 import { Product, User } from "@prisma/client";
 
 // Define the type for the product data fetched with the seller relation
