@@ -110,6 +110,7 @@ const productId = Number(id);
             </div>
           )}
           <button className="btn-primary">Add to Cart</button>
+          <button className="btn-primary">Buy Now </button>
           {/* You can later add size / color / CTA buttons here */}
         </div>
       </section>
