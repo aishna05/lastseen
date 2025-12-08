@@ -89,8 +89,8 @@ export default function LoginPage() {
         </form>
 
         <div className="auth-links">
-          <a href="/signup/customer">New Customer? Sign up</a>
-          <a href="/signup/seller">Become a Seller</a>
+          <a href="/auth/signup/customer">New Customer? Sign up</a>
+          {/* <a href="/auth/signup/seller">Become a Seller</a> */}
         </div>
       </div>
     </div>
