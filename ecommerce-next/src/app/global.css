@@ -1140,3 +1140,113 @@ select:focus {
     margin-top: 4rem;
     text-align: center;
 }
+/* PROFILE PAGE CLASSES - Add this to your global stylesheet */
+
+.profile-container {
+    padding-block: clamp(3rem, 7vw, 4rem); 
+    padding-inline: clamp(1rem, 4vw, 2.5rem);
+    min-height: 80vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Align to the top of the container */
+}
+
+.profile-card {
+    /* Uses general card styling but keeps it centered and max-width */
+    width: 100%;
+    max-width: 450px; 
+    padding: clamp(1.5rem, 4vw, 2rem);
+    border-radius: var(--radius-lg);
+    background: var(--bg-elevated); 
+    border: 1px solid var(--border-subtle);
+    box-shadow: var(--shadow-soft);
+    animation: fadeSlideUp 0.6s ease-out;
+}
+
+/* Headings */
+.profile-title {
+    font-family: "Cinzel", serif;
+    font-size: clamp(1.6rem, 3vw, 2rem);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--primary-dark);
+    margin-bottom: 0.5rem;
+}
+
+.profile-meta {
+    font-size: var(--fs-sm);
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+}
+
+/* Form and Fields */
+.profile-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.profile-field label {
+    font-size: var(--fs-sm);
+    display: block;
+    margin-bottom: 0.3rem;
+    color: var(--text-main);
+    font-weight: 500;
+}
+
+/* Input styling is inherited from global 'input' selector */
+
+/* Message Styles */
+.profile-message {
+    font-size: var(--fs-sm);
+    margin-bottom: 1rem;
+    padding: 0.5rem 0.8rem;
+    border-radius: var(--radius-sm);
+    font-weight: 500;
+}
+
+.profile-message.error {
+    color: #AB2626; /* Darker red for elegance */
+    background: #F8E8E8;
+    border: 1px solid #AB2626;
+}
+
+.profile-message.success {
+    color: #478F4F; /* Elegant green */
+    background: #E8F8E8;
+    border: 1px solid #478F4F;
+}
+
+/* Separator */
+.profile-divider {
+    border: 0;
+    border-top: 1px solid var(--border-subtle);
+    margin: 1.5rem 0;
+}
+
+/* Delete Button */
+.btn-delete-account {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.7rem 1.6rem;
+    border-radius: var(--radius-pill);
+    background: transparent;
+    border: 1px solid #AB2626;
+    color: #AB2626; 
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: var(--fs-sm);
+    transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.btn-delete-account:hover {
+    background-color: #AB2626;
+    color: var(--text-contrast); /* White/Cream text on hover */
+}
+
+.btn-delete-account:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}

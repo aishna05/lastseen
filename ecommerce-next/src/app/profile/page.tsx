@@ -27,7 +27,9 @@ export default function ProfilePage() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
-  // Read token from localStorage (client-side only)
+  // ------------------------------
+  // Load token from localStorage
+  // ------------------------------
   useEffect(() => {
     if (typeof window !== "undefined") {
       const t = localStorage.getItem("token");
@@ -35,7 +37,9 @@ export default function ProfilePage() {
     }
   }, []);
 
+  // ------------------------------
   // Fetch profile
+  // ------------------------------
   useEffect(() => {
     async function fetchProfile() {
       if (!token) {
@@ -71,6 +75,9 @@ export default function ProfilePage() {
     if (token) fetchProfile();
   }, [token]);
 
+  // ------------------------------
+  // Handle Save
+  // ------------------------------
   async function handleSave(e: React.FormEvent) {
     e.preventDefault();
     if (!token) {
@@ -91,7 +98,7 @@ export default function ProfilePage() {
         },
         body: JSON.stringify({
           name,
-          password: password || undefined, // only send if not empty
+          password: password || undefined,
         }),
       });
 
@@ -111,6 +118,9 @@ export default function ProfilePage() {
     }
   }
 
+  // ------------------------------
+  // Handle Delete Account
+  // ------------------------------
   async function handleDelete() {
     if (!token) {
       setError("Not logged in");
@@ -136,10 +146,9 @@ export default function ProfilePage() {
       if (!res.ok) {
         setError(data.message || "Failed to delete account");
       } else {
-        // Clear token and send to home / login
         localStorage.removeItem("token");
         setSuccess("Account deleted");
-        router.push("/"); // or "/login"
+        router.push("/");
       }
     } catch (err) {
       setError("Something went wrong while deleting");
@@ -148,102 +157,109 @@ export default function ProfilePage() {
     }
   }
 
+  // ------------------------------
+  // Layout Component
+  // ------------------------------
+  const BaseLayout = ({
+    children,
+    title,
+  }: {
+    children: React.ReactNode;
+    title: string;
+  }) => (
+    <div className="profile-container">
+      <div className="profile-card">
+        <h1 className="profile-title">{title}</h1>
+        {children}
+      </div>
+    </div>
+  );
+
+  // ------------------------------
+  // Unauthenticated & Loading States
+  // ------------------------------
   if (!token) {
     return (
-      <div className="max-w-md mx-auto mt-10">
-        <h1 className="text-2xl font-semibold mb-4">Profile</h1>
-        <p>Please log in first.</p>
-      </div>
+      <BaseLayout title="Profile">
+        <p className="text-main">Please log in first.</p>
+      </BaseLayout>
     );
   }
 
   if (loading) {
     return (
-      <div className="max-w-md mx-auto mt-10">
-        <h1 className="text-2xl font-semibold mb-4">Profile</h1>
-        <p>Loading...</p>
-      </div>
+      <BaseLayout title="Profile">
+        <p className="text-main">Loading...</p>
+      </BaseLayout>
     );
   }
 
   if (error && !user) {
     return (
-      <div className="max-w-md mx-auto mt-10">
-        <h1 className="text-2xl font-semibold mb-4">Profile</h1>
-        <p className="text-red-600">{error}</p>
-      </div>
+      <BaseLayout title="Profile">
+        <p className="profile-message error">{error}</p>
+      </BaseLayout>
     );
   }
 
+  // ------------------------------
+  // MAIN UI
+  // ------------------------------
   return (
-    <div className="max-w-md mx-auto mt-10 border rounded-lg p-6 shadow-sm">
-      <h1 className="text-2xl font-semibold mb-2">Profile</h1>
+    <div className="profile-container">
+      <div className="profile-card">
+        <h1 className="profile-title">Profile</h1>
 
-      {user && (
-        <p className="text-sm text-gray-500 mb-4">
-          Logged in as <strong>{user.email}</strong> ({user.role})
-        </p>
-      )}
+        {user && (
+          <p className="profile-meta">
+            Logged in as <strong>{user.email}</strong> ({user.role})
+          </p>
+        )}
 
-      {error && (
-        <p className="text-sm text-red-600 mb-2">
-          {error}
-        </p>
-      )}
+        {error && <p className="profile-message error">{error}</p>}
 
-      {success && (
-        <p className="text-sm text-green-600 mb-2">
-          {success}
-        </p>
-      )}
+        {success && <p className="profile-message success">{success}</p>}
 
-      <form onSubmit={handleSave} className="space-y-4">
-        <div>
-          <label className="block text-sm mb-1" htmlFor="name">
-            Name
-          </label>
-          <input
-            id="name"
-            className="w-full border rounded px-3 py-2 text-sm"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Your name"
-          />
-        </div>
+        {/* Update Form */}
+        <form onSubmit={handleSave} className="profile-form">
+          <div className="profile-field">
+            <label htmlFor="name">Name</label>
+            <input
+              id="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Your name"
+            />
+          </div>
 
-        <div>
-          <label className="block text-sm mb-1" htmlFor="password">
-            New Password (optional)
-          </label>
-          <input
-            id="password"
-            type="password"
-            className="w-full border rounded px-3 py-2 text-sm"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Leave blank to keep current password"
-          />
-        </div>
+          <div className="profile-field">
+            <label htmlFor="password">New Password (optional)</label>
+            <input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Leave blank to keep current password"
+            />
+          </div>
 
+          <button type="submit" disabled={saving} className="btn-primary mt-2">
+            {saving ? "Saving..." : "Save Changes"}
+          </button>
+        </form>
+
+        <hr className="profile-divider" />
+
+        {/* Delete Account */}
         <button
-          type="submit"
-          disabled={saving}
-          className="w-full border rounded px-3 py-2 text-sm font-medium disabled:opacity-60"
+          type="button"
+          onClick={handleDelete}
+          disabled={deleting}
+          className="btn-delete-account"
         >
-          {saving ? "Saving..." : "Save Changes"}
+          {deleting ? "Deleting..." : "Delete Account"}
         </button>
-      </form>
-
-      <hr className="my-4" />
-
-      <button
-        type="button"
-        onClick={handleDelete}
-        disabled={deleting}
-        className="w-full border border-red-500 text-red-600 rounded px-3 py-2 text-sm font-medium disabled:opacity-60"
-      >
-        {deleting ? "Deleting..." : "Delete Account"}
-      </button>
+      </div>
     </div>
   );
 }
