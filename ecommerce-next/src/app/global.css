@@ -1,22 +1,35 @@
-/* globals.css – themed to match the dark velvet + antique gold logo */
+/* globals.css – themed to match the rugged, vintage, artisanal logo */
+
+/* MAPPING TO YOUR PALETTE:
+ * #21110B (Deep Coffee) -> Deep Backgrounds
+ * #523A24 (Rich Walnut) -> Soft Backgrounds / Borders
+ * #A68A55 (Deep Gold) -> Primary Accent Color
+ * #D4BC84 (Pale Sand) -> Main Text Color
+ * #3A1F17 (Dark Brown) -> Background Accent
+*/
 
 /* 1. Root design tokens */
 :root {
-  --bg-page: #090504;
-  --bg-elevated: #1a100b;
-  --bg-soft: #130a07;
+  /* BACKGROUNDS (Based on #21110B and #3A1F17) */
+  --bg-page: #21110B;  /* Darkest Brown / Page background */
+  --bg-elevated: #3A1F17; /* Dark Brown / Card/Surface background */
+  --bg-soft: #2E1711;       /* Slightly lighter than page for soft gradients */
 
-  --primary: #d2a45a;       /* logo gold */
-  --primary-soft: rgba(210, 164, 90, 0.14);
-  --primary-strong: #e2b96a;
+  /* PRIMARY ACCENT (Based on #A68A55) */
+  --primary: #A68A55;       /* Deep Gold / Olive Brown */
+  --primary-soft: rgba(166, 138, 85, 0.18); /* Transparent gold for hover/focus */
+  --primary-strong: #D4BC84; /* Pale Sand/Khaki for high contrast gold text */
 
-  --text-main: #f4e7d0;
-  --text-muted: #c0aa8a;
-  --text-soft: #8c7560;
+  /* TEXT COLORS (Based on #D4BC84 and #523A24) */
+  --text-main: #D4BC84; /* Pale Sand / Main text color */
+  --text-muted: #A68A55; /* Deep Gold / Muted text */
+  --text-soft: #523A24;       /* Rich Walnut / Soft text (almost background-matching) */
 
-  --border-subtle: #3a2618;
-  --border-strong: #705137;
+  /* BORDERS */
+  --border-subtle: #523A24;   /* Rich Walnut / Soft borders */
+  --border-strong: #A68A55;   /* Deep Gold / Strong borders (for hover/active) */
 
+  /* GENERAL STYLES - RETAINED */
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 18px;
@@ -43,10 +56,11 @@ body {
 
 body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  /* Dark, earthy background gradient */
   background:
-    radial-gradient(circle at top, #1d0f08 0, transparent 55%),
-    radial-gradient(circle at bottom, #180b06 0, transparent 55%),
-    linear-gradient(135deg, #080302, #120806);
+    radial-gradient(circle at top, #3A1F17 0, transparent 55%),
+    radial-gradient(circle at bottom, #2E1711 0, transparent 55%),
+    linear-gradient(135deg, #21110B, #3A1F17);
   color: var(--text-main);
   -webkit-font-smoothing: antialiased;
 }
@@ -65,7 +79,7 @@ h6 {
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--primary-strong);
+  color: var(--primary); /* Deep Gold headings */
 }
 
 h1 {
@@ -86,7 +100,7 @@ p {
 
 small {
   font-size: 0.8rem;
-  color: var(--text-soft);
+  color: var(--text-muted); /* Muted text */
 }
 
 /* 4. Layout helpers */
@@ -102,7 +116,7 @@ main {
 
 /* 5. Links */
 a {
-  color: var(--primary-strong);
+  color: var(--primary); /* Deep Gold links */
   text-decoration: none;
   position: relative;
   transition: color var(--transition-fast);
@@ -124,7 +138,7 @@ a:hover::after {
 }
 
 a:hover {
-  color: #f6dca3;
+  color: var(--primary-strong); /* Pale Sand hover color for pop */
 }
 
 /* 6. Buttons */
@@ -143,8 +157,9 @@ button,
   gap: 0.45rem;
   padding: 0.7rem 1.6rem;
   border-radius: var(--radius-pill);
-  background: radial-gradient(circle at 20% 0%, #f0db98 0, #d2a45a 40%, #9a7035 100%);
-  color: #201108;
+  /* Gold/Copper gradient for button surface */
+  background: radial-gradient(circle at 20% 0%, #D4BC84 0, #A68A55 40%, #826941 100%);
+  color: #21110B; /* Darkest brown text for contrast */
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.12em;
@@ -189,9 +204,10 @@ button,
 
 /* 7. Cards & surfaces */
 .card {
-  background: radial-gradient(circle at top left, #22140b 0, #150b06 40%, #0c0503 100%);
+  /* Gradient using darker tones from the palette */
+  background: radial-gradient(circle at top left, #3A1F17 0, #2E1711 40%, #21110B 100%);
   border-radius: var(--radius-lg);
-  border: 1px solid rgba(138, 89, 48, 0.4);
+  border: 1px solid rgba(166, 138, 85, 0.4); /* Primary accent border soft */
   padding: 1.4rem 1.6rem;
   box-shadow: var(--shadow-soft);
   position: relative;
@@ -203,8 +219,8 @@ button,
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at top, rgba(255, 224, 147, 0.06), transparent 55%),
-    radial-gradient(circle at bottom, rgba(97, 56, 26, 0.2), transparent 55%);
+    radial-gradient(circle at top, rgba(212, 188, 132, 0.06), transparent 55%), /* Pale Sand sheen */
+    radial-gradient(circle at bottom, rgba(82, 58, 36, 0.2), transparent 55%); /* Rich Walnut subtle shadow */
   opacity: 0.95;
   pointer-events: none;
 }
@@ -217,7 +233,7 @@ select {
   border-radius: var(--radius-md);
   border: 1px solid var(--border-subtle);
   padding: 0.65rem 0.9rem;
-  background: rgba(10, 5, 3, 0.9);
+  background: rgba(33, 17, 11, 0.9); /* Page background dark */
   color: var(--text-main);
   font: inherit;
   outline: none;
@@ -229,15 +245,15 @@ select {
 
 input::placeholder,
 textarea::placeholder {
-  color: var(--text-soft);
+  color: var(--text-muted);
 }
 
 input:focus,
 textarea:focus,
 select:focus {
   border-color: var(--primary);
-  box-shadow: 0 0 0 1px rgba(210, 164, 90, 0.45);
-  background: #140906;
+  box-shadow: 0 0 0 1px rgba(166, 138, 85, 0.45);
+  background: #3A1F17; /* Elevated background on focus */
 }
 
 /* 9. Navigation bar */
@@ -246,8 +262,8 @@ select:focus {
   top: 0;
   z-index: 20;
   backdrop-filter: blur(18px);
-  background: linear-gradient(to bottom, rgba(5, 2, 1, 0.96), rgba(5, 2, 1, 0.8));
-  border-bottom: 1px solid rgba(114, 79, 45, 0.5);
+  background: linear-gradient(to bottom, rgba(33, 17, 11, 0.96), rgba(33, 17, 11, 0.8));
+  border-bottom: 1px solid rgba(166, 138, 85, 0.5); /* Primary accent border */
 }
 
 .site-header-inner {
@@ -268,7 +284,7 @@ select:focus {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.2em;
-  color: var(--primary-strong);
+  color: var(--primary-strong); /* Pale Sand for logo text */
   font-size: 0.95rem;
 }
 
@@ -278,18 +294,18 @@ table {
   border-collapse: collapse;
   border-radius: var(--radius-lg);
   overflow: hidden;
-  background: rgba(13, 6, 4, 0.96);
+  background: rgba(33, 17, 11, 0.96); /* Page background dark */
 }
 
 thead {
-  background: linear-gradient(90deg, #3a2414, #22140c);
+  background: linear-gradient(90deg, #523A24, #3A1F17); /* Rich Walnut to Dark Brown */
 }
 
 th,
 td {
   padding: 0.75rem 1rem;
   font-size: 0.9rem;
-  border-bottom: 1px solid rgba(74, 48, 28, 0.7);
+  border-bottom: 1px solid rgba(82, 58, 36, 0.7); /* Rich Walnut border */
 }
 
 th {
@@ -297,15 +313,15 @@ th {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--primary-strong);
+  color: var(--primary); /* Deep Gold headers */
 }
 
 tbody tr:nth-child(even) {
-  background: rgba(19, 11, 7, 0.8);
+  background: rgba(58, 31, 23, 0.8); /* Darker even rows */
 }
 
 tbody tr:hover {
-  background: rgba(40, 21, 12, 0.9);
+  background: rgba(82, 58, 36, 0.9); /* Rich Walnut hover */
 }
 
 /* 11. Scrollbar (desktop aesthetics) */
@@ -313,18 +329,34 @@ tbody tr:hover {
   width: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: #060302;
+  background: #21110B; /* Deep Coffee track */
 }
 ::-webkit-scrollbar-thumb {
-  background: #3e2614;
+  background: #523A24; /* Rich Walnut thumb */
   border-radius: 999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #5b361b;
+  background: #A68A55; /* Deep Gold hover */
 }
 
 /* 12. Text selection */
 ::selection {
-  background: rgba(210, 164, 90, 0.4);
+  background: rgba(166, 138, 85, 0.4); /* Deep Gold selection */
   color: var(--text-main);
+}
+/* ... (Existing global styles) ... */
+
+/* 13. Utility Classes & Keyframes */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loader-spinner {
+    /* Apply the animation class */
+    animation: spin 1s linear infinite;
 }
