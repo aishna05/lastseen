@@ -1,46 +1,47 @@
-/* globals.css – themed to match the rugged, vintage, artisanal logo */
+/* ================================
+   GLOBALS – RUGGED VINTAGE THEME
+================================ */
 
-/* MAPPING TO YOUR PALETTE:
- * #21110B (Deep Coffee) -> Deep Backgrounds
- * #523A24 (Rich Walnut) -> Soft Backgrounds / Borders
- * #A68A55 (Deep Gold) -> Primary Accent Color
- * #D4BC84 (Pale Sand) -> Main Text Color
- * #3A1F17 (Dark Brown) -> Background Accent
-*/
+html, body {
+  overflow-x: hidden;
+}
 
-/* 1. Root design tokens */
+/* ---------------- ROOT TOKENS ---------------- */
 :root {
-  /* BACKGROUNDS (Based on #21110B and #3A1F17) */
-  --bg-page: #21110B;  /* Darkest Brown / Page background */
-  --bg-elevated: #3A1F17; /* Dark Brown / Card/Surface background */
-  --bg-soft: #2E1711;       /* Slightly lighter than page for soft gradients */
+  --bg-page: #21110B;
+  --bg-elevated: #3A1F17;
+  --bg-soft: #2E1711;
 
-  /* PRIMARY ACCENT (Based on #A68A55) */
-  --primary: #A68A55;       /* Deep Gold / Olive Brown */
-  --primary-soft: rgba(166, 138, 85, 0.18); /* Transparent gold for hover/focus */
-  --primary-strong: #D4BC84; /* Pale Sand/Khaki for high contrast gold text */
+  --primary: #A68A55;
+  --primary-soft: rgba(166, 138, 85, 0.18);
+  --primary-strong: #D4BC84;
 
-  /* TEXT COLORS (Based on #D4BC84 and #523A24) */
-  --text-main: #D4BC84; /* Pale Sand / Main text color */
-  --text-muted: #A68A55; /* Deep Gold / Muted text */
-  --text-soft: #523A24;       /* Rich Walnut / Soft text (almost background-matching) */
+  --text-main: #D4BC84;
+  --text-muted: #A68A55;
+  --text-soft: #523A24;
 
-  /* BORDERS */
-  --border-subtle: #523A24;   /* Rich Walnut / Soft borders */
-  --border-strong: #A68A55;   /* Deep Gold / Strong borders (for hover/active) */
+  --border-subtle: #523A24;
+  --border-strong: #A68A55;
 
-  /* GENERAL STYLES - RETAINED */
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 18px;
   --radius-pill: 999px;
 
   --shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.85);
+
   --transition-fast: 180ms ease-out;
   --transition-med: 240ms ease-out;
+
+  /* ✅ RESPONSIVE FONT SCALE */
+  --fs-xs: clamp(0.65rem, 0.75vw, 0.8rem);
+  --fs-sm: clamp(0.75rem, 0.9vw, 0.9rem);
+  --fs-md: clamp(0.95rem, 1vw, 1.05rem);
+  --fs-lg: clamp(1.15rem, 1.4vw, 1.3rem);
+  --fs-xl: clamp(2.3rem, 5vw, 4.5rem);
 }
 
-/* 2. Reset-ish base */
+/* ---------------- RESET ---------------- */
 *,
 *::before,
 *::after {
@@ -56,7 +57,6 @@ body {
 
 body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  /* Dark, earthy background gradient */
   background:
     radial-gradient(circle at top, #3A1F17 0, transparent 55%),
     radial-gradient(circle at bottom, #2E1711 0, transparent 55%),
@@ -65,48 +65,37 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Optional: load a serif for headings similar to the logo vibe
-@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&display=swap"); */
-
-/* 3. Typography */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+/* ---------------- TYPOGRAPHY ---------------- */
+h1, h2, h3, h4, h5, h6 {
   font-family: "Cinzel", serif;
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--primary); /* Deep Gold headings */
+  color: var(--primary);
 }
 
-h1 {
-  font-size: clamp(2.2rem, 3vw, 2.8rem);
-}
-h2 {
-  font-size: clamp(1.7rem, 2.4vw, 2rem);
-}
-h3 {
-  font-size: 1.3rem;
-}
+h1 { font-size: clamp(2.2rem, 4vw, 3.2rem); }
+h2 { font-size: clamp(1.7rem, 3vw, 2.3rem); }
+h3 { font-size: var(--fs-lg); }
 
 p {
   margin: 0 0 0.75rem;
   line-height: 1.6;
   color: var(--text-main);
+  font-size: var(--fs-md);
 }
 
 small {
-  font-size: 0.8rem;
-  color: var(--text-muted); /* Muted text */
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
 }
 
-/* 4. Layout helpers */
+/* ---------------- LAYOUT (✅ RESPONSIVE FIX) ---------------- */
 main {
   min-height: 100vh;
-  padding: 1.5rem;
+  padding-inline: 0;
+  padding-block: 0;
+  padding-top: 0 !important;
 }
 
 .page-shell {
@@ -114,9 +103,9 @@ main {
   margin: 0 auto;
 }
 
-/* 5. Links */
+/* ---------------- LINKS ---------------- */
 a {
-  color: var(--primary); /* Deep Gold links */
+  color: var(--primary);
   text-decoration: none;
   position: relative;
   transition: color var(--transition-fast);
@@ -133,15 +122,10 @@ a::after {
   transition: width var(--transition-med);
 }
 
-a:hover::after {
-  width: 100%;
-}
+a:hover { color: var(--primary-strong); }
+a:hover::after { width: 100%; }
 
-a:hover {
-  color: var(--primary-strong); /* Pale Sand hover color for pop */
-}
-
-/* 6. Buttons */
+/* ---------------- BUTTONS ---------------- */
 button,
 .btn {
   border: 0;
@@ -157,28 +141,20 @@ button,
   gap: 0.45rem;
   padding: 0.7rem 1.6rem;
   border-radius: var(--radius-pill);
-  /* Gold/Copper gradient for button surface */
   background: radial-gradient(circle at 20% 0%, #D4BC84 0, #A68A55 40%, #826941 100%);
-  color: #21110B; /* Darkest brown text for contrast */
+  color: #21110B;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.12em;
+  font-size: var(--fs-sm);
   box-shadow: var(--shadow-soft);
-  transition:
-    transform var(--transition-fast),
-    box-shadow var(--transition-fast),
-    filter var(--transition-fast);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), filter var(--transition-fast);
 }
 
 .btn-primary:hover {
-  transform: translateY(-1px);
-  filter: brightness(1.07);
-  box-shadow: 0 22px 60px rgba(0, 0, 0, 0.95);
-}
-
-.btn-primary:active {
-  transform: translateY(1px) scale(0.99);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.9);
+  transform: translateY(-2px) scale(1.02);
+  filter: brightness(1.12);
+  box-shadow: 0 24px 70px rgba(212, 188, 132, 0.4);
 }
 
 .btn-ghost {
@@ -189,43 +165,125 @@ button,
   color: var(--text-main);
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  font-size: 0.8rem;
-  transition:
-    background var(--transition-fast),
-    border-color var(--transition-fast),
-    color var(--transition-fast);
+  font-size: var(--fs-sm);
 }
 
-.btn-ghost:hover {
-  background: var(--primary-soft);
-  border-color: var(--primary);
-  color: var(--primary-strong);
-}
-
-/* 7. Cards & surfaces */
-.card {
-  /* Gradient using darker tones from the palette */
-  background: radial-gradient(circle at top left, #3A1F17 0, #2E1711 40%, #21110B 100%);
-  border-radius: var(--radius-lg);
-  border: 1px solid rgba(166, 138, 85, 0.4); /* Primary accent border soft */
-  padding: 1.4rem 1.6rem;
-  box-shadow: var(--shadow-soft);
+/* ---------------- HERO VIDEO SECTION ---------------- */
+/* ---------------- HERO VIDEO SECTION ---------------- */
+.hero-video-section {
   position: relative;
+  width: 100%;
+  height: 100vh; /* full viewport height */
+  max-height: 950px; /* optional for very tall screens */
   overflow: hidden;
 }
 
-.card::before {
+.hero-video-wrapper {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.hero-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 40%; /* focus slightly higher for top content */
+  filter: brightness(0.85);
+}
+
+/* Optional subtle overlay */
+.hero-video-section::after {
   content: "";
   position: absolute;
   inset: 0;
-  background:
-    radial-gradient(circle at top, rgba(212, 188, 132, 0.06), transparent 55%), /* Pale Sand sheen */
-    radial-gradient(circle at bottom, rgba(82, 58, 36, 0.2), transparent 55%); /* Rich Walnut subtle shadow */
-  opacity: 0.95;
+  background: rgba(0, 0, 0, 0.2);
   pointer-events: none;
 }
 
-/* 8. Form elements */
+/* ---------------- RESPONSIVE FIXES ---------------- */
+@media (max-width: 1024px) {
+  .hero-video {
+    object-position: center 45%;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-video-section {
+    height: 70vh;
+  }
+  .hero-video {
+    object-position: center 50%;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-video-section {
+    height: 60vh;
+  }
+  .hero-video {
+    object-position: center 55%;
+  }
+}
+
+
+/* ---------------- CARDS ---------------- */
+.card {
+  background: radial-gradient(circle at top left, #3A1F17 0, #2E1711 40%, #21110B 100%);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(166, 138, 85, 0.4);
+  padding: clamp(1rem, 2vw, 1.6rem);
+  box-shadow: var(--shadow-soft);
+  position: relative;
+  overflow: hidden;
+  transition: transform var(--transition-med), box-shadow var(--transition-med), border-color var(--transition-med);
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(212, 188, 132, 0.08) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity var(--transition-med);
+}
+
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.95), 0 0 40px rgba(166, 138, 85, 0.2);
+  border-color: rgba(166, 138, 85, 0.7);
+}
+
+.card:hover::before {
+  opacity: 1;
+}
+
+.card h2 { 
+  font-size: var(--fs-lg); 
+  margin-bottom: 0.5rem;
+  transition: color var(--transition-fast);
+}
+
+.card:hover h2 {
+  color: var(--primary-strong);
+}
+
+.card p { font-size: var(--fs-sm); }
+
+.card img {
+  transition: transform var(--transition-med), filter var(--transition-med);
+}
+
+.card:hover img {
+  transform: scale(1.05);
+  filter: brightness(1.1);
+}
+
+/* ---------------- FORM ELEMENTS ---------------- */
 input,
 textarea,
 select {
@@ -233,130 +291,223 @@ select {
   border-radius: var(--radius-md);
   border: 1px solid var(--border-subtle);
   padding: 0.65rem 0.9rem;
-  background: rgba(33, 17, 11, 0.9); /* Page background dark */
+  background: rgba(33, 17, 11, 0.9);
   color: var(--text-main);
-  font: inherit;
-  outline: none;
-  transition:
-    border-color var(--transition-fast),
-    box-shadow var(--transition-fast),
-    background var(--transition-fast);
+  font-size: var(--fs-sm);
 }
 
-input::placeholder,
-textarea::placeholder {
-  color: var(--text-muted);
-}
-
-input:focus,
-textarea:focus,
-select:focus {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 1px rgba(166, 138, 85, 0.45);
-  background: #3A1F17; /* Elevated background on focus */
-}
-
-/* 9. Navigation bar */
+/* ---------------- NAVBAR ---------------- */
+/* ---------------- NAVBAR IMPROVEMENT ---------------- */
 .site-header {
   position: sticky;
   top: 0;
-  z-index: 20;
+  z-index: 50; /* make sure it's above everything */
   backdrop-filter: blur(18px);
-  background: linear-gradient(to bottom, rgba(33, 17, 11, 0.96), rgba(33, 17, 11, 0.8));
-  border-bottom: 1px solid rgba(166, 138, 85, 0.5); /* Primary accent border */
+  background: linear-gradient(to bottom, rgba(33, 17, 11, 0.96), rgba(33, 17, 11, 0.85));
+  border-bottom: 1px solid rgba(166, 138, 85, 0.5);
+  padding-block: 0.5rem; /* slightly more breathing room */
 }
 
 .site-header-inner {
   max-width: 1120px;
   margin: 0 auto;
-  padding: 0.75rem 1.5rem;
+  padding-inline: clamp(1rem, 4vw, 2rem);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1.5rem;
+  gap: 1rem; /* ensures spacing between logo and nav */
 }
 
+/* Logo styling */
 .site-logo {
+  font-family: "Cinzel", serif;
+  font-weight: 700;
+  font-size: clamp(1.4rem, 2.5vw, 2rem);
+  color: var(--primary-strong);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* Nav links */
+.site-header nav {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-family: "Cinzel", serif;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  color: var(--primary-strong); /* Pale Sand for logo text */
-  font-size: 0.95rem;
+  gap: 1.5rem; /* increases space between links */
 }
 
-/* 10. Tables (for product lists / orders) */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  background: rgba(33, 17, 11, 0.96); /* Page background dark */
+.site-header nav a {
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  padding: 0.35rem 0.5rem; /* easier to click */
+  transition: all var(--transition-fast);
 }
 
-thead {
-  background: linear-gradient(90deg, #523A24, #3A1F17); /* Rich Walnut to Dark Brown */
+.site-header nav a:hover {
+  color: var(--primary-strong);
+  text-shadow: 0 0 6px rgba(212, 188, 132, 0.7);
 }
 
-th,
-td {
-  padding: 0.75rem 1rem;
-  font-size: 0.9rem;
-  border-bottom: 1px solid rgba(82, 58, 36, 0.7); /* Rich Walnut border */
+/* Auth buttons spacing */
+.site-header nav .btn-primary,
+.site-header nav .btn-ghost {
+  margin-left: 0.75rem;
 }
 
-th {
-  text-align: left;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--primary); /* Deep Gold headers */
+/* Profile icon adjustments */
+.site-header nav .p-1 {
+  margin-left: 0.5rem;
 }
 
-tbody tr:nth-child(even) {
-  background: rgba(58, 31, 23, 0.8); /* Darker even rows */
+/* ---------------- RESPONSIVE NAVBAR ---------------- */
+@media (max-width: 1024px) {
+  .site-header-inner {
+    padding-inline: clamp(0.5rem, 3vw, 1.5rem);
+  }
+  .site-header nav {
+    gap: 1rem;
+  }
 }
 
-tbody tr:hover {
-  background: rgba(82, 58, 36, 0.9); /* Rich Walnut hover */
+@media (max-width: 768px) {
+  .site-header-inner {
+    flex-direction: column;
+    align-items: flex-start;
+    padding-block: 0.5rem;
+    gap: 0.5rem;
+  }
+  .site-header nav {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    width: 100%;
+  }
 }
 
-/* 11. Scrollbar (desktop aesthetics) */
-::-webkit-scrollbar {
-  width: 10px;
-}
-::-webkit-scrollbar-track {
-  background: #21110B; /* Deep Coffee track */
-}
-::-webkit-scrollbar-thumb {
-  background: #523A24; /* Rich Walnut thumb */
-  border-radius: 999px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #A68A55; /* Deep Gold hover */
+@media (max-width: 480px) {
+  .site-logo {
+    font-size: 1.4rem;
+  }
+  .site-header nav a {
+    font-size: 0.75rem;
+  }
+  .site-header nav .btn-primary,
+  .site-header nav .btn-ghost {
+    font-size: 0.7rem;
+    padding: 0.35rem 0.8rem;
+  }
 }
 
-/* 12. Text selection */
-::selection {
-  background: rgba(166, 138, 85, 0.4); /* Deep Gold selection */
-  color: var(--text-main);
-}
-/* ... (Existing global styles) ... */
 
-/* 13. Utility Classes & Keyframes */
-@keyframes spin {
+/* ---------------- ANIMATIONS ---------------- */
+@keyframes heroTitleReveal {
   0% {
-    transform: rotate(0deg);
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+    filter: blur(10px);
   }
   100% {
-    transform: rotate(360deg);
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
   }
 }
 
-.loader-spinner {
-    /* Apply the animation class */
-    animation: spin 1s linear infinite;
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes glow {
+  0% {
+    opacity: 0.5;
+    filter: blur(40px);
+  }
+  100% {
+    opacity: 0.8;
+    filter: blur(60px);
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateX(-50%) translateY(0);
+  }
+  50% {
+    transform: translateX(-50%) translateY(-10px);
+  }
+}
+
+/* Stagger animation for product cards */
+.card {
+  animation: cardFadeIn 0.6s ease-out backwards;
+}
+
+.card:nth-child(1) { animation-delay: 0.1s; }
+.card:nth-child(2) { animation-delay: 0.2s; }
+.card:nth-child(3) { animation-delay: 0.3s; }
+.card:nth-child(4) { animation-delay: 0.4s; }
+.card:nth-child(5) { animation-delay: 0.5s; }
+.card:nth-child(6) { animation-delay: 0.6s; }
+
+@keyframes cardFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---------------- MOBILE SAFETY ---------------- */
+@media (max-width: 768px) {
+  main {
+    padding-inline: 0;
+    padding-block: 0;
+  }
+
+  h1 { font-size: 1.8rem; }
+  h2 { font-size: 1.4rem; }
+
+  .btn-primary {
+    padding: 0.65rem 1.3rem;
+    font-size: 0.75rem;
+  }
+
+  .hero-video-section {
+    min-height: 480px;
+    height: calc(70vh - 80px);
+    margin-top: 1.5rem;
+  }
+
+  .hero-title {
+    line-height: 1.1;
+    letter-spacing: 0.15em;
+  }
+
+  .hero-subtitle {
+    letter-spacing: 0.25em;
+  }
+
+  .card {
+    animation: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-video-section {
+    min-height: 420px;
+    height: calc(60vh - 80px);
+    margin-top: 1rem;
+  }
+
+  .hero-cta {
+    margin-top: 2rem;
+  }
 }
