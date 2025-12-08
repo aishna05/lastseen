@@ -11,19 +11,24 @@ html, body {
   /* --bg-page: #21110B;
   --bg-elevated: #3A1F17;
   --bg-soft: #2E1711; */
-  --bg-page: #f1edeb;
-  --bg-elevated: #e2d8d5;
-  --bg-soft: #e2d8d5;
-  --primary: #A68A55;
-  --primary-soft: rgba(166, 138, 85, 0.18);
-  --primary-strong: #D4BC84;
+  /* Backgrounds */
+  --bg-page: #F5CCA0;       /* warm beige background */
+  --bg-elevated: #FFF4E7;   /* soft card surface */
+  --bg-soft: #F0D7B9;       /* light accent area */
 
-  --text-main: #D4BC84;
-  --text-muted: #A68A55;
-  --text-soft: #523A24;
+  /* Primary Brand Colors */
+  --primary-dark: #6B240C;  /* luxurious anchor */
+  --primary: #994D1C;       /* strong warm accent */
+  --primary-light: #E48F45; /* modern highlight tone */
+  
+  /* Text */
+  --text-main: #3B1A0F;     /* dark brown, readable */
+  --text-muted: #8C6A52;    /* comfy subtle UI text */
+  --text-contrast: #FFFFFF; /* for dark backgrounds */
 
-  --border-subtle: #523A24;
-  --border-strong: #A68A55;
+  /* Borders */
+  --border-subtle: #E5C4A3;
+  --border-strong: #994D1C;
 
   --radius-sm: 8px;
   --radius-md: 12px;
@@ -60,9 +65,9 @@ body {
 body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   background:
-    radial-gradient(circle at top, #3A1F17 0, transparent 55%),
-    radial-gradient(circle at bottom, #2E1711 0, transparent 55%),
-    linear-gradient(135deg, #21110B, #3A1F17);
+    radial-gradient(circle at top, rgba(215, 194, 163, 0.35) 0%, transparent 60%),
+  radial-gradient(circle at bottom, rgba(210, 194, 169, 0.28) 0%, transparent 60%),
+  linear-gradient(135deg, #F5F2EE, #EDE7E1);
   color: var(--text-main);
   -webkit-font-smoothing: antialiased;
 }
@@ -319,11 +324,7 @@ select {
 }
 
 /* Logo styling */
-/* Logo styling */
 .site-logo {
-  display: inline-flex; /* ensures it wraps the image correctly */
-  align-items: center;
-  gap: 0.5rem; /* optional if you have text next to logo */
   font-family: "Cinzel", serif;
   font-weight: 700;
   font-size: clamp(1.4rem, 2.5vw, 2rem);
@@ -331,15 +332,6 @@ select {
   text-transform: uppercase;
   letter-spacing: 0.1em;
 }
-
-/* Ensure the image inside logo fits */
-.site-logo img {
-  display: block;
-  width: auto;
-  height: 50px; /* adjust as needed */
-  object-fit: contain;
-}
-
 
 /* Nav links */
 .site-header nav {

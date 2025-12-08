@@ -74,7 +74,6 @@ const ProductListingClientWrapper: React.FC<ProductListingProps> = ({ products }
                             imageUrls: p.imageUrls.split(',')[0] || '', // Assuming you want the first image
                             // Note: ProductCard only shows price/name/cart button, not seller info
                         };
-
                         return (
                             <ProductCard
                                 key={p.id}

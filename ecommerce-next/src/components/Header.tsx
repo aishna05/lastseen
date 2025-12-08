@@ -32,10 +32,10 @@ const Header: React.FC = () => {
                 {/* Site Logo */}
                 <Link href="/" className="site-logo">
                     <Image 
-                        src="/media/logo.JPG" 
+                        src="/media/logo.png" 
                         alt="Site Logo" 
-                        width={150} 
-                        height={50} 
+                        width={200} 
+                        height={100} 
                         priority // ensures logo loads fast
                         style={{ objectFit: 'contain' }}
                     />
