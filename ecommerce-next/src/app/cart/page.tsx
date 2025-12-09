@@ -8,20 +8,30 @@ export default function CartPage() {
   const [items, setItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [showAddressForm, setShowAddressForm] = useState(false);
+  const [address, setAddress] = useState({
+    address: "",
+    city: "",
+    state: "",
+    country: "",
+    zipcode: "",
+  });
 
-  // Fetch cart items
   const fetchCart = async () => {
     setLoading(true);
     const token = localStorage.getItem("token");
+
     if (!token) {
       setItems([]);
       setLoading(false);
       return;
     }
+
     try {
       const res = await fetch("/api/cart", {
         headers: { Authorization: `Bearer ${token}` },
       });
+
       const data = await res.json();
       setItems(Array.isArray(data) ? data : []);
     } catch (err) {
@@ -32,7 +42,6 @@ export default function CartPage() {
     }
   };
 
-  // Remove item from cart
   const handleRemove = async (id: number) => {
     const token = localStorage.getItem("token");
     if (!token) return;
@@ -52,41 +61,77 @@ export default function CartPage() {
     }
   };
 
-  // Checkout and redirect to order/[id]
-  const handleCheckout = async () => {
+  const createAddress = async () => {
     const token = localStorage.getItem("token");
-    if (!token) return;
+    if (!token) throw new Error("Not authenticated");
+
+    const res = await fetch("/api/address", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(address),
+    });
+
+    const text = await res.text();
+    let data;
+
+    try {
+      data = JSON.parse(text);
+    } catch {
+      throw new Error("Server error: Invalid response");
+    }
+
+    if (!res.ok) throw new Error(data.message || "Address creation failed");
+
+    return data.newAddress.id;
+  };
+
+  const handleCheckout = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      alert("Please login first");
+      return;
+    }
 
     setCheckoutLoading(true);
 
     try {
+      const addressId = await createAddress();
+
       const res = await fetch("/api/order/create", {
         method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ addressId }),
       });
 
-      let data: any = null;
-      try {
-        data = await res.json();
-      } catch (err) {
-        console.warn("No JSON returned from order API");
-      }
+      const text = await res.text();
+      let data;
 
-      if (!res.ok) {
-        console.error("ORDER ERROR:", data || res.statusText);
-        alert(data?.message || "Failed to place order");
+      try {
+        data = JSON.parse(text);
+      } catch {
+        alert("Order API returned invalid response");
         return;
       }
 
-      const orderId = data?.id;
-      if (orderId) {
-        router.push(`/order/${orderId}`);
-      } else {
-        alert("Order created but no order ID returned");
+      if (!res.ok) {
+        alert(data.message || "Order failed");
+        return;
       }
-    } catch (err) {
+
+      alert("Order placed successfully!");
+      window.dispatchEvent(new Event("cartChange"));
+      router.push("/orders");
+    } catch (err: any) {
       console.error("ORDER ERROR:", err);
-      alert("Something went wrong while placing the order");
+      alert(err.message || "Checkout failed");
     } finally {
       setCheckoutLoading(false);
     }
@@ -98,23 +143,33 @@ export default function CartPage() {
 
   const total = items.reduce(
     (sum, item) =>
-      sum + item.product.price * item.quantity * (1 - (item.product.discount ?? 0) / 100),
+      sum +
+      item.product.price *
+        item.quantity *
+        (1 - (item.product.discount ?? 0) / 100),
     0
   );
 
   return (
     <div className="profile-container">
       <div className="profile-card">
-        <h1 className="profile-title">Your Cart</h1>
-        <p className="profile-subtitle">Review your items before checkout</p>
+
+        {/* ✅ HIDE CART HEADER WHEN ADDRESS FORM IS OPEN */}
+        {!showAddressForm && (
+          <>
+            <h1 className="profile-title">Your Cart</h1>
+            <p className="profile-subtitle">Review your items before checkout</p>
+          </>
+        )}
 
         {loading && <p className="profile-message">Loading cart...</p>}
 
-        {!loading && items.length === 0 && (
+        {!loading && items.length === 0 && !showAddressForm && (
           <p className="profile-message error">Your cart is empty</p>
         )}
 
-        {!loading && items.length > 0 && (
+        {/* ✅ Cart Items */}
+        {!loading && items.length > 0 && !showAddressForm && (
           <div className="mt-4 space-y-3">
             {items.map((item) => (
               <div
@@ -126,9 +181,13 @@ export default function CartPage() {
                   <p>Quantity: {item.quantity}</p>
                   <p>
                     Price: ₹
-                    {(item.product.price * (1 - (item.product.discount ?? 0) / 100)).toFixed(2)}
+                    {(
+                      item.product.price *
+                      (1 - (item.product.discount ?? 0) / 100)
+                    ).toFixed(2)}
                   </p>
                 </div>
+
                 <button
                   className="btn-primary"
                   onClick={() => handleRemove(item.id)}
@@ -141,15 +200,98 @@ export default function CartPage() {
 
             <div className="mt-4 flex flex-col items-start gap-2">
               <p className="font-semibold">Total: ₹{total.toFixed(2)}</p>
+
               <button
                 className="btn-primary"
-                onClick={handleCheckout}
+                onClick={() => setShowAddressForm(true)}
                 disabled={checkoutLoading}
               >
-                {checkoutLoading ? "Processing..." : "Proceed to Checkout"}
+                Proceed to Checkout
               </button>
             </div>
           </div>
+        )}
+
+        {/* ✅ Only Address Form Shows Now */}
+        {showAddressForm && (
+          <form onSubmit={handleCheckout} className="w-full mt-4 space-y-3">
+            <h3 className="font-semibold">Delivery Address</h3>
+
+            <div className="auth-field">
+              <label>Address</label>
+              <input
+                value={address.address}
+                onChange={(e) =>
+                  setAddress({ ...address, address: e.target.value })
+                }
+                required
+              />
+            </div>
+
+            <div className="auth-field">
+              <label>City</label>
+              <input
+                value={address.city}
+                onChange={(e) =>
+                  setAddress({ ...address, city: e.target.value })
+                }
+                required
+              />
+            </div>
+
+            <div className="auth-field">
+              <label>State</label>
+              <input
+                value={address.state}
+                onChange={(e) =>
+                  setAddress({ ...address, state: e.target.value })
+                }
+                required
+              />
+            </div>
+
+            <div className="auth-field">
+              <label>Country</label>
+              <input
+                value={address.country}
+                onChange={(e) =>
+                  setAddress({ ...address, country: e.target.value })
+                }
+                required
+              />
+            </div>
+
+            <div className="auth-field">
+              <label>Zipcode</label>
+              <input
+                value={address.zipcode}
+                onChange={(e) =>
+                  setAddress({ ...address, zipcode: e.target.value })
+                }
+                required
+              />
+            </div>
+
+            <div className="flex gap-3 mt-6">
+
+              <button
+                type="submit"
+                className="btn-primary"
+                disabled={checkoutLoading}
+              >
+                {checkoutLoading ? "Processing..." : "Confirm Order"}
+              </button>
+
+              <button
+                type="button"
+                className="btn-primary"
+                onClick={() => setShowAddressForm(false)}
+                disabled={checkoutLoading}
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
         )}
       </div>
     </div>

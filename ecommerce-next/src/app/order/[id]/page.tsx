@@ -27,7 +27,7 @@ export default function OrderPage() {
 
   // ✅ 1. CREATE ADDRESS
 async function createAddress() {
-  const res = await fetch("/api/address", {
+  const res = await fetch("/api/address", { // ← changed URL
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -36,10 +36,10 @@ async function createAddress() {
     body: JSON.stringify(address),
   });
 
-  // ✅ SAFETY CHECK
   const text = await res.text();
-  let data;
+  console.log("Raw API response:", text);
 
+  let data;
   try {
     data = JSON.parse(text);
   } catch {
@@ -50,6 +50,7 @@ async function createAddress() {
 
   return data.newAddress.id;
 }
+
 
   // ✅ 2. ADD TO CART
   async function addToCart() {
@@ -70,7 +71,7 @@ async function createAddress() {
 
   // ✅ 3. PLACE ORDER
   async function placeOrder(addressId: number) {
-    const res = await fetch("/api/order", {
+    const res = await fetch("/api/order/create", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

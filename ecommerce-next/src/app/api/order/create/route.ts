@@ -120,7 +120,7 @@ export async function POST(req: NextRequest) {
 
     // ✅ 9. SUCCESS RESPONSE (cleaned)
     return NextResponse.json(
-      {
+      { id: order.id,  
         message: "Order placed successfully",
         order,
       },
@@ -136,80 +136,6 @@ export async function POST(req: NextRequest) {
 }
 
 
-// ✅ GET CUSTOMER ORDERS
-export async function GET(req: NextRequest) {
-  try {
-    // ✅ 1. AUTH HEADER CHECK
-    const authHeader = req.headers.get("authorization");
-    if (!authHeader) {
-      return NextResponse.json(
-        { message: "No token provided" },
-        { status: 401 }
-      );
-    }
 
-    const token = authHeader.startsWith("Bearer ")
-      ? authHeader.slice(7)
-      : authHeader;
-
-    if (!process.env.JWT_SECRET) {
-      return NextResponse.json(
-        { message: "JWT secret missing" },
-        { status: 500 }
-      );
-    }
-
-    const decoded = jwt.verify(token, process.env.JWT_SECRET) as {
-      userId: number;
-      role: string;
-    };
-
-    // ✅ 2. ROLE CHECK
-    if (decoded.role !== "CUSTOMER") {
-      return NextResponse.json(
-        { message: "Only CUSTOMER can view orders" },
-        { status: 403 }
-      );
-    }
-
-    // ✅ 3. FETCH ORDERS FOR CUSTOMER
-    const orders = await prisma.order.findMany({
-      where: { userId: decoded.userId },
-      include: {
-        address: {
-          select: {
-            address: true,
-            city: true,
-            state: true,
-            country: true,
-            zipcode: true,
-          },
-        },
-        items: {
-          select: {
-            productId: true,
-            quantity: true,
-            price: true,
-            product: {
-              select: {
-                title: true,
-                price: true,
-              },
-            },
-          },
-        },
-      },
-      orderBy: { id: "desc" }, // latest orders first
-    });
-
-    return NextResponse.json({ orders }, { status: 200 });
-  } catch (error: any) {
-    console.error("GET ORDERS ERROR:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch orders", message: error.message },
-      { status: 500 }
-    );
-  }
-}
 
 
