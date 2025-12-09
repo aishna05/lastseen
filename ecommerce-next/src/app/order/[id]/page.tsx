@@ -105,87 +105,85 @@ async function createAddress() {
   }
 
   return (
-    <div className="auth-page">
-      <div className="auth-card">
-        <h2 className="auth-title">Place Your Order</h2>
-        <p className="auth-subtitle">Confirm your delivery details</p>
+ // Use page-shell for overall layout consistency
+<div className="page-shell"> 
+<div className="auth-page">
+<div className="auth-card">
+<h2 className="auth-title">Place Your Order</h2>
+ <p className="auth-subtitle">Confirm your delivery details</p>
 
-        {message && <p className="auth-error">{message}</p>}
+{message && <p className="auth-error">{message}</p>}
 
-        <form onSubmit={handlePlaceOrder} className="auth-form">
-          {/* ✅ Quantity */}
-          <div className="auth-field">
-            <label>Quantity</label>
-            <input
-              type="number"
-              min={1}
-              value={quantity}
-              onChange={(e) => setQuantity(Number(e.target.value))}
-              required
-            />
-          </div>
-
-          {/* ✅ Address Fields */}
-          <div className="auth-field">
-            <label>Address</label>
-            <input
-              value={address.address}
-              onChange={(e) =>
-                setAddress({ ...address, address: e.target.value })
-              }
-              required
-            />
-          </div>
-
-          <div className="auth-field">
-            <label>City</label>
-            <input
-              value={address.city}
-              onChange={(e) =>
-                setAddress({ ...address, city: e.target.value })
-              }
-              required
-            />
-          </div>
-
-          <div className="auth-field">
-            <label>State</label>
-            <input
-              value={address.state}
-              onChange={(e) =>
-                setAddress({ ...address, state: e.target.value })
-              }
-              required
-            />
-          </div>
-
-          <div className="auth-field">
-            <label>Country</label>
-            <input
-              value={address.country}
-              onChange={(e) =>
-                setAddress({ ...address, country: e.target.value })
-              }
-              required
-            />
-          </div>
-
-          <div className="auth-field">
-            <label>Zipcode</label>
-            <input
-              value={address.zipcode}
-              onChange={(e) =>
-                setAddress({ ...address, zipcode: e.target.value })
-              }
-              required
-            />
-          </div>
-
-          <button type="submit" disabled={loading} className="auth-btn">
-            {loading ? "Placing Order..." : "Confirm Order"}
-          </button>
-        </form>
-      </div>
-    </div>
-  );
+ <form onSubmit={handlePlaceOrder} className="auth-form">
+ {/* ✅ Quantity */}
+ <div className="auth-field">
+ <label>Quantity</label>
+ <input
+ type="number"
+ min={1}
+ value={quantity}
+                onChange={(e) => setQuantity(Number(e.target.value))}
+                required
+              />
+            </div>
+ {/* ✅ Address Fields */}
+ <div className="auth-field">
+ <label>Address</label>
+ <input
+ value={address.address}
+ onChange={(e) =>
+ setAddress({ ...address, address: e.target.value })
+                }
+                required
+              />
+            </div>
+<div className="auth-field">
+ <label>City</label>
+ <input
+ value={address.city}
+ onChange={(e) =>
+ setAddress({ ...address, city: e.target.value })
+                }
+                required
+              />
+            </div>
+<div className="auth-field">
+ <label>State</label>
+ <input
+ value={address.state}
+ onChange={(e) =>
+ setAddress({ ...address, state: e.target.value })
+                }
+                required
+              />
+            </div>
+ <div className="auth-field">
+ <label>Country</label>
+ <input
+value={address.country}
+onChange={(e) =>
+ setAddress({ ...address, country: e.target.value })
+                }
+                required
+              />
+            </div>
+<div className="auth-field">
+ <label>Zipcode</label>
+ <input
+ value={address.zipcode}
+ onChange={(e) =>
+ setAddress({ ...address, zipcode: e.target.value })
+                }
+                required
+              />
+            </div>
+ {/* Using the visually stronger .btn-primary class */}
+ <button type="submit" disabled={loading} className="btn-primary mt-4">
+ {loading ? "Placing Order..." : "Confirm Order"}
+ </button>
+ </form>
+ </div>
+ </div>
+</div>
+ );
 }

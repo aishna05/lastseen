@@ -1423,3 +1423,165 @@ select:focus {
     color: var(--text-muted);
     margin-bottom: 1rem;
 }
+/* ===============================
+    ORDERS PAGE - ELEGANT VINTAGE 
+================================ */
+
+.orders-container {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+    max-width: 1200px; /* Slightly wider than page-shell for the grid */
+}
+
+.order-heading {
+    /* Reusing global Cinzel style for H1 */
+    font-size: clamp(2.2rem, 4vw, 3.2rem);
+    text-align: center;
+    margin-bottom: 2rem;
+    color: var(--primary-dark);
+}
+
+.order-empty {
+    text-align: center;
+    font-size: var(--fs-lg);
+    color: var(--text-muted);
+    padding: 3rem;
+    border: 1px dashed var(--border-subtle);
+    border-radius: var(--radius-md);
+    background: var(--bg-elevated);
+    margin: 2rem auto;
+}
+
+.order-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 2.5rem;
+}
+
+/* Base Card for each Order (Reusing .card class) */
+.order-card {
+    /* .card styling provides background, shadow, and border */
+    padding: 1.5rem;
+    transition: none; /* Disable card hover animation for list clarity */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+}
+
+.order-card:hover {
+    transform: none; 
+    border-color: var(--border-subtle);
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-subtle);
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+}
+
+.order-id-label {
+    font-size: var(--fs-md);
+    font-weight: 600;
+    color: var(--primary-dark);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+/* Status Badges */
+.order-status {
+    padding: 0.3rem 0.7rem;
+    border-radius: var(--radius-pill);
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.status-cancelled {
+    background: #FFDDDD; /* Light Red/Pink */
+    color: #AB2626; /* Profile delete button color */
+}
+.status-placed {
+    background: #E8F8E8; /* Profile success background color */
+    color: #478F4F; /* Profile success text color */
+}
+.status-default {
+    /* For PENDING, PROCESSING, SHIPPED, etc. */
+    background: #FFF3CD; /* Light Yellow */
+    color: #A68D65; /* Primary Dark color */
+}
+
+/* Address */
+.order-address {
+    font-size: var(--fs-sm);
+    color: var(--text-main);
+    line-height: 1.4;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px dashed var(--border-subtle);
+}
+.order-address small {
+    display: block;
+    font-weight: 600;
+    color: var(--primary);
+    letter-spacing: 0.05em;
+    margin-bottom: 0.2rem;
+}
+
+/* Items List */
+.order-items-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.order-item {
+    display: flex;
+    justify-content: space-between;
+    font-size: var(--fs-sm);
+    color: var(--text-main);
+}
+.order-item-price {
+    font-weight: 600;
+    color: var(--primary-dark);
+}
+
+.order-total {
+    display: flex;
+    justify-content: space-between;
+    font-size: var(--fs-md);
+    padding-top: 1rem;
+    margin-top: 1rem;
+    border-top: 2px solid var(--primary-light);
+    color: var(--primary-dark);
+}
+
+
+/* Footer and Button */
+.order-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1.5rem;
+}
+
+.order-cancel-btn {
+    /* Reusing .btn-delete-account for the red/cancellation style */
+    padding: 0.6rem 1.2rem;
+    font-size: 0.75rem;
+}
+
+.order-cancellation-disabled {
+    font-size: var(--fs-sm);
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+@media (max-width: 600px) {
+    .order-grid {
+        grid-template-columns: 1fr;
+    }
+}

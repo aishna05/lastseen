@@ -86,150 +86,78 @@ export default function OrdersPage() {
     }
   };
 
-  if (loading) return <p style={styles.loading}>Loading your orders...</p>;
+  if (loading) return <p className="text-main p-8">Loading your orders...</p>;
 
   return (
-    <div style={styles.container}>
-      <h1 style={styles.heading}>Your Orders</h1>
+ <div className="orders-container page-shell">
+ <h1 className="order-heading">Your Orders</h1>
 
-      {orders.length === 0 && (
-        <p style={styles.empty}>You haven’t placed any orders yet.</p>
-      )}
+{orders.length === 0 && (
+ <p className="order-empty">You haven’t placed any orders yet.</p>
+ )}
 
-      <div style={styles.grid}>
-        {orders.map((order) => (
-          <div key={order.id} style={styles.card}>
-            <div style={styles.header}>
-              <span>Order #{order.id}</span>
-              <span
-                style={{
-                  ...styles.status,
-                  background:
-                    order.status === "CANCELLED"
-                      ? "#ffdddd"
-                      : order.status === "PLACED"
-                      ? "#ddffdd"
-                      : "#fff3cd",
-                }}
-              >
-                {order.status}
-              </span>
-            </div>
+<div className="order-grid">
+ {orders.map((order) => {
+            // Determine the status class
+            const statusClass = 
+                order.status === "CANCELLED" ? "status-cancelled" :
+                order.status === "PLACED" ? "status-placed" :
+                "status-default";
 
-            <p style={styles.address}>
-              📍 {order.address.address}, {order.address.city},{" "}
-              {order.address.state}, {order.address.country} -{" "}
-              {order.address.zipcode}
-            </p>
+            // Calculate total amount for display purposes (not strictly needed by API but good UI practice)
+            const totalAmount = order.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
-            <ul style={styles.items}>
-              {order.items.map((item) => (
-                <li key={item.id} style={styles.item}>
-                  <span>
-                    {item.product.title} × {item.quantity}
-                  </span>
-                  <span>₹{item.price * item.quantity}</span>
-                </li>
-              ))}
-            </ul>
+            return (
+                <div key={order.id} className="order-card card">
+                    <div className="order-header">
+                        <span className="order-id-label">Order #{order.id}</span>
+                        <span className={`order-status ${statusClass}`}>
+                            {order.status}
+                        </span>
+                    </div>
 
-            <div style={styles.footer}>
-              {["PLACED", "PENDING"].includes(order.status) ? (
-                <button
-                  style={styles.cancelBtn}
-                  disabled={cancelingId === order.id}
-                  onClick={() => cancelOrder(order.id)}
-                >
-                  {cancelingId === order.id ? "Cancelling..." : "Cancel Order"}
-                </button>
-              ) : (
-                <span style={styles.disabledText}>
-                  Cancellation not available
-                </span>
-              )}
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+                    <p className="order-address">
+                        <small>Shipping To:</small><br/>
+                        {order.address.address}, {order.address.city}, {order.address.state}, {order.address.country} - {order.address.zipcode}
+                    </p>
+
+                    <ul className="order-items-list">
+                        {order.items.map((item) => (
+                            <li key={item.id} className="order-item">
+                                <span>
+                                    {item.product.title} × {item.quantity}
+                                </span>
+                                <span className="order-item-price">
+                                    ₹{item.price * item.quantity}
+                                </span>
+                            </li>
+                        ))}
+                    </ul>
+                    
+                    <div className="order-total">
+                        <strong>Total Paid:</strong>
+                        <strong>₹{totalAmount.toFixed(2)}</strong>
+                    </div>
+
+                    <div className="order-footer">
+                        {["PLACED", "PENDING", "PROCESSING"].includes(order.status) ? (
+                            <button
+                                className="order-cancel-btn btn-delete-account"
+                                disabled={cancelingId === order.id}
+                                onClick={() => cancelOrder(order.id)}
+                            >
+                                {cancelingId === order.id ? "Cancelling..." : "Cancel Order"}
+                            </button>
+                        ) : (
+                            <span className="order-cancellation-disabled">
+                                Cancellation not available
+                            </span>
+                        )}
+                    </div>
+                </div>
+            );
+        })}
+</div>
+ </div>
+ );
 }
-
-/* ✅ Inline CSS Styling */
-const styles: { [key: string]: React.CSSProperties } = {
-  container: {
-    maxWidth: "1000px",
-    margin: "40px auto",
-    padding: "20px",
-    fontFamily: "Arial, sans-serif",
-  },
-  heading: {
-    textAlign: "center",
-    marginBottom: "30px",
-    fontSize: "28px",
-  },
-  grid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
-    gap: "20px",
-  },
-  card: {
-    border: "1px solid #ddd",
-    borderRadius: "12px",
-    padding: "15px",
-    background: "#fff",
-    boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
-  },
-  header: {
-    display: "flex",
-    justifyContent: "space-between",
-    fontWeight: "bold",
-    marginBottom: "10px",
-  },
-  status: {
-    padding: "4px 10px",
-    borderRadius: "8px",
-    fontSize: "12px",
-  },
-  address: {
-    fontSize: "14px",
-    color: "#555",
-    marginBottom: "10px",
-  },
-  items: {
-    listStyle: "none",
-    padding: 0,
-    margin: 0,
-  },
-  item: {
-    display: "flex",
-    justifyContent: "space-between",
-    padding: "6px 0",
-    borderBottom: "1px solid #eee",
-    fontSize: "14px",
-  },
-  footer: {
-    marginTop: "10px",
-    textAlign: "right",
-  },
-  cancelBtn: {
-    background: "#ff4d4f",
-    color: "#fff",
-    border: "none",
-    padding: "8px 14px",
-    borderRadius: "6px",
-    cursor: "pointer",
-  },
-  disabledText: {
-    color: "#aaa",
-    fontSize: "13px",
-  },
-  loading: {
-    textAlign: "center",
-    marginTop: "100px",
-  },
-  empty: {
-    textAlign: "center",
-    color: "#777",
-  },
-};
