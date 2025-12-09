@@ -14,7 +14,7 @@ const Header: React.FC = () => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [cartCount, setCartCount] = useState(0);
 
-  // Fetch cart count from API
+  // ✅ Fetch total cart quantity
   const fetchCartCount = async () => {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -26,7 +26,12 @@ const Header: React.FC = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
-      setCartCount(Array.isArray(data) ? data.length : 0);
+      if (Array.isArray(data)) {
+        const totalQuantity = data.reduce((sum, item) => sum + item.quantity, 0);
+        setCartCount(totalQuantity);
+      } else {
+        setCartCount(0);
+      }
     } catch (err) {
       console.error(err);
       setCartCount(0);
