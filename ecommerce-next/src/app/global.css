@@ -1369,3 +1369,57 @@ select:focus {
     border-color: var(--text-main);
     color: var(--text-main);
 }
+/* --- Additional Status Classes for Seller View --- */
+
+/* Delivered Status (Success color) */
+.status-delivered {
+    background: #E8F8E8; /* Profile success background color */
+    color: #478F4F; /* Profile success text color */
+}
+
+/* Shipped/Processing (Primary Dark color) */
+.status-shipped-processing {
+    background: #D4BC84; /* Light Gold */
+    color: var(--primary-dark);
+}
+
+/* Seller Item List Adjustments */
+.section-title-small {
+    font-size: var(--fs-md);
+    color: var(--primary);
+    margin: 1.5rem 0 0.8rem 0;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+}
+
+.order-item.seller-item {
+    font-size: var(--fs-sm);
+    padding-bottom: 0.5rem;
+    border-bottom: 1px dashed var(--border-subtle);
+}
+
+.order-item.seller-item .product-title-item {
+    font-weight: 500;
+    color: var(--text-main);
+}
+
+.order-total-revenue {
+    border-bottom: 1px solid var(--border-subtle);
+    padding-bottom: 1rem;
+}
+.order-total-revenue p {
+    margin: 0.3rem 0;
+    font-size: var(--fs-sm);
+    color: var(--text-main);
+}
+.order-total-revenue strong {
+    font-size: var(--fs-md);
+    color: var(--text-main);
+}
+.order-date-time {
+    display: block;
+    font-size: var(--fs-sm);
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+}

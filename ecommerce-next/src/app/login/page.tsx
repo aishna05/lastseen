@@ -44,8 +44,16 @@ export default function LoginPage() {
       setSuccess("Login successful! Redirecting...");
 
       setTimeout(() => {
-        router.push("/");
-      }, 1500);
+  if (data.user.role === "SELLER") {
+    router.push("/seller/dashboard");
+    return;
+  } 
+  else if (data.user.role === "CUSTOMER") {
+    router.push("/");
+    return;
+  }
+}, 1500);
+
     } catch (err) {
       setError("Something went wrong. Try again.");
     } finally {
