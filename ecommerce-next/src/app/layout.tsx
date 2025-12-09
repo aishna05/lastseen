@@ -1,8 +1,8 @@
+// src/app/layout.tsx
 import type { Metadata } from "next";
 import "./global.css";
 import Providers from "./providers";
-import GlobalLoader from "@/components/GlobalLoader";
-import Header from "@/components/Header";
+import RoleBasedHeader from "@/components/RoleBasedHeader";
 
 export const metadata: Metadata = {
   title: "My Ecommerce",
@@ -16,11 +16,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      {/* <GlobalLoader /> */}
       <body>
-        <header><Header /></header>
+        <RoleBasedHeader />
         <Providers>{children}</Providers>
-        {/* <GlobalLoader /> */}
       </body>
     </html>
   );

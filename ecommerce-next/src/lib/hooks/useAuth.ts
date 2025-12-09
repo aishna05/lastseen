@@ -4,6 +4,7 @@
 import { useState, useEffect } from 'react';
 
 interface User {
+  role: string;
   isLoggedIn: boolean;
   email?: string;
   name?: string;
