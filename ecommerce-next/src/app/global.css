@@ -1585,3 +1585,235 @@ select:focus {
         grid-template-columns: 1fr;
     }
 }
+/* ===============================
+   EXTRA RESPONSIVE ENHANCEMENTS
+   (Add at the END of your CSS file)
+================================ */
+
+/* 1) Ultra-wide screens – center content nicely */
+@media (min-width: 1400px) {
+  .page-shell,
+  .contact-page-wrapper,
+  .about-page-wrapper,
+  .profile-container,
+  .orders-container,
+  .seller-dashboard-grid,
+  .product-detail-page {
+    max-width: 1280px;
+    margin-inline: auto;
+  }
+}
+
+/* 2) Global small-screen padding + typography */
+@media (max-width: 768px) {
+  body {
+    font-size: 0.95rem;
+  }
+
+  .page-shell,
+  .contact-page-wrapper,
+  .about-page-wrapper,
+  .orders-container,
+  .seller-dashboard-grid,
+  .product-detail-page,
+  .profile-container {
+    padding-inline: 1rem;
+    padding-block: 2rem;
+  }
+
+  .card,
+  .order-card,
+  .profile-card,
+  .auth-card {
+    padding: 1.25rem 1rem;
+  }
+
+  .section-title,
+  .order-heading,
+  .contact-heading {
+    text-align: center;
+  }
+
+  .product-grid {
+    gap: 1.5rem;
+  }
+}
+
+/* 3) Very small phones (≤ 480px) */
+@media (max-width: 480px) {
+  .auth-page {
+    padding: 1rem 0.75rem;
+  }
+
+  .auth-card {
+    max-width: 100%;
+    padding: 1.5rem 1.25rem;
+  }
+
+  .auth-title {
+    font-size: 1.4rem;
+    letter-spacing: 0.12em;
+  }
+
+  .product-card {
+    padding: 0.7rem;
+  }
+
+  .product-title {
+    font-size: 0.85rem;
+    letter-spacing: 0.12em;
+  }
+
+  .product-price {
+    font-size: 0.95rem;
+  }
+
+  .product-view-btn {
+    font-size: 0.7rem;
+    padding: 0.45rem;
+  }
+
+  .product-detail-layout {
+    gap: 1.5rem;
+  }
+
+  .product-detail-info {
+    padding: 1.25rem;
+  }
+
+  .contact-subheading {
+    font-size: var(--fs-md);
+    text-align: left;
+  }
+
+  .profile-card {
+    padding: 1.4rem 1.1rem;
+  }
+
+  .profile-title {
+    font-size: 1.3rem;
+    letter-spacing: 0.08em;
+  }
+
+  .seller-dashboard-grid {
+    padding-inline: 1rem;
+    padding-block: 2rem;
+    gap: 1.5rem;
+  }
+
+  .card-soft {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .order-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .order-card {
+    padding: 1.25rem 1rem;
+  }
+
+  .order-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+  }
+
+  .order-total {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+
+  .order-footer {
+    justify-content: flex-start;
+  }
+}
+
+/* 4) Tiny devices (≤ 360px) – extra safety */
+@media (max-width: 360px) {
+  .site-header-inner {
+    padding-inline: 0.5rem;
+  }
+
+  .site-header nav {
+    gap: 0.5rem;
+  }
+
+  .site-header nav a {
+    font-size: 0.7rem;
+  }
+
+  .btn-primary,
+  .btn-ghost {
+    font-size: 0.7rem;
+    padding: 0.45rem 0.9rem;
+  }
+
+  .product-title {
+    font-size: 0.8rem;
+  }
+
+  .section-title,
+  .contact-heading,
+  .order-heading {
+    font-size: 1.2rem;
+    letter-spacing: 0.08em;
+  }
+}
+/* ============================
+   NAVBAR – MOBILE FIX
+   Keep nav in a single row
+============================ */
+
+/* For mobiles */
+@media (max-width: 640px) {
+  .site-header-inner {
+      /* Keep logo + nav in one row */
+      flex-direction: row;
+      align-items: center;
+      padding-inline: 0.75rem;
+      gap: 0.5rem;
+  }
+
+  .site-logo {
+      font-size: 1.1rem;
+      letter-spacing: 0.08em;
+      white-space: nowrap; /* Prevent logo from breaking */
+  }
+
+  .site-header nav {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: nowrap;      /* 🔑 Prevent items from going to 2nd line */
+      overflow-x: auto;       /* Allow horizontal scroll if too many links */
+      -webkit-overflow-scrolling: touch;
+  }
+
+  .site-header nav a {
+      white-space: nowrap;    /* 🔑 Keep each link on a single line */
+      font-size: 0.75rem;
+      padding: 0.25rem 0.1rem;
+  }
+
+  /* Optional: hide big buttons on very small screens to save space */
+  .site-header nav .btn-primary,
+  .site-header nav .btn-ghost {
+      padding: 0.35rem 0.8rem;
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+  }
+}
+
+/* Extra tiny screens – be more aggressive */
+@media (max-width: 400px) {
+  .site-header nav .btn-primary,
+  .site-header nav .btn-ghost {
+      display: none; /* Hide auth buttons if space is too tight */
+  }
+}
