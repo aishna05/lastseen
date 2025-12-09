@@ -2,33 +2,30 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import jwt from "jsonwebtoken";
 
-// CREATE Product (SELLER ONLY)
+// ================== CREATE PRODUCT (SELLER ONLY) ==================
 export async function POST(req: NextRequest) {
   try {
-    // 1. Token check
+    // ---------- TOKEN CHECK ----------
     const authHeader = req.headers.get("authorization");
-    if (!authHeader)
-      return NextResponse.json(
-        { message: "No token provided" },
-        { status: 401 }
-      );
+    if (!authHeader) {
+      return NextResponse.json({ message: "No token provided" }, { status: 401 });
+    }
 
     const token = authHeader.startsWith("Bearer ")
       ? authHeader.slice(7)
       : authHeader;
+
     const secret = process.env.JWT_SECRET;
-    if (!secret)
-      return NextResponse.json(
-        { message: "JWT secret not set" },
-        { status: 500 }
-      );
+    if (!secret) {
+      return NextResponse.json({ message: "JWT secret not set" }, { status: 500 });
+    }
 
     const decoded = jwt.verify(token, secret) as {
       userId: number;
       role: string;
     };
 
-    // 2. SELLER only
+    // ---------- SELLER ONLY ----------
     if (decoded.role !== "SELLER") {
       return NextResponse.json(
         { message: "Only SELLER can create product" },
@@ -36,34 +33,86 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // ---------- BODY ----------
     const {
       title,
       description,
       details,
       price,
-      hsn,
       imageUrls,
+      availableSizes,
+      sizeStock,
+      colors,
       categoryId,
       subcategoryId,
     } = await req.json();
 
-    if (!title || !description || !price || !categoryId || !subcategoryId) {
+    // ---------- VALIDATION ----------
+    if (
+      !title ||
+      !description ||
+      !price ||
+      !categoryId ||
+      !subcategoryId ||
+      !availableSizes ||
+      !sizeStock ||
+      !colors
+    ) {
       return NextResponse.json(
         { error: "Missing required fields" },
         { status: 400 }
       );
     }
 
+    // ---------- FK VALIDATION (VERY IMPORTANT) ----------
+    const sellerExists = await prisma.user.findUnique({
+      where: { id: decoded.userId },
+    });
+
+    if (!sellerExists) {
+      return NextResponse.json(
+        { error: "Invalid seller ID" },
+        { status: 400 }
+      );
+    }
+
+    const categoryExists = await prisma.category.findUnique({
+      where: { id: Number(categoryId) },
+    });
+
+    if (!categoryExists) {
+      return NextResponse.json(
+        { error: "Invalid category ID" },
+        { status: 400 }
+      );
+    }
+
+    const subcategoryExists = await prisma.subcategory.findUnique({
+      where: { id: Number(subcategoryId) },
+    });
+
+    if (!subcategoryExists) {
+      return NextResponse.json(
+        { error: "Invalid subcategory ID" },
+        { status: 400 }
+      );
+    }
+
+    // ---------- CREATE PRODUCT ----------
     const product = await prisma.product.create({
       data: {
         title,
         description,
         details,
-        price,
-        hsn,
+        price: Number(price),
+
         imageUrls: JSON.stringify(imageUrls || []),
-        categoryId,
-        subcategoryId,
+        availableSizes: JSON.stringify(availableSizes),
+        sizeStock: JSON.stringify(sizeStock),
+        colors: JSON.stringify(colors),
+
+        categoryId: Number(categoryId),
+        subcategoryId: Number(subcategoryId),
         sellerId: decoded.userId,
       },
       select: {
@@ -72,7 +121,6 @@ export async function POST(req: NextRequest) {
         description: true,
         details: true,
         price: true,
-        hsn: true,
         imageUrls: true,
         categoryId: true,
         subcategoryId: true,
@@ -85,6 +133,7 @@ export async function POST(req: NextRequest) {
       { status: 201 }
     );
   } catch (error: any) {
+    console.error("CREATE PRODUCT ERROR:", error);
     return NextResponse.json(
       { error: "Failed to create product", message: error.message },
       { status: 400 }
@@ -92,7 +141,7 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// LIST all Products (no auth)
+// ================== GET ALL PRODUCTS ==================
 export async function GET() {
   try {
     const products = await prisma.product.findMany({
@@ -109,7 +158,6 @@ export async function GET() {
       description: p.description,
       details: p.details,
       price: p.price,
-      hsn: p.hsn,
       imageUrls: JSON.parse(p.imageUrls),
       category: p.category,
       subcategory: p.subcategory,

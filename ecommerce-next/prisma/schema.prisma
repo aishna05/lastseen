@@ -37,36 +37,29 @@ model Product {
   description  String     @map("description")
   details      String?    @map("details")
   price        Float      @map("price")
+  hsn          String?    @map("hsn")   // ✅ ✅ ✅ ADDED FIX
 
-  // --- ADDED CLOTHING ATTRIBUTES -------------------
   discount     Float?     @default(0) @map("discount")
   brand        String?    @map("brand")
-  gender       String     @default("UNISEX") @map("gender") // MEN, WOMEN, KIDS, UNISEX
+  gender       String     @default("UNISEX") @map("gender")
   material     String?    @map("material")
   fabricCare   String?    @map("fabric_care")
-  occasion     String?    @map("occasion")  // formal, casual, party etc.
+  occasion     String?    @map("occasion")
   modelNumber  String?    @map("model_number")
   sku          String?    @unique @map("sku") 
 
-  // Sizes & stock for clothing (stored as JSON)
-  availableSizes Json @map("available_sizes")  // ["S","M","L","XL"]
-  sizeStock      Json @map("size_stock")       // { "S": 20, "M": 15, "L": 10 }
+  availableSizes String @map("available_sizes")
+  sizeStock      String @map("size_stock")
+  colors         String @map("colors")
 
-  // Colors
-  colors        Json      @map("colors") // ["Black", "Blue"]
+  imageUrls     String    @map("image_urls")
 
-  // More images
-  imageUrls     String    @map("image_urls") // store JSON: ["img1","img2"]
+  weight        Float?    @map("weight")
+  dimensions    String?   @map("dimensions")
 
-  // Shipping Details
-  weight        Float?    @map("weight")      // in grams
-  dimensions    String?   @map("dimensions")  // "20x15x2 cm"
-
-  // Business / Seller Info
   returnPolicy  String?   @map("return_policy")
   sellerNotes   String?   @map("seller_notes")
 
-  // Relations
   seller        User       @relation("SellerProducts", fields: [sellerId], references: [id])
   sellerId      Int        @map("seller_id")
 
@@ -81,6 +74,7 @@ model Product {
 
   @@map("products")
 }
+
 
 
 model CartItem {
