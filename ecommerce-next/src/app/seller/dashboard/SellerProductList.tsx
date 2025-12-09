@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useSession } from "next-auth/react";
 
 type Product = {
   id: number;
@@ -18,7 +17,6 @@ export default function SellerProductList() {
     discount: "",
   });
   const [editingId, setEditingId] = useState<number | null>(null);
-  const { data: session } = useSession();
 
   async function fetchProducts() {
     const res = await fetch("/api/seller/products");
@@ -32,6 +30,7 @@ export default function SellerProductList() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+
     const body: any = {
       title: form.title,
       price: parseFloat(form.price),
@@ -39,24 +38,24 @@ export default function SellerProductList() {
     };
 
     if (editingId) {
-      // update
       const res = await fetch(`/api/seller/products/${editingId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
+
       if (res.ok) {
         setEditingId(null);
         setForm({ title: "", price: "", discount: "" });
         fetchProducts();
       }
     } else {
-      // create
       const res = await fetch("/api/seller/products", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
+
       if (res.ok) {
         setForm({ title: "", price: "", discount: "" });
         fetchProducts();
@@ -75,95 +74,105 @@ export default function SellerProductList() {
 
   async function handleDelete(id: number) {
     if (!confirm("Delete this product?")) return;
+
     const res = await fetch(`/api/seller/products/${id}`, {
       method: "DELETE",
     });
+
     if (res.ok) {
       fetchProducts();
     }
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-[1.5fr_1fr] gap-6">
+    <div className="seller-dashboard-grid">
       <div>
-        <h2 className="text-xl font-semibold mb-2">Your Products</h2>
-        <ul className="space-y-2">
-          {Array.isArray(products) && products.map((p) => (
-            <li
-              key={p.id}
-              className="border rounded p-3 flex justify-between items-center"
-            >
-              <div>
-                <p className="font-medium">{p.title}</p>
-                <p className="text-sm">
-                  Price: ₹{p.price}{" "}
-                  {p.discount
-                    ? `(Discount: ${p.discount}% → Final: ₹${
-                        p.price * (1 - p.discount / 100)
-                      })`
-                    : null}
-                </p>
-              </div>
-              <div className="flex gap-2">
-                <button
-                  className="text-sm underline"
-                  onClick={() => handleEdit(p)}
-                >
-                  Edit
-                </button>
-                <button
-                  className="text-sm text-red-600 underline"
-                  onClick={() => handleDelete(p.id)}
-                >
-                  Delete
-                </button>
-              </div>
-            </li>
-          ))}
+        <h2 className="section-title">Your Products</h2>
+
+        <ul className="product-list-container">
+          {Array.isArray(products) &&
+            products.map((p) => (
+              <li key={p.id} className="product-list-item card-soft">
+                <div>
+                  <p className="product-item-title">{p.title}</p>
+
+                  <p className="product-item-price-info">
+                    Price:{" "}
+                    <span className="text-primary-dark">₹{p.price}</span>{" "}
+                    {p.discount
+                      ? `(Discount: ${p.discount}% → Final: ₹${(
+                          p.price *
+                          (1 - p.discount / 100)
+                        ).toFixed(2)})`
+                      : null}
+                  </p>
+                </div>
+
+                <div className="flex gap-2">
+                  <button className="btn-link" onClick={() => handleEdit(p)}>
+                    Edit
+                  </button>
+
+                  <button
+                    className="btn-link-delete"
+                    onClick={() => handleDelete(p.id)}
+                  >
+                    Delete
+                  </button>
+                </div>
+              </li>
+            ))}
         </ul>
       </div>
 
       <div>
-        <h2 className="text-xl font-semibold mb-2">
-          {editingId ? "Edit Product" : "Add Product"}
+        <h2 className="section-title">
+          {editingId ? "Edit Product" : "Add New Product"}
         </h2>
-        <form
-          onSubmit={handleSubmit}
-          className="border p-4 rounded space-y-3"
-        >
+
+        <form onSubmit={handleSubmit} className="card product-form">
           <input
             type="text"
             placeholder="Title"
-            className="w-full border px-3 py-2 rounded"
             value={form.title}
             onChange={(e) =>
               setForm((f) => ({ ...f, title: e.target.value }))
             }
+            required
           />
+
           <input
             type="number"
             placeholder="Price"
-            className="w-full border px-3 py-2 rounded"
             value={form.price}
             onChange={(e) =>
               setForm((f) => ({ ...f, price: e.target.value }))
             }
+            required
           />
+
           <input
             type="number"
             placeholder="Discount (%) - optional"
-            className="w-full border px-3 py-2 rounded"
             value={form.discount}
             onChange={(e) =>
               setForm((f) => ({ ...f, discount: e.target.value }))
             }
           />
-          <button
-            type="submit"
-            className="w-full py-2 rounded bg-black text-white font-medium"
-          >
-            {editingId ? "Update" : "Create"}
+
+          <button type="submit" className="btn-primary mt-2">
+            {editingId ? "Update Product" : "Create Product"}
           </button>
+
+          {editingId && (
+            <button
+              type="button"
+              className="btn-ghost-cancel"
+              onClick={() => setEditingId(null)}
+            >
+              Cancel Edit
+            </button>
+          )}
         </form>
       </div>
     </div>

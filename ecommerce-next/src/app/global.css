@@ -1250,3 +1250,122 @@ select:focus {
     opacity: 0.6;
     cursor: not-allowed;
 }
+/* ===============================
+    SELLER PRODUCT LIST & FORM
+================================ */
+
+/* Layout Grid - Replaces Tailwind grid-cols-1 md:grid-cols-[1.5fr_1fr] */
+.seller-dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding: 2rem clamp(1rem, 4vw, 2.5rem);
+    max-width: 1120px;
+    margin: 0 auto;
+}
+@media (min-width: 768px) {
+    .seller-dashboard-grid {
+        grid-template-columns: 1.5fr 1fr;
+        gap: 2.5rem;
+    }
+}
+
+/* Section Title */
+.section-title {
+    /* Uses global H2/H3 styling */
+    font-family: "Cinzel", serif;
+    font-size: var(--fs-lg); 
+    color: var(--primary-dark);
+    margin-bottom: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+}
+
+/* Product List Container */
+.product-list-container {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+/* Soft Card for List Items */
+.card-soft {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    background: var(--bg-elevated);
+    transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+
+.card-soft:hover {
+    background: var(--bg-soft); /* Subtle color change on hover */
+    border-color: var(--primary-light);
+}
+
+/* Product Text Styles */
+.product-item-title {
+    font-size: var(--fs-md);
+    font-weight: 600;
+    color: var(--text-main);
+    margin: 0 0 0.2rem 0;
+}
+.product-item-price-info {
+    font-size: var(--fs-sm);
+    color: var(--text-muted);
+}
+.text-primary-dark {
+    color: var(--primary-dark);
+    font-weight: 600;
+}
+
+/* Link-Style Buttons (Edit/Delete) */
+.btn-link {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: var(--fs-sm);
+    color: var(--primary); /* Gold link color */
+    text-decoration: underline;
+    transition: color var(--transition-fast);
+}
+.btn-link:hover {
+    color: var(--primary-strong);
+}
+
+.btn-link-delete {
+    composes: btn-link; /* Inherit link styles */
+    color: #AB2626; /* Elegant red for delete */
+}
+.btn-link-delete:hover {
+    color: #ff6b4a;
+}
+
+/* Product Form */
+.product-form {
+    /* Inherits main card styles for the box */
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.5rem;
+}
+/* Inputs inherit from global 'input' selector */
+
+/* Cancel Edit Button */
+.btn-ghost-cancel {
+    composes: btn-ghost; /* Inherit ghost button style */
+    border: 1px solid var(--text-muted);
+    color: var(--text-muted);
+    margin-top: 0.5rem;
+    background: none;
+}
+.btn-ghost-cancel:hover {
+    background: var(--bg-soft);
+    border-color: var(--text-main);
+    color: var(--text-main);
+}

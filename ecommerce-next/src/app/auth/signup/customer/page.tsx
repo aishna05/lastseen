@@ -4,14 +4,19 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function CustomerSignupPage() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const router = useRouter();
+ const [name, setName] = useState("");
+ const [email, setEmail] = useState("");
+ const [password, setPassword] = useState("");
+ const [loading, setLoading] = useState(false);
+ const [error, setError] = useState("");
+ const [success, setSuccess] = useState("");
+ const router = useRouter();
 
+   async function handleSubmit(e: React.FormEvent) {   e.preventDefault();
+    setLoading(true);
+    setError("");
+    setSuccess("");
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
     const res = await fetch("/api/auth/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -19,54 +24,61 @@ export default function CustomerSignupPage() {
     });
 
     if (res.ok) {
-      router.push("/login");
+        setSuccess("Signup successful! Redirecting to login...");
+     router.push("/login");
     } else {
-      const data = await res.json();
-      alert(data.message || "Error");
+     const data = await res.json();
+     setError(data.message || "Signup failed");
     }
+    setLoading(false);
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <form
-        onSubmit={handleSubmit}
-        className="border p-6 rounded w-full max-w-md space-y-4"
-      >
-        <h1 className="text-2xl font-semibold text-center">
-          Customer Signup
-        </h1>
+    <div className="auth-page">
+      <div className="auth-card">
+        <h2 className="auth-title">Customer Sign Up</h2>
+        <p className="auth-subtitle">Create your account to start shopping</p>
 
-        <input
-          type="text"
-          placeholder="Name"
-          className="w-full border px-3 py-2 rounded"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
+        {error && <p className="auth-error">{error}</p>}
+        {success && <p className="auth-success">{success}</p>}
 
-        <input
-          type="email"
-          placeholder="Email"
-          className="w-full border px-3 py-2 rounded"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+      <form onSubmit={handleSubmit} className="auth-form">
+ <div className="auth-field">
+<label>Name</label>
+ <input
+ type="text"
+ value={name}
+ onChange={(e) => setName(e.target.value)}
+ required
+ />
+ </div>
+ <div className="auth-field">
+ <label>Email Address</label>
+ <input
+ type="email"
+ value={email}
+ onChange={(e) => setEmail(e.target.value)}
+ required
+ />
+ </div>
+ <div className="auth-field">
+ <label>Password</label>
+ <input
+ type="password"
+ value={password}
+ onChange={(e) => setPassword(e.target.value)}
+ required
+ />
+ </div>
+<button type="submit" disabled={loading} className="auth-btn">
+ {loading ? "Signing up..." : "Sign Up"}
+ </button>
+ </form>
 
-        <input
-          type="password"
-          placeholder="Password"
-          className="w-full border px-3 py-2 rounded"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-
-        <button
-          type="submit"
-          className="w-full py-2 rounded bg-black text-white font-medium"
-        >
-          Sign Up
-        </button>
-      </form>
+        <div className="auth-links">
+            <a href="/login">Already have an account? Log in</a>
+        </div>
+ </div>
     </div>
   );
 }
