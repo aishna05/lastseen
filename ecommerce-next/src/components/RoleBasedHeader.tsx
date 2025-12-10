@@ -4,7 +4,6 @@ import React from "react";
 import { useAuth } from "@/lib/hooks/useAuth";
 import Header from "@/components/Header"; 
 import SellerHeader from "@/components/SellerHeader";
-// If you ever use SellerHeader in future, import it similarly.
 
 export default function RoleBasedHeader() {
   const { user, isLoading } = useAuth();
@@ -16,20 +15,11 @@ export default function RoleBasedHeader() {
     );
   }
 
-  // If unified Header handles all roles:
-  // return <Header />;
-
-  
-  // If you want to switch based on role in the future:
-
-  if (user) {
-    if (user.role === "SELLER" || user.role === "ADMIN") {
-      return <SellerHeader />;
-    }
-    return <Header />; // Customer
+  // Check if user is logged in and has SELLER or ADMIN role
+  if (user?.isLoggedIn && (user.role === "SELLER" || user.role === "ADMIN")) {
+    return <SellerHeader />;
   }
 
-  // Not logged in → public header
+  // For customers and non-logged-in users, show regular header
   return <Header />;
-  
 }
