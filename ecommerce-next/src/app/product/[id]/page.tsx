@@ -218,8 +218,8 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 {availableSizes.map((size) => {
                   const qty = sizeStock?.[size] ?? 0;
                   return (
-                    <span key={size} className="size-pill">
-                      <span>{size}</span>
+                    <span key={size}>
+                      <span className="btn-primary">{size}</span>
                     </span>
                   );
                 })}
@@ -227,7 +227,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
             </div>
           )}
 
-          {/* COLORS */}
+          {/* COLORS
           {colors.length > 0 && (
             <div className="product-detail-description">
               <h2>Available colours</h2>
@@ -239,7 +239,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 ))}
               </div>
             </div>
-          )}
+          )} */}
 
           {/* OPTIONAL seller notes – you might keep this internal only, so comment if not needed */}
           {product.sellerNotes && (
