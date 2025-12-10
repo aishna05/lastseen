@@ -31,7 +31,7 @@ export default function CheckoutPage() {
         key: data.key, // NEXT_PUBLIC_RAZORPAY_KEY_ID
         amount: data.amount, // in paise
         currency: data.currency,
-        name: "Your Brand Name",
+        name: "LastSeen",
         description: "Order payment",
         order_id: data.orderId,
         theme: { color: "#B08B48" }, // optional: match your gold

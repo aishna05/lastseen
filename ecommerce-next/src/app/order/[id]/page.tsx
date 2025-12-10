@@ -96,7 +96,7 @@ async function createAddress() {
       await addToCart();
       await placeOrder(addressId);
 
-      router.push("/orders");
+      router.push("/checkout");
     } catch (err: any) {
       setMessage(err.message);
     } finally {

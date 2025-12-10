@@ -128,7 +128,7 @@ export default function CartPage() {
 
       alert("Order placed successfully!");
       window.dispatchEvent(new Event("cartChange"));
-      router.push("/orders");
+      router.push("/checkout");
     } catch (err: any) {
       console.error("ORDER ERROR:", err);
       alert(err.message || "Checkout failed");
