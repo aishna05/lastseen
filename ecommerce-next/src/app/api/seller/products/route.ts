@@ -1,60 +1,99 @@
-// File: pages/api/seller/products/index.ts
-import type { NextApiRequest, NextApiResponse } from 'next';
-import { getSession } from 'next-auth/react';
-import  { prisma } from '@/lib/prisma'; // create a prisma client in lib/prisma.ts
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+import { verifyToken } from "@/lib/auth";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const session = await getSession({ req });
-  if (!session) return res.status(401).json({ error: 'Unauthorized' });
-  const role = (session.user as any).role;
-  if (role !== 'SELLER') return res.status(403).json({ error: 'Forbidden' });
+// ✅ GET Seller Products
+export async function GET(req: NextRequest) {
+  try {
+    const authHeader = req.headers.get("authorization");
 
-  const userId = (session.user as any).id;
+    const result = verifyToken(authHeader);
 
-  if (req.method === 'GET') {
-    // return products for this seller
-    const products = await prisma.product.findMany({ where: { sellerId: Number(userId) } });
-    return res.status(200).json(products);
-  }
-
-  if (req.method === 'POST') {
-    try {
-      const body = req.body;
-      const product = await prisma.product.create({
-        data: {
-          title: body.title,
-          description: body.description || '',
-          details: body.details || null,
-          price: Number(body.price),
-          discount: body.discount ?? 0,
-          brand: body.brand || null,
-          gender: body.gender || 'UNISEX',
-          material: body.material || null,
-          fabricCare: body.fabricCare || null,
-          occasion: body.occasion || null,
-          modelNumber: body.modelNumber || null,
-          sku: body.sku || null,
-          availableSizes: body.availableSizes ? JSON.stringify(body.availableSizes) : JSON.stringify([]),
-          sizeStock: body.sizeStock ? JSON.stringify(body.sizeStock) : JSON.stringify({}),
-          colors: body.colors ? JSON.stringify(body.colors) : JSON.stringify([]),
-          imageUrls: body.imageUrls ? JSON.stringify(body.imageUrls) : JSON.stringify([]),
-          weight: body.weight ?? null,
-          dimensions: body.dimensions ?? null,
-          returnPolicy: body.returnPolicy ?? null,
-          sellerNotes: body.sellerNotes ?? null,
-          sellerId: Number(userId),
-          categoryId: body.categoryId ?? 1,
-          subcategoryId: body.subcategoryId ?? 1,
-        }
-      });
-      return res.status(201).json(product);
-    } catch (err: any) {
-      console.error(err);
-      return res.status(500).json({ error: 'Create failed' });
+    if (!result.valid) {
+      return NextResponse.json(
+        { error: result.error },
+        { status: 401 }
+      );
     }
-  }
 
-  return res.status(405).end();
+    if (result.decoded.role !== "SELLER") {
+      return NextResponse.json(
+        { error: "Forbidden" },
+        { status: 403 }
+      );
+    }
+
+    const products = await prisma.product.findMany({
+      where: { sellerId: result.decoded.userId },
+    });
+
+    return NextResponse.json(products, { status: 200 });
+  } catch (error) {
+    console.error("GET /seller/products error:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch products" },
+      { status: 500 }
+    );
+  }
 }
 
+// ✅ CREATE Product
+export async function POST(req: NextRequest) {
+  try {
+    const authHeader = req.headers.get("authorization");
 
+    const result = verifyToken(authHeader);
+
+    if (!result.valid) {
+      return NextResponse.json(
+        { error: result.error },
+        { status: 401 }
+      );
+    }
+
+    if (result.decoded.role !== "SELLER") {
+      return NextResponse.json(
+        { error: "Forbidden" },
+        { status: 403 }
+      );
+    }
+
+    const body = await req.json();
+
+    const product = await prisma.product.create({
+      data: {
+        title: body.title,
+        description: body.description || "",
+        details: body.details || null,
+        price: Number(body.price),
+        discount: body.discount ?? 0,
+        brand: body.brand || null,
+        gender: body.gender || "UNISEX",
+        material: body.material || null,
+        fabricCare: body.fabricCare || null,
+        occasion: body.occasion || null,
+        modelNumber: body.modelNumber || null,
+        sku: body.sku || null,
+        availableSizes: JSON.stringify(body.availableSizes || []),
+        sizeStock: JSON.stringify(body.sizeStock || {}),
+        colors: JSON.stringify(body.colors || []),
+        imageUrls: JSON.stringify(body.imageUrls || []),
+        weight: body.weight ?? null,
+        dimensions: body.dimensions ?? null,
+        returnPolicy: body.returnPolicy ?? null,
+        sellerNotes: body.sellerNotes ?? null,
+        sellerId: result.decoded.userId,
+        categoryId: body.categoryId ?? 1,
+        subcategoryId: body.subcategoryId ?? 1,
+      },
+    });
+
+    return NextResponse.json(product, { status: 201 });
+  } catch (error) {
+    console.error("POST /seller/products error:", error);
+    return NextResponse.json(
+      { error: "Product creation failed" },
+      { status: 500 }
+    );
+  }
+}
