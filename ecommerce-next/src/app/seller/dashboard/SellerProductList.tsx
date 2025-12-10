@@ -3,7 +3,6 @@
 import SellerProductForm from "@/components/SellerProductForm";
 import { useEffect, useState } from "react";
 
-
 type Product = {
   id: number;
   title: string;
@@ -13,105 +12,113 @@ type Product = {
 
 export default function SellerProductList() {
   const [products, setProducts] = useState<Product[]>([]);
-  const [form, setForm] = useState({
-    title: "",
-    price: "",
-    discount: "",
-  });
-  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editing, setEditing] = useState<Product | null>(null);
+  const [loading, setLoading] = useState(false);
 
   async function fetchProducts() {
-    const res = await fetch("/api/seller/products");
-    const data = await res.json();
-    setProducts(data);
+    try {
+      setLoading(true);
+      const res = await fetch("/api/product");
+      const data = await res.json();
+      setProducts(Array.isArray(data) ? data : []);
+    } catch (err) {
+      console.error("Fetch error", err);
+    } finally {
+      setLoading(false);
+    }
   }
 
   useEffect(() => {
     fetchProducts();
   }, []);
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
+  // ✅ CREATE
+  async function handleCreate(payload: any) {
+    const token = localStorage.getItem("token");
 
-    const body: any = {
-      title: form.title,
-      price: parseFloat(form.price),
-      discount: form.discount ? parseFloat(form.discount) : null,
-    };
-
-    if (editingId) {
-      const res = await fetch(`/api/seller/products/${editingId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-
-      if (res.ok) {
-        setEditingId(null);
-        setForm({ title: "", price: "", discount: "" });
-        fetchProducts();
-      }
-    } else {
-      const res = await fetch("/api/seller/products", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-
-      if (res.ok) {
-        setForm({ title: "", price: "", discount: "" });
-        fetchProducts();
-      }
-    }
-  }
-
-  function handleEdit(p: Product) {
-    setEditingId(p.id);
-    setForm({
-      title: p.title,
-      price: String(p.price),
-      discount: p.discount != null ? String(p.discount) : "",
-    });
-  }
-
-  async function handleDelete(id: number) {
-    if (!confirm("Delete this product?")) return;
-
-    const res = await fetch(`/api/seller/products/${id}`, {
-      method: "DELETE",
+    const res = await fetch("/api/product", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
     });
 
     if (res.ok) {
       fetchProducts();
+      setEditing(null);
+    } else {
+      alert("Create failed");
     }
+  }
+
+  // ✅ UPDATE
+  async function handleUpdate(payload: any) {
+    if (!editing) return;
+
+    const token = localStorage.getItem("token");
+
+    const res = await fetch(`/api/product/${editing.id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (res.ok) {
+      fetchProducts();
+      setEditing(null);
+    } else {
+      alert("Update failed");
+    }
+  }
+
+  // ✅ DELETE
+  async function handleDelete(id: number) {
+    if (!confirm("Delete this product?")) return;
+
+    const token = localStorage.getItem("token");
+
+    const res = await fetch(`/api/product/${id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (res.ok) fetchProducts();
+    else alert("Delete failed");
   }
 
   return (
     <div className="seller-dashboard-grid">
       <div>
-        <h2 className="section-title">Your Products</h2>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="section-title">Your Products</h2>
+          <button
+            className="btn-ghost"
+            onClick={() => setEditing(null)}   // ✅ FIXED
+          >
+            + Add Product
+          </button>
+        </div>
 
-        <ul className="product-list-container">
-          {Array.isArray(products) &&
-            products.map((p) => (
+        {loading ? (
+          <p>Loading...</p>
+        ) : (
+          <ul className="product-list-container">
+            {products.map((p) => (
               <li key={p.id} className="product-list-item card-soft">
                 <div>
                   <p className="product-item-title">{p.title}</p>
-
-                  <p className="product-item-price-info">
-                    Price:{" "}
-                    <span className="text-primary-dark">₹{p.price}</span>{" "}
-                    {p.discount
-                      ? `(Discount: ${p.discount}% → Final: ₹${(
-                          p.price *
-                          (1 - p.discount / 100)
-                        ).toFixed(2)})`
-                      : null}
-                  </p>
+                  <p className="product-item-price-info">₹{p.price}</p>
                 </div>
 
                 <div className="flex gap-2">
-                  <button className="btn-link" onClick={() => handleEdit(p)}>
+                  <button className="btn-link" onClick={() => setEditing(p)}>
                     Edit
                   </button>
 
@@ -124,17 +131,20 @@ export default function SellerProductList() {
                 </div>
               </li>
             ))}
-        </ul>
+          </ul>
+        )}
       </div>
 
       <div>
         <h2 className="section-title">
-          {editingId ? "Edit Product" : "Add New Product"}
+          {editing ? "Edit Product" : "Add New Product"}
         </h2>
 
-      <SellerProductForm onSubmit={function (payload: any): Promise<void> {
-          throw new Error("Function not implemented.");
-        } } />
+        <SellerProductForm
+          initial={editing}
+          onSubmit={editing ? handleUpdate : handleCreate}
+          onCancel={() => setEditing(null)}
+        />
       </div>
     </div>
   );
