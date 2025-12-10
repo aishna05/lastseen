@@ -1817,3 +1817,13 @@ select:focus {
       display: none; /* Hide auth buttons if space is too tight */
   }
 }
+/* ✅ Make sure card glow never blocks clicks */
+.card::before {
+  pointer-events: none;
+}
+
+/* ✅ Extra safety: content stays on top & clickable */
+.order-card {
+  position: relative;
+  z-index: 1;
+}

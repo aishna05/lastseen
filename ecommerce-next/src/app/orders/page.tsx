@@ -142,6 +142,7 @@ export default function OrdersPage() {
                     <div className="order-footer">
                         {["PLACED", "PENDING", "PROCESSING"].includes(order.status) ? (
                             <button
+                            type="button"
                                 className="order-cancel-btn btn-delete-account"
                                 disabled={cancelingId === order.id}
                                 onClick={() => cancelOrder(order.id)}
