@@ -1,6 +1,8 @@
 "use client";
 
+import SellerProductForm from "@/components/SellerProductForm";
 import { useEffect, useState } from "react";
+
 
 type Product = {
   id: number;
@@ -130,50 +132,9 @@ export default function SellerProductList() {
           {editingId ? "Edit Product" : "Add New Product"}
         </h2>
 
-        <form onSubmit={handleSubmit} className="card product-form">
-          <input
-            type="text"
-            placeholder="Title"
-            value={form.title}
-            onChange={(e) =>
-              setForm((f) => ({ ...f, title: e.target.value }))
-            }
-            required
-          />
-
-          <input
-            type="number"
-            placeholder="Price"
-            value={form.price}
-            onChange={(e) =>
-              setForm((f) => ({ ...f, price: e.target.value }))
-            }
-            required
-          />
-
-          <input
-            type="number"
-            placeholder="Discount (%) - optional"
-            value={form.discount}
-            onChange={(e) =>
-              setForm((f) => ({ ...f, discount: e.target.value }))
-            }
-          />
-
-          <button type="submit" className="btn-primary mt-2">
-            {editingId ? "Update Product" : "Create Product"}
-          </button>
-
-          {editingId && (
-            <button
-              type="button"
-              className="btn-ghost-cancel"
-              onClick={() => setEditingId(null)}
-            >
-              Cancel Edit
-            </button>
-          )}
-        </form>
+      <SellerProductForm onSubmit={function (payload: any): Promise<void> {
+          throw new Error("Function not implemented.");
+        } } />
       </div>
     </div>
   );
