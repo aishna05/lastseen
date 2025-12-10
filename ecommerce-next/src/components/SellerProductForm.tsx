@@ -24,30 +24,36 @@ type Category = {
 
 const defaultSizes = ["XS", "S", "M", "L", "XL", "XXL"];
 
-export default function SellerProductForm({ initial = {}, onSubmit, onCancel }: Props) {
-  const [form, setForm] = useState({
-    title: initial.title || "",
-    description: initial.description || "",
-    price: initial.price ?? "",
-    discount: initial.discount ?? "",
-    brand: initial.brand || "",
-    gender: initial.gender || "UNISEX",
-    material: initial.material || "",
-    fabricCare: initial.fabricCare || "",
-    occasion: initial.occasion || "",
-    modelNumber: initial.modelNumber || "",
-    sku: initial.sku || "",
-    availableSizes: initial.availableSizes || [],
-    sizeStock: initial.sizeStock || {},
-    colors: initial.colors || [],
-    imageUrls: initial.imageUrls || [],
-    weight: initial.weight ?? "",
-    dimensions: initial.dimensions || "",
-    returnPolicy: initial.returnPolicy || "",
-    sellerNotes: initial.sellerNotes || "",
-    categoryId: initial.categoryId ?? "",
-    subcategoryId: initial.subcategoryId ?? "",
-  });
+export default function SellerProductForm({
+  initial,
+  onSubmit,
+  onCancel,
+}: Props) {
+  const safeInitial = initial ?? {};
+
+ const [form, setForm] = useState({
+  title: safeInitial.title || "",
+  description: safeInitial.description || "",
+  price: safeInitial.price ?? "",
+  discount: safeInitial.discount ?? "",
+  brand: safeInitial.brand || "",
+  gender: safeInitial.gender || "UNISEX",
+  material: safeInitial.material || "",
+  fabricCare: safeInitial.fabricCare || "",
+  occasion: safeInitial.occasion || "",
+  modelNumber: safeInitial.modelNumber || "",
+  sku: safeInitial.sku || "",
+  availableSizes: safeInitial.availableSizes || [],
+  sizeStock: safeInitial.sizeStock || {},
+  colors: safeInitial.colors || [],
+  imageUrls: safeInitial.imageUrls || [],
+  weight: safeInitial.weight ?? "",
+  dimensions: safeInitial.dimensions || "",
+  returnPolicy: safeInitial.returnPolicy || "",
+  sellerNotes: safeInitial.sellerNotes || "",
+  categoryId: safeInitial.categoryId ?? "",
+  subcategoryId: safeInitial.subcategoryId ?? "",
+});
 
   const [newImageFiles, setNewImageFiles] = useState<File[]>([]);
   const [uploading, setUploading] = useState(false);
