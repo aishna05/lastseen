@@ -1,24 +1,25 @@
-
 "use client";
 
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { ReactNode, useEffect } from "react";
+import { useAuth } from "@/lib/hooks/useAuth"; // ✅ your actual auth system
 
 export default function RequireSeller({ children }: { children: ReactNode }) {
-  const { data: session, status } = useSession();
+  const { user } = useAuth();   // ✅ NOT useSession
   const router = useRouter();
 
   useEffect(() => {
-    if (status === "loading") return;
-    const role = (session?.user as any)?.role;
-    if (!session || role !== "SELLER") {
+    if (!user) {
       router.replace("/login");
+      return;
     }
-  }, [session, status, router]);
 
-  if (status === "loading") return <p className="p-4">Loading...</p>;
-  const role = (session?.user as any)?.role;
-  if (!session || role !== "SELLER") return null;
+    if (user.role !== "SELLER") {
+      router.replace("/"); // or /unauthorized
+    }
+  }, [user, router]);
+
+  if (!user) return <p className="p-4">Loading...</p>;
+
   return <>{children}</>;
 }
