@@ -2,21 +2,16 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import jwt from "jsonwebtoken";
 
-// -----------------------------------------
-// 🔥 Universal param reader (Turbopack-safe)
-// -----------------------------------------
-async function getParams(
-  context: { params: { id: string } | Promise<{ id: string }> }
-): Promise<{ id: string }> {
-  return await context.params; // works for both {id} and Promise<{id}>
+async function getParams(context: { params: { id: string } }) {
+  return await context.params; // Works for both sync and async internally
 }
 
 // -----------------------------------------
-// ✅ GET PRODUCT (PUBLIC)
+// GET PRODUCT (PUBLIC)
 // -----------------------------------------
 export async function GET(
   req: NextRequest,
-  context: { params: { id: string } | Promise<{ id: string }> }
+  context: { params: { id: string } }
 ) {
   try {
     const { id } = await getParams(context);
@@ -53,11 +48,11 @@ export async function GET(
 }
 
 // -----------------------------------------
-// ✅ UPDATE PRODUCT (SELLER ONLY)
+// UPDATE PRODUCT (SELLER ONLY)
 // -----------------------------------------
 export async function PUT(
   req: NextRequest,
-  context: { params: { id: string } | Promise<{ id: string }> }
+  context: { params: { id: string } }
 ) {
   try {
     const { id } = await getParams(context);
@@ -67,15 +62,9 @@ export async function PUT(
       return NextResponse.json({ message: "No token provided" }, { status: 401 });
     }
 
-    const token = authHeader.startsWith("Bearer ")
-      ? authHeader.slice(7)
-      : authHeader;
+    const token = authHeader.replace("Bearer ", "");
 
-    const secret = process.env.JWT_SECRET;
-    if (!secret) {
-      return NextResponse.json({ message: "JWT secret not set" }, { status: 500 });
-    }
-
+    const secret = process.env.JWT_SECRET!;
     const decoded = jwt.verify(token, secret) as {
       userId: number;
       role: string;
@@ -90,7 +79,6 @@ export async function PUT(
 
     const data = await req.json();
 
-    // Convert arrays/objects to JSON strings
     if (Array.isArray(data.availableSizes))
       data.availableSizes = JSON.stringify(data.availableSizes);
 
@@ -131,11 +119,11 @@ export async function PUT(
 }
 
 // -----------------------------------------
-// ✅ DELETE PRODUCT (SELLER ONLY)
+// DELETE PRODUCT (SELLER ONLY)
 // -----------------------------------------
 export async function DELETE(
   req: NextRequest,
-  context: { params: { id: string } | Promise<{ id: string }> }
+  context: { params: { id: string } }
 ) {
   try {
     const { id } = await getParams(context);
@@ -145,15 +133,9 @@ export async function DELETE(
       return NextResponse.json({ message: "No token provided" }, { status: 401 });
     }
 
-    const token = authHeader.startsWith("Bearer ")
-      ? authHeader.slice(7)
-      : authHeader;
+    const token = authHeader.replace("Bearer ", "");
 
-    const secret = process.env.JWT_SECRET;
-    if (!secret) {
-      return NextResponse.json({ message: "JWT secret not set" }, { status: 500 });
-    }
-
+    const secret = process.env.JWT_SECRET!;
     const decoded = jwt.verify(token, secret) as {
       userId: number;
       role: string;
