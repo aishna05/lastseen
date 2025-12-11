@@ -2,15 +2,24 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import jwt from "jsonwebtoken";
 
-// ✅ GET single product (PUBLIC)
-// GET product by ID (PUBLIC)
+// -----------------------------------------
+// 🔥 Universal param reader (Turbopack-safe)
+// -----------------------------------------
+async function getParams(
+  context: { params: { id: string } | Promise<{ id: string }> }
+): Promise<{ id: string }> {
+  return await context.params; // works for both {id} and Promise<{id}>
+}
+
+// -----------------------------------------
+// ✅ GET PRODUCT (PUBLIC)
+// -----------------------------------------
 export async function GET(
   req: NextRequest,
-  context: { params: any }      // <-- FIX: make it flexible
+  context: { params: { id: string } | Promise<{ id: string }> }
 ) {
   try {
-    const params = await context.params;  // <-- supports both Promise and object
-    const id = params.id;
+    const { id } = await getParams(context);
 
     const product = await prisma.product.findUnique({
       where: { id: Number(id) },
@@ -37,21 +46,21 @@ export async function GET(
       subcategory: product.subcategory,
       seller: product.seller,
     });
-
   } catch (error: any) {
     console.error("GET PRODUCT ERROR:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
 
-
-// ✅ UPDATE product (SELLER ONLY)
+// -----------------------------------------
+// ✅ UPDATE PRODUCT (SELLER ONLY)
+// -----------------------------------------
 export async function PUT(
   req: NextRequest,
-  context: { params: { id: string } }   // <-- plain object as well
+  context: { params: { id: string } | Promise<{ id: string }> }
 ) {
   try {
-    const { id } = context.params;
+    const { id } = await getParams(context);
 
     const authHeader = req.headers.get("authorization");
     if (!authHeader) {
@@ -81,22 +90,18 @@ export async function PUT(
 
     const data = await req.json();
 
-    // ✅ FIX ALL ARRAY → STRING CONVERSIONS
-    if (Array.isArray(data.availableSizes)) {
+    // Convert arrays/objects to JSON strings
+    if (Array.isArray(data.availableSizes))
       data.availableSizes = JSON.stringify(data.availableSizes);
-    }
 
-    if (Array.isArray(data.colors)) {
+    if (Array.isArray(data.colors))
       data.colors = JSON.stringify(data.colors);
-    }
 
-    if (typeof data.sizeStock === "object") {
+    if (data.sizeStock && typeof data.sizeStock === "object")
       data.sizeStock = JSON.stringify(data.sizeStock);
-    }
 
-    if (Array.isArray(data.imageUrls)) {
+    if (Array.isArray(data.imageUrls))
       data.imageUrls = JSON.stringify(data.imageUrls);
-    }
 
     const updatedProduct = await prisma.product.update({
       where: { id: Number(id) },
@@ -125,13 +130,15 @@ export async function PUT(
   }
 }
 
-// ✅ DELETE product (SELLER ONLY)
+// -----------------------------------------
+// ✅ DELETE PRODUCT (SELLER ONLY)
+// -----------------------------------------
 export async function DELETE(
   req: NextRequest,
-  context: { params: { id: string } }   // <-- plain object
+  context: { params: { id: string } | Promise<{ id: string }> }
 ) {
   try {
-    const { id } = context.params;
+    const { id } = await getParams(context);
 
     const authHeader = req.headers.get("authorization");
     if (!authHeader) {
