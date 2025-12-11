@@ -2,18 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import jwt from "jsonwebtoken";
 
-// ✅ params MUST be a Promise in App Router
-interface RouteContext {
-  params: Promise<{ id: string }>;
-}
-
 // ✅ GET single product (PUBLIC)
 export async function GET(
   req: NextRequest,
-  { params }: RouteContext
+  context: { params: { id: string } }   // <-- plain object, not Promise
 ) {
   try {
-    const { id } = await params; // ✅ FIXED
+    const { id } = context.params; // no await
     const product = await prisma.product.findUnique({
       where: { id: Number(id) },
       include: {
@@ -34,7 +29,7 @@ export async function GET(
       details: product.details,
       price: product.price,
       hsn: product.hsn,
-      imageUrls: JSON.parse(product.imageUrls),
+      imageUrls: product.imageUrls ? JSON.parse(product.imageUrls) : [],
       category: product.category,
       subcategory: product.subcategory,
       seller: product.seller,
@@ -48,10 +43,10 @@ export async function GET(
 // ✅ UPDATE product (SELLER ONLY)
 export async function PUT(
   req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  context: { params: { id: string } }   // <-- plain object as well
 ) {
   try {
-    const { id } = await params;
+    const { id } = context.params;
 
     const authHeader = req.headers.get("authorization");
     if (!authHeader) {
@@ -81,7 +76,7 @@ export async function PUT(
 
     const data = await req.json();
 
-    // ✅ ✅ ✅ FIX ALL ARRAY → STRING CONVERSIONS
+    // ✅ FIX ALL ARRAY → STRING CONVERSIONS
     if (Array.isArray(data.availableSizes)) {
       data.availableSizes = JSON.stringify(data.availableSizes);
     }
@@ -128,10 +123,10 @@ export async function PUT(
 // ✅ DELETE product (SELLER ONLY)
 export async function DELETE(
   req: NextRequest,
-  { params }: RouteContext
+  context: { params: { id: string } }   // <-- plain object
 ) {
   try {
-    const { id } = await params; // ✅ FIXED
+    const { id } = context.params;
 
     const authHeader = req.headers.get("authorization");
     if (!authHeader) {
