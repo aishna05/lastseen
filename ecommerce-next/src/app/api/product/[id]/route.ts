@@ -2,16 +2,17 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import jwt from "jsonwebtoken";
 
+
 // -----------------------------------------
 // GET PRODUCT (PUBLIC)
 // -----------------------------------------
 export async function GET(
   req: NextRequest,
   // FIX: Next.js provides 'params' as a synchronous object, not a Promise.
-  context: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = context.params; // No await needed here
+    const { id } = await context.params; // No await needed here
 
     const product = await prisma.product.findUnique({
       where: { id: Number(id) },
@@ -51,10 +52,10 @@ export async function GET(
 export async function PUT(
   req: NextRequest,
   // FIX: Corrected type definition for context
-  context: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = context.params; // No await needed here
+    const { id } = await context.params; // No await needed here
 
     const authHeader = req.headers.get("authorization");
     if (!authHeader)
@@ -110,10 +111,10 @@ export async function PUT(
 export async function DELETE(
   req: NextRequest,
   // FIX: Corrected type definition for context
-  context: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = context.params; // No await needed here
+    const { id } = await context.params; // No await needed here
 
     const authHeader = req.headers.get("authorization");
     if (!authHeader)
