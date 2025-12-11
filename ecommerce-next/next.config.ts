@@ -2,10 +2,8 @@
 
 import { NextConfig } from 'next';
 
-const nextConfig: NextConfig & { srcDir?: string } = {
-  // Add this line to tell Next.js to look for the 'app' directory inside 'src/'
-  // experimental: { appDir: true, /* This is often implicit but good practice for App Router */ } as any,
-  srcDir: 'src', // <--- THIS IS THE CRUCIAL LINE
+const nextConfig: NextConfig = {
+  // No need for srcDir - Next.js auto-detects src/ folder
 };
 
 export default nextConfig;

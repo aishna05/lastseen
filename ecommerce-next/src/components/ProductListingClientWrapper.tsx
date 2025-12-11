@@ -3,19 +3,21 @@
 
 import React from 'react';
 import ProductCard from "./ProductCard"; 
-import { User, Product } from "@prisma/client";
 import { Buffer } from "buffer";
 
-
-// Define the expected structure for the product data from the server
-type ProductWithSeller = Product & {
-    seller: User;
-    discount: number | null; 
+// Simplified product display type
+interface ProductDisplay {
+    id: number;
+    title: string;
+    price: number;
+    originalPrice: number;
+    discount: number | null;
     imageUrls: string;
-};
+    sellerName: string;
+}
 
 interface ProductListingProps {
-    products: ProductWithSeller[];
+    products: ProductDisplay[];
 }
 
 // Client-side function that makes the POST request to the API
@@ -65,21 +67,12 @@ const ProductListingClientWrapper: React.FC<ProductListingProps> = ({ products }
                 {/* 3. Replaced Tailwind grid with custom CSS class name */}
                 <div className="product-grid">
                     {products.map((p) => {
-                        // Calculate final price on the client (or keep it on the server if possible)
-                        const finalPrice = p.discount
-                            ? p.price * (1 - (p.discount || 0) / 100)
-                            : p.price;
-
-                        // Map the full Prisma product object to the expected ProductCard props
+                        // Map to ProductCard props
                         const cardProps = {
                             id: p.id,
                             title: p.title,
-                            price: finalPrice,
-                            // Assuming imageUrls is a comma-separated string, extract the first one
+                            price: p.price,
                             imageUrls: Buffer.from(p.imageUrls).toString("base64"), 
-                            // Note: The prompt requested image color replacement. This component provides 
-                            // the image URL, so the *absence* of the image color is now correctly 
-                            // handled by the ProductCard component using the image URL.
                         };
                         return (
                             <ProductCard

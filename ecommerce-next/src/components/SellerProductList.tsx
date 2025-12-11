@@ -4,7 +4,18 @@
 import React, { useEffect, useState } from "react";
 import SellerProductForm from "./SellerProductForm";
 
-type Product = any;
+interface Product {
+  id: number;
+  title: string;
+  description: string;
+  price: number;
+  discount?: number | null;
+  imageUrls: string;
+  categoryId: number;
+  subcategoryId: number;
+  sellerId: number;
+  [key: string]: any;
+}
 
 export default function SellerProductList() {
   const [products, setProducts] = useState<Product[]>([]);

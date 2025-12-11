@@ -4,7 +4,17 @@ import React, { useEffect } from 'react';
 import Link from 'next/link';
 import { Buffer } from "buffer";
 
-const ProductCard = ({ product }) => {
+interface ProductCardProps {
+  product: {
+    id: number;
+    title: string;
+    price: number;
+    imageUrls: string;
+  };
+  onAddToCart?: (productId: number) => void;
+}
+
+const ProductCard = ({ product, onAddToCart }: ProductCardProps) => {
 
   // Decode base64 JSON array safely
   let images: string[] = [];

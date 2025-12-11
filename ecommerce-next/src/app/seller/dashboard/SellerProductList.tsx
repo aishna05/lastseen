@@ -141,7 +141,7 @@ export default function SellerProductList() {
         </h2>
 
         <SellerProductForm
-          initial={editing}
+          initial={editing ? { ...editing, discount: editing.discount ?? undefined } as any : undefined}
           onSubmit={editing ? handleUpdate : handleCreate}
           onCancel={() => setEditing(null)}
         />

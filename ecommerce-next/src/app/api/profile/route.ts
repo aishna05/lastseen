@@ -8,14 +8,15 @@ import { verifyToken } from "@/lib/auth"; // you already have this
 export async function GET(req: Request) {
   try {
     const authHeader = req.headers.get("authorization");
-    const { valid, decoded, error } = verifyToken(authHeader);
+    const authResult = verifyToken(authHeader);
 
-    if (!valid || !decoded) {
+    if (!authResult.valid) {
       return NextResponse.json(
-        { message: error ?? "Unauthorized" },
+        { message: authResult.error },
         { status: 401 }
       );
     }
+    const { decoded } = authResult;
 
     const user = await prisma.user.findUnique({
       where: { id: decoded.userId },
@@ -48,14 +49,15 @@ export async function GET(req: Request) {
 export async function PUT(req: Request) {
   try {
     const authHeader = req.headers.get("authorization");
-    const { valid, decoded, error } = verifyToken(authHeader);
+    const authResult = verifyToken(authHeader);
 
-    if (!valid || !decoded) {
+    if (!authResult.valid) {
       return NextResponse.json(
-        { message: error ?? "Unauthorized" },
+        { message: authResult.error },
         { status: 401 }
       );
     }
+    const { decoded } = authResult;
 
     const body = await req.json();
     const { name, password } = body as {
@@ -97,19 +99,19 @@ export async function PUT(req: Request) {
     );
   }
 }
-
 // DELETE /api/profile  → delete current user account
 export async function DELETE(req: Request) {
   try {
     const authHeader = req.headers.get("authorization");
-    const { valid, decoded, error } = verifyToken(authHeader);
+    const authResult = verifyToken(authHeader);
 
-    if (!valid || !decoded) {
+    if (!authResult.valid) {
       return NextResponse.json(
-        { message: error ?? "Unauthorized" },
+        { message: authResult.error },
         { status: 401 }
       );
     }
+    const { decoded } = authResult;
 
     // ⚠ NOTE: this may fail if there are related products/orders/cartItems
     // You can later add onDelete: Cascade in schema or handle child deletes manually
