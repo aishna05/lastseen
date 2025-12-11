@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
+export const dynamic = 'force-dynamic';
 
 interface Params {
   params: { id: string };

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import jwt from "jsonwebtoken";
-
+export const dynamic = 'force-dynamic';
 // UPDATE item quantity in cart (customer only)
 export async function PUT(req: NextRequest, context: { params: Promise<{ id: string }> }) {
   try {

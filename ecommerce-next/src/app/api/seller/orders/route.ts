@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import jwt from "jsonwebtoken";
-
+export const dynamic = 'force-dynamic';
 // Helper function (similar to one used previously)
 const verifySellerToken = (authHeader: string | null) => {
   if (!authHeader) return { valid: false, message: "No token provided" };

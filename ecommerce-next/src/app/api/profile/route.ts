@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { verifyToken } from "@/lib/auth"; // you already have this
-
+export const dynamic = 'force-dynamic';
 // GET /api/profile  → get current user's profile
 export async function GET(req: Request) {
   try {

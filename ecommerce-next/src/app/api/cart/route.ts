@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import jwt from "jsonwebtoken";
+export const dynamic = 'force-dynamic';
 
 // ADD an item to the cart (customer only)
 export async function POST(req: NextRequest) {

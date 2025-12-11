@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { verifyToken } from "@/lib/auth";
+export const dynamic = 'force-dynamic';
 
 // ✅ GET Seller Products
 export async function GET(req: NextRequest) {

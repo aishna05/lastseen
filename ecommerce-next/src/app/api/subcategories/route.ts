@@ -2,6 +2,7 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
+export const dynamic = 'force-dynamic';
 
 // GET all subcategories (no auth)
 export async function GET() {

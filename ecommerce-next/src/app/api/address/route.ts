@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import jwt from "jsonwebtoken";
+export const dynamic = 'force-dynamic';
 
 // GET all addresses for customer
 export async function GET(req: NextRequest) {

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import jwt from "jsonwebtoken";
+export const dynamic = 'force-dynamic';
 
 async function verifyCustomer(req: NextRequest) {
   const authHeader = req.headers.get("authorization");

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import jwt from "jsonwebtoken";
-
+export const dynamic = 'force-dynamic';
 // ================== CREATE PRODUCT (SELLER ONLY) ==================
 export async function POST(req: NextRequest) {
   try {
