@@ -7,6 +7,19 @@ export default async function HomePage() {
     orderBy: { createdAt: "desc" },
   });
 
+  const productsForDisplay = products.map((p) => {
+    const finalPrice = p.discount ? p.price * (1 - p.discount / 100) : p.price;
+    return {
+      id: p.id,
+      title: p.title,
+      price: finalPrice,
+      originalPrice: p.price,
+      discount: p.discount,
+      imageUrls: p.imageUrls,
+      sellerName: p.seller.name,
+    };
+  });
+
   return (
     <main className="space-y-16">
       
@@ -26,7 +39,7 @@ export default async function HomePage() {
       </section>
 
       {/* ✅ PRODUCTS SECTION (CONSTRAINED & CENTERED) */}
-      <ProductListingClientWrapper products={products} />
+      <ProductListingClientWrapper products={productsForDisplay} />
 
     </main>
   );

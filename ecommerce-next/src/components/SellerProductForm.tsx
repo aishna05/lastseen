@@ -5,9 +5,35 @@ import React, { useState, useEffect } from "react";
 
 export type SizeStock = Record<string, number>;
 
+interface ProductFormData {
+  title: string;
+  description: string;
+  details?: string;
+  price: number;
+  hsn?: string;
+  discount?: number | null;
+  brand?: string;
+  gender?: string;
+  material?: string;
+  fabricCare?: string;
+  occasion?: string;
+  modelNumber?: string;
+  sku?: string;
+  availableSizes: any;
+  sizeStock: any;
+  colors: any;
+  imageUrls: any;
+  weight?: number;
+  dimensions?: string;
+  returnPolicy?: string;
+  sellerNotes?: string;
+  categoryId: number;
+  subcategoryId: number;
+}
+
 type Props = {
-  initial?: any;
-  onSubmit: (payload: any) => Promise<void>;
+  initial?: Partial<ProductFormData>;
+  onSubmit: (payload: ProductFormData) => Promise<void>;
   onCancel?: () => void;
 };
 type Category = {
@@ -24,6 +50,17 @@ type Category = {
 
 const defaultSizes = ["XS", "S", "M", "L", "XL", "XXL"];
 
+function parseJson(value: any, fallback: any) {
+  if (typeof value === "string") {
+    try {
+      return JSON.parse(value);
+    } catch {
+      return fallback;
+    }
+  }
+  return value || fallback;
+}
+
 export default function SellerProductForm({
   initial,
   onSubmit,
@@ -31,29 +68,29 @@ export default function SellerProductForm({
 }: Props) {
   const safeInitial = initial ?? {};
 
- const [form, setForm] = useState({
-  title: safeInitial.title || "",
-  description: safeInitial.description || "",
-  price: safeInitial.price ?? "",
-  discount: safeInitial.discount ?? "",
-  brand: safeInitial.brand || "",
-  gender: safeInitial.gender || "UNISEX",
-  material: safeInitial.material || "",
-  fabricCare: safeInitial.fabricCare || "",
-  occasion: safeInitial.occasion || "",
-  modelNumber: safeInitial.modelNumber || "",
-  sku: safeInitial.sku || "",
-  availableSizes: safeInitial.availableSizes || [],
-  sizeStock: safeInitial.sizeStock || {},
-  colors: safeInitial.colors || [],
-  imageUrls: safeInitial.imageUrls || [],
-  weight: safeInitial.weight ?? "",
-  dimensions: safeInitial.dimensions || "",
-  returnPolicy: safeInitial.returnPolicy || "",
-  sellerNotes: safeInitial.sellerNotes || "",
-  categoryId: safeInitial.categoryId ?? "",
-  subcategoryId: safeInitial.subcategoryId ?? "",
-});
+  const [form, setForm] = useState({
+    title: safeInitial.title || "",
+    description: safeInitial.description || "",
+    price: safeInitial.price ?? "",
+    discount: safeInitial.discount ?? "",
+    brand: safeInitial.brand || "",
+    gender: safeInitial.gender || "UNISEX",
+    material: safeInitial.material || "",
+    fabricCare: safeInitial.fabricCare || "",
+    occasion: safeInitial.occasion || "",
+    modelNumber: safeInitial.modelNumber || "",
+    sku: safeInitial.sku || "",
+    availableSizes: parseJson(safeInitial.availableSizes, []),
+    sizeStock: parseJson(safeInitial.sizeStock, {}),
+    colors: parseJson(safeInitial.colors, []),
+    imageUrls: parseJson(safeInitial.imageUrls, []),
+    weight: safeInitial.weight ?? "",
+    dimensions: safeInitial.dimensions || "",
+    returnPolicy: safeInitial.returnPolicy || "",
+    sellerNotes: safeInitial.sellerNotes || "",
+    categoryId: safeInitial.categoryId ?? "",
+    subcategoryId: safeInitial.subcategoryId ?? "",
+  });
 
   const [newImageFiles, setNewImageFiles] = useState<File[]>([]);
   const [uploading, setUploading] = useState(false);
@@ -162,9 +199,9 @@ export default function SellerProductForm({
 
     await onSubmit(payload);
   }
-   const selectedCategory =
-    form.categoryId &&
-    categories.find((c) => c.id === Number(form.categoryId));
+   const selectedCategory = form.categoryId 
+    ? categories.find((c) => c.id === Number(form.categoryId))
+    : undefined;
 
   const availableSubcategories = selectedCategory?.subcategories ?? [];
 

@@ -29,7 +29,7 @@ export default async function ProductDataFetcher() {
         price: finalPrice, 
         originalPrice: p.price,
         discount: p.discount,
-        imageUrls: p.imageUrls.split(',')[0] || '',
+        imageUrls: p.imageUrls,
         sellerName: p.seller.name,
     };
   });
