@@ -3,12 +3,15 @@ import { prisma } from "@/lib/prisma";
 import jwt from "jsonwebtoken";
 
 // ✅ GET single product (PUBLIC)
+// GET product by ID (PUBLIC)
 export async function GET(
   req: NextRequest,
-  context: { params: { id: string } }   // <-- plain object, not Promise
+  context: { params: any }      // <-- FIX: make it flexible
 ) {
   try {
-    const { id } = context.params; // no await
+    const params = await context.params;  // <-- supports both Promise and object
+    const id = params.id;
+
     const product = await prisma.product.findUnique({
       where: { id: Number(id) },
       include: {
@@ -34,11 +37,13 @@ export async function GET(
       subcategory: product.subcategory,
       seller: product.seller,
     });
+
   } catch (error: any) {
     console.error("GET PRODUCT ERROR:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
+
 
 // ✅ UPDATE product (SELLER ONLY)
 export async function PUT(
