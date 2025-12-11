@@ -1986,3 +1986,104 @@ select:focus {
   gap: 0.75rem;
   margin-top: 0.5rem;
 }
+/* ============================
+   ABOUT PAGE – LUXURY THEME
+============================ */
+
+.about-page {
+    padding: clamp(2rem, 5vw, 4rem) 1.2rem;
+    animation: fadeSlideUp 0.6s ease-out;
+}
+
+.about-title {
+    text-align: center;
+    margin-bottom: 0.5rem;
+    color: var(--primary-dark);
+}
+
+.about-subtitle {
+    text-align: center;
+    color: var(--text-muted);
+    font-weight: 400;
+    margin-bottom: 2.5rem;
+    font-size: var(--fs-lg);
+}
+
+.about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(2rem, 4vw, 3rem);
+    max-width: 1120px;
+    margin: 0 auto;
+}
+
+.about-section {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    padding: clamp(1.2rem, 2vw, 1.8rem);
+    box-shadow: var(--shadow-soft);
+}
+
+.about-heading {
+    margin-bottom: 0.8rem;
+    color: var(--primary-dark);
+    font-size: var(--fs-lg);
+}
+
+.about-list {
+    list-style: none;
+    padding-left: 0;
+    border-left: 3px solid var(--primary-light);
+    padding-left: 1rem;
+}
+
+.about-list li {
+    margin-bottom: 0.7rem;
+    font-size: var(--fs-md);
+    color: var(--text-main);
+}
+
+.about-cta {
+    text-align: center;
+    margin-top: 3rem;
+}
+.about-page {
+  padding: clamp(2rem, 5vw, 4rem) 1.2rem;
+  animation: fadeSlideUp 0.6s ease-out;
+}
+
+.about-title {
+  text-align: center;
+  color: var(--primary-dark);
+  margin-bottom: 2rem;
+}
+
+.single-column {
+  max-width: 760px;
+  margin: 0 auto;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: clamp(1.5rem, 3vw, 2rem);
+  box-shadow: var(--shadow-soft);
+  line-height: 1.7;
+  font-size: var(--fs-md);
+}
+
+.single-column p {
+  margin-bottom: 1.2rem;
+  color: var(--text-main);
+}
+
+.closing-line {
+  margin-top: 1.8rem;
+  text-align: center;
+  font-size: var(--fs-lg);
+  color: var(--primary-dark);
+}
+
+.about-cta {
+  text-align: center;
+  margin-top: 2.5rem;
+}

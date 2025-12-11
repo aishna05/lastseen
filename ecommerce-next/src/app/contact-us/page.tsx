@@ -38,6 +38,10 @@ const ContactUsPage = () => {
          <input type="email" id="email" required placeholder="example@email.com" />
          </div>
          <div className="contact-form-field">
+         <label htmlFor="phone">Phone Number</label>
+         <input type="tel" id="phone" required placeholder="123-456-7890" />
+         </div>
+         <div className="contact-form-field">
           <label htmlFor="message">Message</label>
          <textarea id="message" rows={5} required placeholder="Your inquiry..."></textarea>
          </div>
@@ -57,7 +61,7 @@ const ContactUsPage = () => {
 <p className="mt-2">
  Email: <br />
  {/* Removed inline style, global <a> styling handles color */}
-<a href="mailto:support@lostseeker.com">support@lostseeker.com</a> 
+<a href="mailto:support@lostseeker.com">support@lastseen.co.in</a> 
 </p>
  </div>
  <div className="card">

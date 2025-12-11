@@ -1,50 +1,47 @@
 // /src/app/about-us/page.tsx
-import React from 'react';
-import Link from 'next/link';
+import React from "react";
+import Link from "next/link";
 
 export const metadata = {
-  title: 'About Us | Lost Seeker',
-  description: 'Our journey and mission to find and share timeless, artisanal goods.',
+  title: "About Us | LAST SEEN",
+  description:
+    "Where India's heritage meets modern luxury fashion — handcrafted, artisanal, timeless.",
 };
 
 const AboutUsPage = () => {
   return (
-    <div className="about-page-wrapper">
-      <h1>Our Journey: The Lost Seeker</h1>
-      <h2 className="contact-subheading" style={{color: 'var(--text-muted)'}}>
-        Discovering the Craft, One Story at a Time.
-      </h2>
+    <div className="about-page page-shell">
+      <h1 className="about-title">About Us</h1>
 
-      <div className="about-content-grid">
-        <section>
-          <h3>The Philosophy</h3>
-          <p>
-            The world is rich with history and craftsmanship often overlooked in the rush of modern life. We founded **Lost Seeker** on the principle of reverence for the handmade, the authentic, and the enduring. Our mission is to traverse forgotten corners and hidden workshops to bring you pieces that carry a soul—items that are not just products, but **heirlooms in the making**.
-          </p>
-          <p>
-            Every seller on our platform shares this dedication to quality over quantity. We believe in transparency, ethical sourcing, and empowering the artisans whose skills define their lives.
-          </p>
-        </section>
+      <div className="about-section single-column">
+        <p>
+          LAST SEEN is a unisex luxury fashion brand where India’s heritage meets
+          modern design. We blend centuries-old block printing and artisanal
+          handwork with contemporary silhouettes, crafting pieces that feel
+          timeless, bold, and globally relevant.
+        </p>
 
-        <section>
-          <h3>Our Commitment</h3>
-          <ul className="commitment-list" style={{borderLeft: '3px solid var(--primary-soft)'}}>
-            <li>
-              <strong>Authenticity:</strong> Every product is verified for its story and origin.
-            </li>
-            <li>
-              <strong>Sustainability:</strong> We prioritize eco-friendly and timeless materials.
-            </li>
-            <li>
-              <strong>Community:</strong> We directly support small-scale artisans and independent sellers globally.
-            </li>
-          </ul>
-        </section>
+        <p>
+          Our signature lies in the use of <strong>Real Gold (Sona)</strong> and{" "}
+          <strong>Real Silver (Chandi)</strong> detailing — transforming
+          traditional craftsmanship into wearable luxury. Every garment is
+          hand-crafted with intention, artistry, and cultural depth.
+        </p>
+
+        <p>
+          At LAST SEEN, we believe fashion should tell a story.  
+          A story of heritage, individuality, and handcrafted excellence.  
+          A story you can wear.
+        </p>
+
+        <p className="closing-line">
+          <strong>LAST SEEN — From Heritage to High Fashion.</strong>
+        </p>
       </div>
-      
+
       <div className="about-cta">
         <Link href="/products" className="btn-primary">
-          Explore Our Unique Finds
+          Explore Collection
         </Link>
       </div>
     </div>
