@@ -7,10 +7,11 @@ import jwt from "jsonwebtoken";
 // -----------------------------------------
 export async function GET(
   req: NextRequest,
-  context: { params: Promise<{ id: string }> }
+  // FIX: Next.js provides 'params' as a synchronous object, not a Promise.
+  context: { params: { id: string } }
 ) {
   try {
-    const { id } = await context.params;
+    const { id } = context.params; // No await needed here
 
     const product = await prisma.product.findUnique({
       where: { id: Number(id) },
@@ -32,6 +33,7 @@ export async function GET(
       details: product.details,
       price: product.price,
       hsn: product.hsn,
+      // Handle potential null/undefined imageUrls before parsing
       imageUrls: product.imageUrls ? JSON.parse(product.imageUrls) : [],
       category: product.category,
       subcategory: product.subcategory,
@@ -48,10 +50,11 @@ export async function GET(
 // -----------------------------------------
 export async function PUT(
   req: NextRequest,
-  context: { params: Promise<{ id: string }> }
+  // FIX: Corrected type definition for context
+  context: { params: { id: string } }
 ) {
   try {
-    const { id } = await context.params;
+    const { id } = context.params; // No await needed here
 
     const authHeader = req.headers.get("authorization");
     if (!authHeader)
@@ -73,13 +76,14 @@ export async function PUT(
 
     const data = await req.json();
 
+    // Ensure array/object data is stringified for Prisma (assuming your model fields are `Json` or `String`)
     if (Array.isArray(data.availableSizes))
       data.availableSizes = JSON.stringify(data.availableSizes);
 
     if (Array.isArray(data.colors))
       data.colors = JSON.stringify(data.colors);
 
-    if (data.sizeStock && typeof data.sizeStock === "object")
+    if (data.sizeStock && typeof data.sizeStock === "object" && !Array.isArray(data.sizeStock))
       data.sizeStock = JSON.stringify(data.sizeStock);
 
     if (Array.isArray(data.imageUrls))
@@ -105,10 +109,11 @@ export async function PUT(
 // -----------------------------------------
 export async function DELETE(
   req: NextRequest,
-  context: { params: Promise<{ id: string }> }
+  // FIX: Corrected type definition for context
+  context: { params: { id: string } }
 ) {
   try {
-    const { id } = await context.params;
+    const { id } = context.params; // No await needed here
 
     const authHeader = req.headers.get("authorization");
     if (!authHeader)
