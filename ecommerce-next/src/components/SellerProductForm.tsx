@@ -113,7 +113,7 @@ export default function SellerProductForm({
       colors: (f.colors || []).filter((c: string) => c !== color),
     }));
   }
-
+  const [newImageUrl, setNewImageUrl] = useState("");
   async function handleUploadImages() {
     if (newImageFiles.length === 0) return [];
     setUploading(true);
@@ -380,25 +380,39 @@ export default function SellerProductForm({
         </div>
       </div>
 
-      {/* Images */}
-      <div className="form-field">
-        <label className="form-label">
-          Images {uploading && <span className="form-muted">Uploading…</span>}
-        </label>
-        <input
-          type="file"
-          multiple
-          accept="image/*"
-          onChange={(e) =>
-            setNewImageFiles(Array.from(e.target.files || []))
-          }
-        />
-        <div className="image-preview-grid">
-          {(form.imageUrls || []).map((u: string) => (
-            <img key={u} src={u} alt="preview" />
-          ))}
-        </div>
-      </div>
+      
+
+<div className="form-field">
+  <label className="form-label">Image URLs</label>
+
+  <input
+    type="text"
+    placeholder="Paste image URL ,  url ending with .jpg, .png etc."
+    value={newImageUrl}
+    onChange={(e) => setNewImageUrl(e.target.value)}
+  />
+
+  <button
+    type="button"
+    onClick={() => {
+      if (!newImageUrl) return;
+      setForm((prev) => ({
+        ...prev,
+        imageUrls: [...(prev.imageUrls || []), newImageUrl],
+      }));
+      setNewImageUrl("");
+    }}
+  >
+    Add Image
+  </button>
+
+  <div className="image-preview-grid">
+    {(form.imageUrls || []).map((u) => (
+      <img key={u} src={u} alt="preview" />
+    ))}
+  </div>
+</div>
+
 
       {/* --- Category + Subcategory --- */}
       <div className="form-grid-2">

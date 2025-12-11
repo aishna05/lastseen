@@ -2,54 +2,45 @@
 
 import React, { useEffect } from 'react';
 import Link from 'next/link';
+import { Buffer } from "buffer";
 
-interface Product {
-  id: number;
-  title: string;
-  price: number;
-  imageUrls: string;
-}
+const ProductCard = ({ product }) => {
 
-interface ProductCardProps {
-  product: Product;
-}
-
-const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
-
-  // ✅ Convert string-array to actual image URL
-  let imageUrl = "";
+  // Decode base64 JSON array safely
+  let images: string[] = [];
   try {
-    const parsed = JSON.parse(product.imageUrls); // convert string → array
-    imageUrl = Array.isArray(parsed) ? parsed[0] : parsed;
+      const jsonString = Buffer.from(product.imageUrls, "base64").toString();
+      images = JSON.parse(jsonString);
   } catch {
-    imageUrl = product.imageUrls;
+      images = [];
   }
 
-  useEffect(() => {
-    console.log("FINAL IMAGE USED 👉", imageUrl);
-  }, [imageUrl]);
+  const mainImage = images[0] || "";
+  console.log("DECODED IMAGES ARRAY →", mainImage);
 
-  const formattedPrice = new Intl.NumberFormat("en-IN", {
-    style: "currency",
-    currency: "INR",
-  }).format(product.price);
+  useEffect(() => {
+    console.log("FINAL DECODED IMAGE →", mainImage);
+  }, [mainImage]);
+
+  const imageBackgroundStyle = mainImage
+    ? {
+        backgroundImage: `url(${mainImage})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center top",
+      }
+    : {
+        backgroundColor: "transparent",
+      };
 
   return (
     <Link href={`/product/${product.id}`} className="product-card">
       <div className="product-image-wrapper">
-        <div
-          className="product-image"
-          style={{
-            backgroundImage: `url(${imageUrl})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        />
+        <div className="product-image" style={imageBackgroundStyle} />
       </div>
 
       <div className="product-details">
         <h4 className="product-title">{product.title}</h4>
-        <p className="product-price">{formattedPrice}</p>
+        <p className="product-price">₹{product.price}</p>
       </div>
     </Link>
   );

@@ -4,6 +4,8 @@
 import React from 'react';
 import ProductCard from "./ProductCard"; 
 import { User, Product } from "@prisma/client";
+import { Buffer } from "buffer";
+
 
 // Define the expected structure for the product data from the server
 type ProductWithSeller = Product & {
@@ -74,7 +76,7 @@ const ProductListingClientWrapper: React.FC<ProductListingProps> = ({ products }
                             title: p.title,
                             price: finalPrice,
                             // Assuming imageUrls is a comma-separated string, extract the first one
-                            imageUrls: p.imageUrls.split(',')[0] || '', 
+                            imageUrls: Buffer.from(p.imageUrls).toString("base64"), 
                             // Note: The prompt requested image color replacement. This component provides 
                             // the image URL, so the *absence* of the image color is now correctly 
                             // handled by the ProductCard component using the image URL.
