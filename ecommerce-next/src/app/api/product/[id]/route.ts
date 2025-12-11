@@ -2,19 +2,15 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import jwt from "jsonwebtoken";
 
-async function getParams(context: { params: { id: string } }) {
-  return await context.params; // Works for both sync and async internally
-}
-
 // -----------------------------------------
 // GET PRODUCT (PUBLIC)
 // -----------------------------------------
 export async function GET(
   req: NextRequest,
-  context: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = await getParams(context);
+    const { id } = await context.params;
 
     const product = await prisma.product.findUnique({
       where: { id: Number(id) },
@@ -48,22 +44,20 @@ export async function GET(
 }
 
 // -----------------------------------------
-// UPDATE PRODUCT (SELLER ONLY)
+// UPDATE PRODUCT
 // -----------------------------------------
 export async function PUT(
   req: NextRequest,
-  context: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = await getParams(context);
+    const { id } = await context.params;
 
     const authHeader = req.headers.get("authorization");
-    if (!authHeader) {
+    if (!authHeader)
       return NextResponse.json({ message: "No token provided" }, { status: 401 });
-    }
 
     const token = authHeader.replace("Bearer ", "");
-
     const secret = process.env.JWT_SECRET!;
     const decoded = jwt.verify(token, secret) as {
       userId: number;
@@ -94,18 +88,6 @@ export async function PUT(
     const updatedProduct = await prisma.product.update({
       where: { id: Number(id) },
       data,
-      select: {
-        id: true,
-        title: true,
-        description: true,
-        details: true,
-        price: true,
-        hsn: true,
-        imageUrls: true,
-        categoryId: true,
-        subcategoryId: true,
-        sellerId: true,
-      },
     });
 
     return NextResponse.json({
@@ -119,22 +101,20 @@ export async function PUT(
 }
 
 // -----------------------------------------
-// DELETE PRODUCT (SELLER ONLY)
+// DELETE PRODUCT
 // -----------------------------------------
 export async function DELETE(
   req: NextRequest,
-  context: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = await getParams(context);
+    const { id } = await context.params;
 
     const authHeader = req.headers.get("authorization");
-    if (!authHeader) {
+    if (!authHeader)
       return NextResponse.json({ message: "No token provided" }, { status: 401 });
-    }
 
     const token = authHeader.replace("Bearer ", "");
-
     const secret = process.env.JWT_SECRET!;
     const decoded = jwt.verify(token, secret) as {
       userId: number;
