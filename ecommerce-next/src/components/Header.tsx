@@ -82,7 +82,7 @@ const Header: React.FC = () => {
       <div className="site-header-inner">
         <Link href="/" className="site-logo">
           <Image 
-            src="/media/logo.png" 
+            src="/media/Logo.png" 
             alt="Site Logo" 
             priority
             width={150} 
