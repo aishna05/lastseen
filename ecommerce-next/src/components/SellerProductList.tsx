@@ -20,6 +20,7 @@ interface Product {
 export default function SellerProductList() {
   const [products, setProducts] = useState<Product[]>([]);
   const [editing, setEditing] = useState<Product | null>(null);
+  const [isAdding, setIsAdding] = useState(false);
   const [loading, setLoading] = useState(false);
 
   async function fetchProducts() {
@@ -43,6 +44,7 @@ export default function SellerProductList() {
     if (res.ok) {
       fetchProducts();
       setEditing(null);
+      setIsAdding(false);
     } else {
       alert("Create failed");
     }
@@ -58,6 +60,7 @@ export default function SellerProductList() {
     if (res.ok) {
       fetchProducts();
       setEditing(null);
+      setIsAdding(false);
     } else {
       alert("Update failed");
     }
@@ -75,7 +78,13 @@ export default function SellerProductList() {
       <div>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-semibold">Your Products</h2>
-          <button className="text-sm underline" onClick={() => setEditing({})}>
+          <button 
+            className="text-sm underline" 
+            onClick={() => {
+              setEditing(null);
+              setIsAdding(true);
+            }}
+          >
             + Add
           </button>
         </div>
@@ -94,7 +103,15 @@ export default function SellerProductList() {
                   <p className="text-xs text-gray-600">Brand: {p.brand || "-"} • Gender: {p.gender}</p>
                 </div>
                 <div className="flex gap-2">
-                  <button className="text-sm underline" onClick={() => setEditing(p)}>Edit</button>
+                  <button 
+                    className="text-sm underline" 
+                    onClick={() => {
+                      setEditing(p);
+                      setIsAdding(false);
+                    }}
+                  >
+                    Edit
+                  </button>
                   <button className="text-sm text-red-600 underline" onClick={() => handleDelete(p.id)}>Delete</button>
                 </div>
               </li>
@@ -104,17 +121,22 @@ export default function SellerProductList() {
       </div>
 
       <div>
-        <h2 className="text-xl font-semibold mb-2">{editing?.id ? "Edit Product" : "Add Product"}</h2>
-        <SellerProductForm
-          initial={editing}
-          onSubmit={editing?.id ? handleUpdate : handleCreate}
-          onCancel={() => setEditing(null)}
-        />
+        {(isAdding || editing) && (
+          <>
+            <h2 className="text-xl font-semibold mb-2">
+              {editing?.id ? "Edit Product" : "Add Product"}
+            </h2>
+            <SellerProductForm
+              initial={editing || undefined}
+              onSubmit={editing?.id ? handleUpdate : handleCreate}
+              onCancel={() => {
+                setEditing(null);
+                setIsAdding(false);
+              }}
+            />
+          </>
+        )}
       </div>
     </div>
   );
 }
-
-
-
-

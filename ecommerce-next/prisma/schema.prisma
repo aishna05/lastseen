@@ -19,7 +19,6 @@ model User {
   email    String    @unique @map("email")
   password String    @map("password")
   role     String    @default("CUSTOMER") @map("role")
-
   products  Product[]  @relation("SellerProducts")
   cartItems CartItem[]
   orders    Order[]

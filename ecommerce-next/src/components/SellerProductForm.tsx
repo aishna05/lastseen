@@ -444,12 +444,11 @@ export default function SellerProductForm({
   </button>
 
   <div className="image-preview-grid">
-    {(form.imageUrls || []).map((u) => (
+    {(form.imageUrls || []).map((u: string) => (
       <img key={u} src={u} alt="preview" />
     ))}
   </div>
 </div>
-
 
       {/* --- Category + Subcategory --- */}
       <div className="form-grid-2">
