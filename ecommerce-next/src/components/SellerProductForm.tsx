@@ -157,7 +157,7 @@ export default function SellerProductForm({
     try {
       const formData = new FormData();
       newImageFiles.forEach((f) => formData.append("images", f));
-      const res = await fetch("/api/product", { method: "POST", body: formData });
+      const res = await fetch("/api/upload", { method: "POST", body: formData });
       if (!res.ok) throw new Error("Upload failed");
       const data = await res.json();
       setForm((f: any) => ({
@@ -182,9 +182,23 @@ export default function SellerProductForm({
       setError("Please provide product title and price.");
       return;
     }
+    if (newImageFiles.length > 0) {
+    await handleUploadImages();
+    // Wait a moment for state to update
+    await new Promise(resolve => setTimeout(resolve, 100));
+  }
+   let newUrls: string[] = [];
+  if (newImageFiles.length > 0) {
+    newUrls = await handleUploadImages();
+    if (newUrls.length === 0 && newImageFiles.length > 0) {
+      setError("Failed to upload images. Please try again.");
+      return;
+    }
+  }
 
     const payload: any = {
       ...form,
+      imageUrls: [...(form.imageUrls || []), ...newUrls],
       price: Number(form.price),
       discount:
         form.discount === "" || form.discount == null
@@ -192,10 +206,6 @@ export default function SellerProductForm({
           : Number(form.discount),
       weight: form.weight === "" ? null : Number(form.weight),
     };
-
-    if (newImageFiles.length) {
-      await handleUploadImages();
-    }
 
     await onSubmit(payload);
   }
@@ -419,36 +429,53 @@ export default function SellerProductForm({
 
       
 
-<div className="form-field">
-  <label className="form-label">Image URLs</label>
 
+
+<div className="form-field">
+  <label className="form-label">Product Images</label>
+  
   <input
-    type="text"
-    placeholder="Paste image URL ,  url ending with .jpg, .png etc."
-    value={newImageUrl}
-    onChange={(e) => setNewImageUrl(e.target.value)}
+    type="file"
+    accept="image/png, image/jpeg, image/jpg, image/webp"
+    multiple
+    onChange={(e) => {
+      const files = Array.from(e.target.files || []);
+      setNewImageFiles(files);
+    }}
   />
 
-  <button
-    type="button"
-    onClick={() => {
-      if (!newImageUrl) return;
-      setForm((prev) => ({
-        ...prev,
-        imageUrls: [...(prev.imageUrls || []), newImageUrl],
-      }));
-      setNewImageUrl("");
-    }}
-  >
-    Add Image
-  </button>
+  {newImageFiles.length > 0 && (
+    <button
+      type="button"
+      onClick={handleUploadImages}
+      disabled={uploading}
+      className="btn-primary"
+    >
+      {uploading ? "Uploading..." : `Upload ${newImageFiles.length} image(s)`}
+    </button>
+  )}
 
   <div className="image-preview-grid">
-    {(form.imageUrls || []).map((u: string) => (
-      <img key={u} src={u} alt="preview" />
+    {(form.imageUrls || []).map((url: string, idx: number) => (
+      <div key={idx} className="image-preview-item">
+        <img src={url} alt={`Product ${idx + 1}`} />
+        <button
+          type="button"
+          onClick={() => {
+            setForm((prev) => ({
+              ...prev,
+              imageUrls: prev.imageUrls.filter((_: string, i: number) => i !== idx),
+            }));
+          }}
+          className="btn-remove-image"
+        >
+          ×
+        </button>
+      </div>
     ))}
   </div>
 </div>
+
 
       {/* --- Category + Subcategory --- */}
       <div className="form-grid-2">

@@ -2087,3 +2087,221 @@ select:focus {
   text-align: center;
   margin-top: 2.5rem;
 }
+.image-preview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.image-preview-item {
+  position: relative;
+  aspect-ratio: 1;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.image-preview-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.btn-remove-image {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: rgba(255, 0, 0, 0.8);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+}
+
+/* --- LUXE CHECKOUT THEME --- */
+.checkout-page {
+  background: #0A0A0A; /* Pure Black */
+  min-height: 100vh;
+  color: #FFFFFF;
+  font-family: 'Inter', sans-serif;
+  padding-bottom: 5rem;
+}
+
+.checkout-container {
+  max-width: 1050px; /* Reduced width for a more focused look */
+  margin: 0 auto;
+  padding: 3rem 1.5rem;
+}
+
+.checkout-header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.checkout-title {
+  font-family: "Cinzel", serif;
+  font-size: 2rem;
+  letter-spacing: 0.3em;
+  color: var(--primary-light);
+  margin-bottom: 0.5rem;
+}
+
+.checkout-subtitle {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: #666;
+}
+
+/* --- GRID --- */
+.checkout-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+@media (min-width: 1024px) {
+  .checkout-grid {
+    grid-template-columns: 1.4fr 1fr;
+  }
+}
+
+/* --- CARDS --- */
+.luxe-card {
+  background: #111111; /* Slightly lighter than black */
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 2rem;
+  border-radius: 4px; /* Sharper corners for a more architectural look */
+}
+
+.card-label {
+  font-family: "Cinzel", serif;
+  font-size: 0.85rem;
+  color: var(--primary);
+  margin-bottom: 2rem;
+  display: block;
+  border-bottom: 1px solid rgba(176, 139, 72, 0.2);
+  padding-bottom: 0.75rem;
+}
+
+/* --- ADDRESS SYSTEM --- */
+.address-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.address-item {
+  position: relative;
+  padding: 1.25rem;
+  background: #161616;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.address-item:hover {
+  background: #1A1A1A;
+  border-color: rgba(176, 139, 72, 0.3);
+}
+
+.address-item.active {
+  border-color: var(--primary);
+  background: #1A1814;
+}
+
+.addr-main {
+  font-size: 0.95rem;
+  color: #EEE;
+  margin-bottom: 0.25rem;
+}
+
+.addr-sub {
+  font-size: 0.75rem;
+  color: #666;
+}
+
+.selection-indicator {
+  width: 12px;
+  height: 12px;
+  border: 1px solid #333;
+  border-radius: 50%;
+}
+
+.active .selection-indicator {
+  background: var(--primary);
+  border-color: var(--primary);
+  box-shadow: 0 0 10px var(--primary);
+}
+
+/* --- SUMMARY --- */
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  font-size: 0.85rem;
+}
+
+.item-name { color: #BBB; }
+.item-qty { color: #555; margin-left: 0.5rem; font-size: 0.7rem; }
+.item-price { color: #FFF; font-weight: 500; }
+
+.price-breakdown {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.breakdown-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: #888;
+  margin-bottom: 0.75rem;
+}
+
+.free-tag { color: var(--primary); font-size: 0.7rem; text-transform: uppercase; }
+
+.total-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.25rem;
+  color: #FFF;
+  font-family: "Cinzel", serif;
+  margin-top: 1rem;
+}
+
+/* --- BUTTON --- */
+.pay-btn-luxe {
+  width: 100%;
+  margin-top: 2rem;
+  padding: 1rem;
+  background: transparent;
+  color: var(--primary);
+  border: 1px solid var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.pay-btn-luxe:hover {
+  background: var(--primary);
+  color: #000;
+  box-shadow: 0 0 30px rgba(176, 139, 72, 0.2);
+}
+
+.pay-btn-luxe:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}

@@ -13,6 +13,7 @@ export default function OrderPage() {
   const [message, setMessage] = useState("");
 
   const [address, setAddress] = useState({
+    phone: "",
     address: "",
     city: "",
     state: "",
@@ -126,6 +127,18 @@ async function createAddress() {
                 required
               />
             </div>
+  
+  <div className="auth-field">
+    <label>Phone Number</label>
+  <input
+    type="tel"
+    value={address.phone}
+    onChange={(e) =>
+      setAddress({ ...address, phone: e.target.value })
+                }
+                required
+              />
+</div>
  {/* ✅ Address Fields */}
  <div className="auth-field">
  <label>Address</label>

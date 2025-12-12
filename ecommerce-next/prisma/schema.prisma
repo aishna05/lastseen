@@ -23,6 +23,7 @@ model User {
   cartItems CartItem[]
   orders    Order[]
   CustomerAddress CustomerAddress[]
+  phone     String? @map("phone")
 
   @@map("users")
 }
@@ -161,7 +162,7 @@ model CustomerAddress {
   state     String @map("state")
   country   String @map("country")
   zipcode   String @map("zipcode")
-  
+  phone     String? @map("phone")
 
   customer    User      @relation(fields: [userId], references: [id])
   orders    Order[]

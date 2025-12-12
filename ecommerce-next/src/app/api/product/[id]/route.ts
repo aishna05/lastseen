@@ -8,11 +8,10 @@ export const dynamic = 'force-dynamic';
 // -----------------------------------------
 export async function GET(
   req: NextRequest,
-  // FIX: Next.js provides 'params' as a synchronous object, not a Promise.
-  context: { params: Promise<{ id: string }> }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = await context.params; // No await needed here
+    const { id } = await context.params;
 
     const product = await prisma.product.findUnique({
       where: { id: Number(id) },
@@ -34,11 +33,27 @@ export async function GET(
       details: product.details,
       price: product.price,
       hsn: product.hsn,
-      // Handle potential null/undefined imageUrls before parsing
+      discount: product.discount,
+      brand: product.brand,
+      gender: product.gender,
+      material: product.material,
+      fabricCare: product.fabricCare,
+      occasion: product.occasion,
+      modelNumber: product.modelNumber,
+      sku: product.sku,
+      availableSizes: product.availableSizes ? JSON.parse(product.availableSizes) : [],
+      sizeStock: product.sizeStock ? JSON.parse(product.sizeStock) : {},
+      colors: product.colors ? JSON.parse(product.colors) : [],
       imageUrls: product.imageUrls ? JSON.parse(product.imageUrls) : [],
+      weight: product.weight,
+      dimensions: product.dimensions,
+      returnPolicy: product.returnPolicy,
+      sellerNotes: product.sellerNotes,
       category: product.category,
       subcategory: product.subcategory,
       seller: product.seller,
+      createdAt: product.createdAt,
+      updatedAt: product.updatedAt,
     });
   } catch (error: any) {
     console.error("GET PRODUCT ERROR:", error);
@@ -51,11 +66,10 @@ export async function GET(
 // -----------------------------------------
 export async function PUT(
   req: NextRequest,
-  // FIX: Corrected type definition for context
-  context: { params: Promise<{ id: string }> }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = await context.params; // No await needed here
+    const { id } = await context.params;
 
     const authHeader = req.headers.get("authorization");
     if (!authHeader)
@@ -77,7 +91,28 @@ export async function PUT(
 
     const data = await req.json();
 
-    // Ensure array/object data is stringified for Prisma (assuming your model fields are `Json` or `String`)
+    // ✅ Convert categoryId and subcategoryId to numbers
+    if (data.categoryId !== undefined) {
+      data.categoryId = Number(data.categoryId);
+    }
+    if (data.subcategoryId !== undefined) {
+      data.subcategoryId = Number(data.subcategoryId);
+    }
+
+    // ✅ Convert numeric fields
+    if (data.price !== undefined) {
+      data.price = Number(data.price);
+    }
+    if (data.discount !== undefined) {
+      data.discount = Number(data.discount);
+    }
+    if (data.weight !== undefined && data.weight !== null && data.weight !== "") {
+      data.weight = Number(data.weight);
+    } else if (data.weight === "") {
+      data.weight = null;
+    }
+
+    // Ensure array/object data is stringified for Prisma
     if (Array.isArray(data.availableSizes))
       data.availableSizes = JSON.stringify(data.availableSizes);
 
@@ -110,11 +145,10 @@ export async function PUT(
 // -----------------------------------------
 export async function DELETE(
   req: NextRequest,
-  // FIX: Corrected type definition for context
   context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = await context.params; // No await needed here
+    const { id } = await context.params;
 
     const authHeader = req.headers.get("authorization");
     if (!authHeader)

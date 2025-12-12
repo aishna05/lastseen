@@ -52,6 +52,7 @@ export async function PUT(
       data,
       select: {
         id: true,
+        phone : true,
         address: true,
         city: true,
         state: true,
@@ -82,6 +83,7 @@ export async function GET(
       select: {
         id: true,
         address: true,
+        phone: true,
         city: true,
         state: true,
         country: true,
@@ -133,6 +135,7 @@ export async function DELETE(
       select: {
         id: true,
         address: true,
+        phone: true,
         city: true,
         state: true,
         country: true,

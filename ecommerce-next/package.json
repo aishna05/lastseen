@@ -10,6 +10,7 @@
     "postinstall": "prisma generate"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
     "@prisma/adapter-better-sqlite3": "^7.1.0",
     "@prisma/client": "^5.22.0",
     "bcryptjs": "^3.0.3",
@@ -18,17 +19,22 @@
     "lucide-react": "^0.556.0",
     "next": "16.0.7",
     "next-auth": "^4.24.13",
+    "nodemailer": "^7.0.11",
     "prisma": "^5.22.0",
     "razorpay": "^2.9.6",
     "react": "19.2.0",
-    "react-dom": "19.2.0"
+    "react-dom": "19.2.0",
+    "resend": "^6.6.0",
+    "uuid": "^13.0.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^20",
+    "@types/nodemailer": "^7.0.4",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/uuid": "^10.0.0",
     "eslint": "^9",
     "eslint-config-next": "16.0.7",
     "tailwindcss": "^4",

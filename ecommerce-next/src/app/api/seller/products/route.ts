@@ -84,8 +84,8 @@ export async function POST(req: NextRequest) {
         returnPolicy: body.returnPolicy ?? null,
         sellerNotes: body.sellerNotes ?? null,
         sellerId: result.decoded.userId,
-        categoryId: body.categoryId ?? 1,
-        subcategoryId: body.subcategoryId ?? 1,
+        categoryId: Number(body.categoryId) ?? 1,
+        subcategoryId: Number(body.subcategoryId) ?? 1,
       },
     });
 

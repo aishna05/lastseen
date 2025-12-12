@@ -9,9 +9,9 @@ export const dynamic = 'force-dynamic';
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { name, email, password, role } = body;
+    const { name, email, password, phone,role } = body;
 
-    if (!name || !email || !password || !role) {
+    if (!name || !email || !password || !role || !phone) {
       return NextResponse.json(
         { message: "Missing fields" },
         { status: 400 }
@@ -33,6 +33,7 @@ export async function POST(req: Request) {
         name,
         email,
         password: hashed,
+        phone,
         role, // "SELLER" or "CUSTOMER"
       },
     });
@@ -49,7 +50,9 @@ export async function POST(req: Request) {
       {
         userId: user.id,
         email: user.email,
+        phone: user.phone,
         role: user.role,
+
       },
       secret,
       { expiresIn: "7d" }
@@ -61,6 +64,7 @@ export async function POST(req: Request) {
           id: user.id,
           name: user.name,
           email: user.email,
+          phone: user.phone,
           role: user.role,
         },
         token,

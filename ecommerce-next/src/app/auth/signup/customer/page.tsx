@@ -10,6 +10,7 @@ export default function CustomerSignupPage() {
  const [loading, setLoading] = useState(false);
  const [error, setError] = useState("");
  const [success, setSuccess] = useState("");
+ const [phone, setPhone] = useState("");
  const router = useRouter();
 
    async function handleSubmit(e: React.FormEvent) {   e.preventDefault();
@@ -20,7 +21,7 @@ export default function CustomerSignupPage() {
     const res = await fetch("/api/auth/signup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, password, role: "CUSTOMER" }),
+      body: JSON.stringify({ name, email, password, phonerole: "CUSTOMER" }),
     });
 
     if (res.ok) {
@@ -62,6 +63,13 @@ export default function CustomerSignupPage() {
  />
  </div>
  <div className="auth-field">
+  <label>Phone Number</label>
+  <input
+    type="tel"
+    value={phone}
+    onChange={(e) => setPhone(e.target.value)}
+    required
+  />
  <label>Password</label>
  <input
  type="password"

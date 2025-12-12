@@ -110,6 +110,7 @@ export async function GET(req: NextRequest) {
             id: true,
             title: true,
             price: true,
+            discount: true,
             imageUrls: true,
           },
         },

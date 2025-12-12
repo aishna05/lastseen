@@ -19,6 +19,7 @@ interface SellerOrder {
   sellerItems: SellerOrderItem[];
   sellerRevenue: number;
   address: {
+    phone: string;
     address: string;
     city: string;
     state: string;
@@ -123,7 +124,7 @@ export default function SellerOrdersPage() {
                 <p>Your Revenue Share: <strong className="text-primary-dark">₹{order.sellerRevenue.toFixed(2)}</strong></p>
             </div>
 
-
+            <p className="order-address"><small>Phone Number:</small><br/>{order.address.phone}</p>
             <p className="order-address">
               <small>Shipping Address:</small><br/>
               {order.address.address}, {order.address.city}, {order.address.state}, {order.address.country} - {order.address.zipcode}

@@ -1,3 +1,4 @@
+// /src/app/api/order/[id]/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import jwt from "jsonwebtoken";
@@ -13,7 +14,6 @@ export async function GET(req: NextRequest, context: { params: { id: string } | 
 
     if (decoded.role !== "CUSTOMER") return NextResponse.json({ message: "Forbidden" }, { status: 403 });
 
-    // ✅ Await params if it's a Promise
     const params = await context.params;
     const orderId = Number(params.id);
     if (!orderId || isNaN(orderId)) return NextResponse.json({ message: "Invalid orderId" }, { status: 400 });
@@ -21,9 +21,28 @@ export async function GET(req: NextRequest, context: { params: { id: string } | 
     const order = await prisma.order.findFirst({
       where: { id: orderId, userId: decoded.userId },
       include: {
-        address: { select: { address: true, city: true, state: true, country: true, zipcode: true } },
+        address: { 
+          select: { 
+            address: true, 
+            city: true, 
+            state: true, 
+            country: true, 
+            zipcode: true,
+            phone: true // ✅ NOW INCLUDES PHONE
+          } 
+        },
         items: {
-          select: { productId: true, quantity: true, price: true, product: { select: { title: true, price: true } } },
+          select: { 
+            productId: true, 
+            quantity: true, 
+            price: true, 
+            product: { 
+              select: { 
+                title: true, 
+                price: true 
+              } 
+            } 
+          },
         },
       },
     });
@@ -36,5 +55,3 @@ export async function GET(req: NextRequest, context: { params: { id: string } | 
     return NextResponse.json({ error: "Failed", message: error.message }, { status: 500 });
   }
 }
-
-

@@ -85,6 +85,7 @@ export async function GET(req: Request) {
         total: true, // Total order value (customer paid)
         address: {
           select: {
+            phone: true,
             address: true,
             city: true,
             state: true,
