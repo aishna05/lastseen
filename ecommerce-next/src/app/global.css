@@ -2305,3 +2305,292 @@ select:focus {
   opacity: 0.3;
   cursor: not-allowed;
 }
+/* --- SUCCESS PAGE THEME --- */
+.success-page {
+  background: #0A0A0A;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.8s cubic-bezier(0.2, 1, 0.3, 1);
+}
+
+.success-page.entry-animate {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.success-card {
+  max-width: 450px;
+  width: 100%;
+  background: #111;
+  border: 1px solid rgba(176, 139, 72, 0.2);
+  padding: 3.5rem 2.5rem;
+  text-align: center;
+  border-radius: 2px;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+}
+
+.success-icon {
+  width: 60px;
+  height: 60px;
+  border: 1px solid #B08B48;
+  color: #B08B48;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 2rem;
+  box-shadow: 0 0 20px rgba(176, 139, 72, 0.2);
+}
+
+.success-icon svg {
+  width: 30px;
+}
+
+.success-title {
+  font-family: "Cinzel", serif;
+  font-size: 1.75rem;
+  letter-spacing: 0.2em;
+  color: #B08B48;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+}
+
+.success-message {
+  font-size: 0.85rem;
+  color: #888;
+  line-height: 1.8;
+  margin-bottom: 2.5rem;
+}
+
+.order-details-box {
+  background: #0A0A0A;
+  padding: 1.25rem;
+  border: 1px dashed rgba(255,255,255,0.1);
+  margin-bottom: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.detail-label {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: #555;
+}
+
+.detail-value {
+  font-family: "Cinzel", serif;
+  color: #FFF;
+  letter-spacing: 0.1em;
+}
+
+.success-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.btn-success-primary {
+  background: #B08B48;
+  color: #000;
+  padding: 1rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.btn-success-primary:hover {
+  background: #D4BC84;
+}
+
+.btn-success-ghost {
+  border: 1px solid #333;
+  color: #666;
+  padding: 1rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.btn-success-ghost:hover {
+  border-color: #B08B48;
+  color: #B08B48;
+}
+
+.success-footer {
+  margin-top: 2.5rem;
+  font-size: 0.65rem;
+  color: #444;
+  letter-spacing: 0.05em;
+}
+
+/* Loading State */
+.success-loading {
+  background: #0A0A0A;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loader-gold {
+  width: 40px;
+  height: 40px;
+  border: 2px solid rgba(176, 139, 72, 0.1);
+  border-top: 2px solid #B08B48;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+/* --- FAILED PAGE THEME --- */
+.failed-page {
+  background: #0A0A0A; /* Matches your luxe theme */
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.failed-card {
+  max-width: 420px;
+  width: 100%;
+  background: #111;
+  border: 1px solid rgba(255, 255, 255, 0.05); /* Very subtle border */
+  padding: 3rem 2rem;
+  text-align: center;
+  border-radius: 2px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+}
+
+.failed-icon {
+  width: 50px;
+  height: 50px;
+  border: 1px solid rgba(255, 0, 0, 0.3); /* Subtle red accent */
+  color: #ff4d4d;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+}
+
+.failed-icon svg {
+  width: 24px;
+}
+
+.failed-title {
+  font-family: "Cinzel", serif;
+  font-size: 1.5rem;
+  letter-spacing: 0.2em;
+  color: #FFF;
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+}
+
+.failed-message {
+  font-size: 0.85rem;
+  color: #777;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.failed-reason-box {
+  background: #0D0D0D;
+  border-left: 2px solid #B08B48; /* Gold accent */
+  padding: 1rem;
+  text-align: left;
+  margin-bottom: 2rem;
+}
+
+.reason-header {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #B08B48;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.reason-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 0.75rem;
+  color: #555;
+}
+
+.reason-list li::before {
+  content: "— ";
+  color: #333;
+}
+
+.failed-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.btn-failed-primary {
+  background: #B08B48;
+  color: #000;
+  border: none;
+  padding: 1rem;
+  font-weight: 700;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-failed-ghost {
+  background: transparent;
+  border: 1px solid #333;
+  color: #666;
+  padding: 1rem;
+  font-weight: 500;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-failed-ghost:hover {
+  border-color: #B08B48;
+  color: #B08B48;
+}
+
+.failed-support {
+  margin-top: 1.5rem;
+  font-size: 0.75rem;
+  color: #444;
+}
+
+.failed-support a {
+  color: #B08B48;
+  text-decoration: underline;
+}
+
+.refund-note {
+  margin-top: 2rem;
+  font-size: 0.65rem;
+  color: #333;
+  font-style: italic;
+}
