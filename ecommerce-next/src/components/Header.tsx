@@ -75,6 +75,7 @@ const Header: React.FC = () => {
     { href: "/products", label: "Products" },
     { href: "/about-us", label: "About Us" },
     { href: "/contact-us", label: "Contact Us" },
+    { href: "/filter", label: "Categories" },
   ];
 
   return (

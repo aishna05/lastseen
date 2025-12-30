@@ -252,12 +252,12 @@ export default async function ProductPage({ params }: ProductPageProps) {
           {/* ADD TO CART */}
           <AddToCartButton productId={productId} />
 
-          {/* BUY NOW */}
+          {/* BUY NOW
           <Link href={`/order/${productId}`} className="w-full mt-2">
             <button type="button" className="btn-primary w-full">
               Buy Now
             </button>
-          </Link>
+          </Link> */}
         </div>
       </section>
     </main>

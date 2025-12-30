@@ -168,8 +168,10 @@ export async function DELETE(
       );
     }
 
-    await prisma.product.delete({
+    // Soft delete - mark as inactive instead of deleting
+    await prisma.product.update({
       where: { id: Number(id) },
+      data: { isActive: false }
     });
 
     return NextResponse.json({ message: "Product deleted successfully" });

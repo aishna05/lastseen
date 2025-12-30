@@ -37,7 +37,7 @@ model Product {
   description  String     @map("description")
   details      String?    @map("details")
   price        Float      @map("price")
-  hsn          String?    @map("hsn")   // ✅ ✅ ✅ ADDED FIX
+  hsn          String?    @map("hsn")
 
   discount     Float?     @default(0) @map("discount")
   brand        String?    @map("brand")
@@ -60,6 +60,8 @@ model Product {
   returnPolicy  String?   @map("return_policy")
   sellerNotes   String?   @map("seller_notes")
 
+  isActive      Boolean   @default(true) @map("is_active")  // ✅ ADD THIS LINE
+
   seller        User       @relation("SellerProducts", fields: [sellerId], references: [id])
   sellerId      Int        @map("seller_id")
 
@@ -74,7 +76,6 @@ model Product {
 
   @@map("products")
 }
-
 
 
 model CartItem {
