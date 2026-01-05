@@ -38,3 +38,4 @@ export default async function ProductDataFetcher() {
   // 3. Pass *only* the static data to the client component
   return <ProductListingClient products={productsForDisplay} />;
 }
+export const dynamic = 'force-dynamic';

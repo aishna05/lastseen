@@ -26,6 +26,7 @@ const handleAddToCart = (productId: number) => {
 
 import ProductDataFetcher from "@/components/ProductDataFetcher";
 
+export const dynamic = 'force-dynamic';
 
 // This file remains a Server Component, focusing only on rendering the fetcher.
 export default function ProductsPage() {

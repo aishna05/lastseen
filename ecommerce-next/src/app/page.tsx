@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import ProductListingClientWrapper from "@/components/ProductListingClientWrapper";
 import { prisma } from "@/lib/prisma";
 
