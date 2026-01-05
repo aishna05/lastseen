@@ -1,70 +1,172 @@
-// File: pages/api/seller/products/[id].ts
-import type { NextApiRequest, NextApiResponse } from 'next';
-import { getSession } from 'next-auth/react';
-import { prisma } from '@/lib/prisma';
+// File: app/api/seller/products/[id]/route.ts
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+import { verifyToken } from "@/lib/auth";
+
 export const dynamic = 'force-dynamic';
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const session = await getSession({ req });
-  if (!session) return res.status(401).json({ error: 'Unauthorized' });
-  const role = (session.user as any).role;
-  if (role !== 'SELLER') return res.status(403).json({ error: 'Forbidden' });
-  const userId = (session.user as any).id;
-  const { id } = req.query;
-  const pid = Number(id);
 
-  // verify seller owns product
-  const product = await prisma.product.findUnique({ where: { id: pid } });
-  if (!product) return res.status(404).json({ error: 'Not found' });
-  if (product.sellerId !== Number(userId)) return res.status(403).json({ error: 'Not your product' });
+// ✅ GET Single Product
+export async function GET(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const authHeader = req.headers.get("authorization");
+    const result = verifyToken(authHeader);
 
-  if (req.method === 'PUT') {
-    try {
-      const body = req.body;
-      const updated = await prisma.product.update({
-        where: { id: pid },
-        data: {
-          title: body.title,
-          description: body.description || '',
-          price: Number(body.price),
-          discount: body.discount ?? 0,
-          brand: body.brand || null,
-          gender: body.gender || 'UNISEX',
-          material: body.material || null,
-          fabricCare: body.fabricCare || null,
-          occasion: body.occasion || null,
-          modelNumber: body.modelNumber || null,
-          sku: body.sku || null,
-          availableSizes: body.availableSizes ? JSON.stringify(body.availableSizes) : JSON.stringify([]),
-          sizeStock: body.sizeStock ? JSON.stringify(body.sizeStock) : JSON.stringify({}),
-          colors: body.colors ? JSON.stringify(body.colors) : JSON.stringify([]),
-          imageUrls: body.imageUrls ? JSON.stringify(body.imageUrls) : JSON.stringify([]),
-          weight: body.weight ?? null,
-          dimensions: body.dimensions ?? null,
-          returnPolicy: body.returnPolicy ?? null,
-          sellerNotes: body.sellerNotes ?? null,
-        }
-      });
-      return res.status(200).json(updated);
-    } catch (err) {
-      console.error(err);
-      return res.status(500).json({ error: 'Update failed' });
+    if (!result.valid) {
+      return NextResponse.json({ error: result.error }, { status: 401 });
     }
-  }
 
-  if (req.method === 'DELETE') {
-    try {
-      await prisma.product.delete({ where: { id: pid } });
-      return res.status(204).end();
-    } catch (err) {
-      console.error(err);
-      return res.status(500).json({ error: 'Delete failed' });
+    if (result.decoded.role !== "SELLER") {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
-  }
 
-  if (req.method === 'GET') {
-    return res.status(200).json(product);
-  }
+    const pid = Number(params.id);
+    if (isNaN(pid)) {
+      return NextResponse.json({ error: "Invalid product ID" }, { status: 400 });
+    }
 
-  return res.status(405).end();
+    const product = await prisma.product.findUnique({
+      where: { id: pid }
+    });
+
+    if (!product) {
+      return NextResponse.json({ error: "Not found" }, { status: 404 });
+    }
+
+    if (product.sellerId !== result.decoded.userId) {
+      return NextResponse.json({ error: "Not your product" }, { status: 403 });
+    }
+
+    return NextResponse.json(product, { status: 200 });
+  } catch (error) {
+    console.error("GET /seller/products/[id] error:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch product" },
+      { status: 500 }
+    );
+  }
 }
 
+// ✅ UPDATE Product
+export async function PUT(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const authHeader = req.headers.get("authorization");
+    const result = verifyToken(authHeader);
+
+    if (!result.valid) {
+      return NextResponse.json({ error: result.error }, { status: 401 });
+    }
+
+    if (result.decoded.role !== "SELLER") {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
+    const pid = Number(params.id);
+    if (isNaN(pid)) {
+      return NextResponse.json({ error: "Invalid product ID" }, { status: 400 });
+    }
+
+    // Verify ownership
+    const product = await prisma.product.findUnique({
+      where: { id: pid }
+    });
+
+    if (!product) {
+      return NextResponse.json({ error: "Not found" }, { status: 404 });
+    }
+
+    if (product.sellerId !== result.decoded.userId) {
+      return NextResponse.json({ error: "Not your product" }, { status: 403 });
+    }
+
+    const body = await req.json();
+
+    const updated = await prisma.product.update({
+      where: { id: pid },
+      data: {
+        title: body.title,
+        description: body.description || "",
+        details: body.details || null,
+        price: Number(body.price),
+        discount: body.discount ?? 0,
+        brand: body.brand || null,
+        gender: body.gender || "UNISEX",
+        material: body.material || null,
+        fabricCare: body.fabricCare || null,
+        occasion: body.occasion || null,
+        modelNumber: body.modelNumber || null,
+        sku: body.sku || null,
+        availableSizes: body.availableSizes ? JSON.stringify(body.availableSizes) : JSON.stringify([]),
+        sizeStock: body.sizeStock ? JSON.stringify(body.sizeStock) : JSON.stringify({}),
+        colors: body.colors ? JSON.stringify(body.colors) : JSON.stringify([]),
+        imageUrls: body.imageUrls ? JSON.stringify(body.imageUrls) : JSON.stringify([]),
+        weight: body.weight ?? null,
+        dimensions: body.dimensions ?? null,
+        returnPolicy: body.returnPolicy ?? null,
+        sellerNotes: body.sellerNotes ?? null,
+      }
+    });
+
+    return NextResponse.json(updated, { status: 200 });
+  } catch (error) {
+    console.error("PUT /seller/products/[id] error:", error);
+    return NextResponse.json(
+      { error: "Update failed" },
+      { status: 500 }
+    );
+  }
+}
+
+// ✅ DELETE Product
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const authHeader = req.headers.get("authorization");
+    const result = verifyToken(authHeader);
+
+    if (!result.valid) {
+      return NextResponse.json({ error: result.error }, { status: 401 });
+    }
+
+    if (result.decoded.role !== "SELLER") {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
+    const pid = Number(params.id);
+    if (isNaN(pid)) {
+      return NextResponse.json({ error: "Invalid product ID" }, { status: 400 });
+    }
+
+    // Verify ownership
+    const product = await prisma.product.findUnique({
+      where: { id: pid }
+    });
+
+    if (!product) {
+      return NextResponse.json({ error: "Not found" }, { status: 404 });
+    }
+
+    if (product.sellerId !== result.decoded.userId) {
+      return NextResponse.json({ error: "Not your product" }, { status: 403 });
+    }
+
+    await prisma.product.delete({
+      where: { id: pid }
+    });
+
+    return new NextResponse(null, { status: 204 });
+  } catch (error) {
+    console.error("DELETE /seller/products/[id] error:", error);
+    return NextResponse.json(
+      { error: "Delete failed" },
+      { status: 500 }
+    );
+  }
+}
