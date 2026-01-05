@@ -145,6 +145,7 @@ export async function POST(req: NextRequest) {
 export async function GET() {
   try {
     const products = await prisma.product.findMany({
+      where: { isActive: true },
       include: {
         category: { select: { id: true, name: true, description: true } },
         subcategory: { select: { id: true, name: true, description: true } },

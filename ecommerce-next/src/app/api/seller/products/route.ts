@@ -25,7 +25,7 @@ export async function GET(req: NextRequest) {
     }
 
     const products = await prisma.product.findMany({
-      where: { sellerId: result.decoded.userId },
+      where: { sellerId: result.decoded.userId, isActive: true },
     });
 
     return NextResponse.json(products, { status: 200 });

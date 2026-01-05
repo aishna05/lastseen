@@ -157,8 +157,10 @@ export async function DELETE(
       return NextResponse.json({ error: "Not your product" }, { status: 403 });
     }
 
-    await prisma.product.delete({
-      where: { id: pid }
+    // Soft-delete: mark product as inactive so it no longer appears
+    await prisma.product.update({
+      where: { id: pid },
+      data: { isActive: false },
     });
 
     return new NextResponse(null, { status: 204 });

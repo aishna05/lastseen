@@ -7,6 +7,7 @@ interface OrderItem {
   product: { title: string; price: number };
   quantity: number;
   price: number;
+  size?: string | null;
 }
 
 interface Order {
@@ -123,14 +124,15 @@ export default function OrdersPage() {
 
                     <ul className="order-items-list">
                         {order.items.map((item) => (
-                            <li key={item.id} className="order-item">
-                                <span>
-                                    {item.product.title} × {item.quantity}
-                                </span>
-                                <span className="order-item-price">
-                                    ₹{item.price * item.quantity}
-                                </span>
-                            </li>
+                          <li key={item.id} className="order-item">
+                            <span>
+                              {item.product.title} × {item.quantity}
+                              {item.size && <span> • Size: {item.size}</span>}
+                            </span>
+                            <span className="order-item-price">
+                              ₹{item.price * item.quantity}
+                            </span>
+                          </li>
                         ))}
                     </ul>
                     

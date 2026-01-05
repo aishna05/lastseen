@@ -9,6 +9,7 @@ interface SellerOrderItem {
   product: { title: string; imageUrls: string; id: number };
   quantity: number;
   price: number;
+  size?: string | null;
 }
 
 interface SellerOrder {
@@ -137,6 +138,9 @@ export default function SellerOrdersPage() {
                   <div className="item-details">
                     <span className="product-title-item">{item.product.title}</span> 
                     <span className="product-quantity">× {item.quantity}</span>
+                    {item.size && (
+                      <span className="product-size"> • Size: {item.size}</span>
+                    )}
                   </div>
                   <span className="order-item-price">
                     ₹{(item.price * item.quantity).toFixed(2)}

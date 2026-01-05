@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 
 export default async function HomePage() {
   const products = await prisma.product.findMany({
+    where: { isActive: true },
     include: { seller: true },
     orderBy: { createdAt: "desc" },
   });

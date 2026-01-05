@@ -48,6 +48,7 @@ export async function GET(req: Request) {
         quantity: true,
         price: true,
         orderId: true,
+        size: true,
         product: {
           select: {
             id: true,

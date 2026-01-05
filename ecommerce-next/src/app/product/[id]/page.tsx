@@ -210,22 +210,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
             </div>
           )}
 
-          {/* SIZES + STOCK */}
-          {availableSizes.length > 0 && (
-            <div className="product-detail-description">
-              <h2>Sizes & stock</h2>
-              <div className="size-checkbox-group">
-                {availableSizes.map((size) => {
-                  const qty = sizeStock?.[size] ?? 0;
-                  return (
-                    <span key={size}>
-                      <span className="btn-primary">{size}</span>
-                    </span>
-                  );
-                })}
-              </div>
-            </div>
-          )}
+          {/* SIZES + STOCK: selection handled inside AddToCartButton to keep UI consistent */}
 
           {/* COLORS
           {colors.length > 0 && (
@@ -250,7 +235,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
           )}
 
           {/* ADD TO CART */}
-          <AddToCartButton productId={productId} />
+          <AddToCartButton productId={productId} availableSizes={availableSizes} sizeStock={sizeStock} />
 
           {/* BUY NOW
           <Link href={`/order/${productId}`} className="w-full mt-2">

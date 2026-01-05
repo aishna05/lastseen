@@ -88,7 +88,7 @@ model CartItem {
 
   product   Product  @relation(fields: [productId], references: [id])
   productId Int      @map("product_id")
-
+  size      String?
   quantity  Int      @default(1) @map("quantity")
 
   @@map("cart_items")
@@ -125,7 +125,7 @@ model OrderItem {
 
   price     Float    @map("price")
   quantity  Int      @map("quantity")
-
+  size      String?
   @@map("order_items")
 }
 

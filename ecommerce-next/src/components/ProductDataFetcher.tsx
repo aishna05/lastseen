@@ -13,6 +13,7 @@ type ProductWithSeller = Product & {
 export default async function ProductDataFetcher() {
   // 1. Fetch data on the server (Server Component)
   const products: ProductWithSeller[] = await prisma.product.findMany({
+    where: { isActive: true },
     include: { 
         seller: true,
     }, 

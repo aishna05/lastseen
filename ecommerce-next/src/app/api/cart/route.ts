@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
         { status: 403 }
       );
 
-    const { productId, quantity } = await req.json();
+    const { productId, quantity, size } = await req.json();
 
     if (!productId)
       return NextResponse.json(
@@ -38,6 +38,7 @@ export async function POST(req: NextRequest) {
       where: {
         userId: decoded.userId,
         productId: Number(productId),
+        size: size || null,
       },
     });
 
@@ -51,6 +52,7 @@ export async function POST(req: NextRequest) {
           productId: true,
           userId: true,
           quantity: true,
+          size: true,
         },
       });
 
@@ -66,12 +68,14 @@ export async function POST(req: NextRequest) {
         userId: decoded.userId,
         productId: Number(productId),
         quantity: quantity || 1,
+        size: size || null,
       },
       select: {
         id: true,
         productId: true,
         userId: true,
         quantity: true,
+        size: true,
       },
     });
 
@@ -104,6 +108,7 @@ export async function GET(req: NextRequest) {
       where: { userId: decoded.userId },
       select: {
         id: true,
+        size: true,
         quantity: true,
         product: {
           select: {

@@ -87,6 +87,7 @@ export async function POST(req: NextRequest) {
             productId: item.productId,
             quantity: item.quantity,
             price: item.product.price,
+            size: item.size || null,
           })),
         },
       },
@@ -105,6 +106,7 @@ export async function POST(req: NextRequest) {
             productId: true,
             quantity: true,
             price: true,
+            size: true,
             product: {
               select: {
                 title: true,

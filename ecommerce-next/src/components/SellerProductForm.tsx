@@ -48,7 +48,7 @@ type Category = {
 };
 
 
-const defaultSizes = ["XS", "S", "M", "L", "XL", "XXL"];
+const defaultSizes = ["XS", "S", "M", "L", "XL", "XXL", "3XL", "4XL", "5XL"];
 
 function parseJson(value: any, fallback: any) {
   if (typeof value === "string") {
