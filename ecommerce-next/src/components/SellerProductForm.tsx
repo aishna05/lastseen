@@ -182,19 +182,14 @@ export default function SellerProductForm({
       setError("Please provide product title and price.");
       return;
     }
+    let newUrls: string[] = [];
     if (newImageFiles.length > 0) {
-    await handleUploadImages();
-    // Wait a moment for state to update
-    await new Promise(resolve => setTimeout(resolve, 100));
-  }
-   let newUrls: string[] = [];
-  if (newImageFiles.length > 0) {
-    newUrls = await handleUploadImages();
-    if (newUrls.length === 0 && newImageFiles.length > 0) {
-      setError("Failed to upload images. Please try again.");
-      return;
+      newUrls = await handleUploadImages();
+      if (newUrls.length === 0 && newImageFiles.length > 0) {
+        setError("Failed to upload images. Please try again.");
+        return;
+      }
     }
-  }
 
     const payload: any = {
       ...form,
@@ -440,7 +435,7 @@ export default function SellerProductForm({
     multiple
     onChange={(e) => {
       const files = Array.from(e.target.files || []);
-      setNewImageFiles(files);
+      setNewImageFiles((prev) => [...prev, ...files]);
     }}
   />
 
