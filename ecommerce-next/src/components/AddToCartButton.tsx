@@ -64,7 +64,7 @@ export default function AddToCartButton({ productId, availableSizes = [], sizeSt
                   key={size}
                   type="button"
                   onClick={() => !disabled && setSelectedSize(size)}
-                  className={`mr-2 mb-2 btn-primary ${selectedSize === size ? 'opacity-90' : ''}`}
+                  className={`size-button btn-primary ${selectedSize === size ? 'opacity-90' : ''}`}
                   disabled={disabled}
                   aria-pressed={selectedSize === size}
                 >
@@ -78,7 +78,7 @@ export default function AddToCartButton({ productId, availableSizes = [], sizeSt
       <button
         onClick={handleAddToCart}
         disabled={loading || (availableSizes.length > 0 && !selectedSize)}
-        className="btn-primary w-full"
+        className="btn-primary w-full add-to-cart-btn"
       >
         {loading ? "Adding..." : availableSizes.length > 0 && !selectedSize ? "Select size" : "Add to Cart"}
       </button>
