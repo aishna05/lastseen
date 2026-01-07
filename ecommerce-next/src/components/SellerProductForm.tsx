@@ -511,11 +511,19 @@ export default function SellerProductForm({
                   : "No subcategories for this category"
                 : "Select category first"}
             </option>
-            {availableSubcategories.map((sub) => (
-              <option key={sub.id} value={sub.id}>
-                {sub.name}
+            {/* If a 'None' subcategory exists, show it explicitly first */}
+            {availableSubcategories.find((s) => s.name.toLowerCase() === "none") && (
+              <option value={String(availableSubcategories.find((s) => s.name.toLowerCase() === "none")!.id)}>
+                None
               </option>
-            ))}
+            )}
+            {availableSubcategories
+              .filter((s) => s.name.toLowerCase() !== "none")
+              .map((sub) => (
+                <option key={sub.id} value={sub.id}>
+                  {sub.name}
+                </option>
+              ))}
           </select>
         </div>
       </div>

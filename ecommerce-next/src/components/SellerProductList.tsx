@@ -25,9 +25,12 @@ export default function SellerProductList() {
 
   async function fetchProducts() {
     setLoading(true);
-    const res = await fetch("/api/seller/products");
+    const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    const res = await fetch("/api/seller/products", {
+      headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+    });
     const data = await res.json();
-    setProducts(Array.isArray(data) ? data : []);
+    setProducts(res.ok && Array.isArray(data) ? data : []);
     setLoading(false);
   }
 
@@ -36,9 +39,12 @@ export default function SellerProductList() {
   }, []);
 
   async function handleCreate(payload: any) {
+    const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    if (!token) return alert("Authentication required");
+
     const res = await fetch("/api/seller/products", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
       body: JSON.stringify(payload),
     });
     if (res.ok) {
@@ -52,9 +58,12 @@ export default function SellerProductList() {
 
   async function handleUpdate(payload: any) {
     if (!editing) return;
+    const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    if (!token) return alert("Authentication required");
+
     const res = await fetch(`/api/seller/products/${editing.id}`, {
       method: "PUT",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
       body: JSON.stringify(payload),
     });
     if (res.ok) {
@@ -68,7 +77,10 @@ export default function SellerProductList() {
 
   async function handleDelete(id: number) {
     if (!confirm("Delete this product?")) return;
-    const res = await fetch(`/api/seller/products/${id}`, { method: "DELETE" });
+    const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    if (!token) return alert("Authentication required");
+
+    const res = await fetch(`/api/seller/products/${id}`, { method: "DELETE", headers: { Authorization: `Bearer ${token}` } });
     if (res.ok) fetchProducts();
     else alert("Delete failed");
   }

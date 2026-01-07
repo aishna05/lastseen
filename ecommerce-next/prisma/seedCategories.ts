@@ -11,6 +11,7 @@ async function main() {
         "Galaxy edge chandi pant",
         "Lovry regal lace pant",
         "Moonline chandi pant",
+        "None",
       ],
     },
     {
@@ -21,6 +22,7 @@ async function main() {
         "G stripe black gold shirt",
         "Star mist",
         "Stellar noir shirt",
+        "None",
       ],
     },
     {
@@ -34,6 +36,7 @@ async function main() {
         "Silver petals",
         "Silver weave black chandi shirt",
         "Stellar florals chandi shirt",
+        "None",
       ],
     },
     {
@@ -44,6 +47,7 @@ async function main() {
         "Midnight majesty",
         "Sapphire skyline",
         "Royal heritage",
+        "None",
       ],
     },
     {
@@ -53,7 +57,13 @@ async function main() {
         "Elephant crest",
         "Galaxy Edge",
         "Shadow Gold work kurta",
+        "None",
       ],
+    },
+    {
+      name: "Casual",
+      description: "Casual everyday wear",
+      subcategories: ["None"],
     },
   ];
 
