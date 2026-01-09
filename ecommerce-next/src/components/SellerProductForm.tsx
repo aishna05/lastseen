@@ -2,6 +2,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { getSizesForCategory } from "@/lib/sizeUtils";
 
 export type SizeStock = Record<string, number>;
 
@@ -47,8 +48,6 @@ type Category = {
   }[];
 };
 
-
-const defaultSizes = ["XS", "S", "M", "L", "XL", "XXL", "3XL", "4XL", "5XL"];
 
 function parseJson(value: any, fallback: any) {
   if (typeof value === "string") {
@@ -350,7 +349,7 @@ export default function SellerProductForm({
       <div className="form-field">
         <label className="form-label">Available Sizes</label>
         <div className="size-checkbox-group">
-          {defaultSizes.map((s) => (
+          {getSizesForCategory(selectedCategory?.name).map((s) => (
             <label key={s} className="size-pill">
               <input
                 type="checkbox"

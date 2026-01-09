@@ -1,14 +1,16 @@
 "use client";
 
 import { useState } from "react";
+import { getSizesForCategory } from "@/lib/sizeUtils";
 
 interface AddToCartButtonProps {
   productId: number;
   availableSizes?: string[];
   sizeStock?: Record<string, number>;
+  categoryName?: string | null;
 }
 
-export default function AddToCartButton({ productId, availableSizes = [], sizeStock = {} }: AddToCartButtonProps) {
+export default function AddToCartButton({ productId, availableSizes = [], sizeStock = {}, categoryName }: AddToCartButtonProps) {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [selectedSize, setSelectedSize] = useState<string | null>(null);

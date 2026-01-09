@@ -134,6 +134,10 @@ export default function MyProductsPage() {
       discount: p.discount != null ? String(p.discount) : "",
     });
     setError(null);
+    // Scroll to form
+    setTimeout(() => {
+      document.querySelector(".product-form")?.scrollIntoView({ behavior: "smooth" });
+    }, 0);
   }
 
   // ---------------------------------------------------
@@ -248,8 +252,9 @@ export default function MyProductsPage() {
           {editingId ? "Edit Product" : "Add New Product"}
         </h2>
 
-        <form onSubmit={handleSubmit} className="card product-form">
+        <form onSubmit={handleSubmit} className="card product-form" key={editingId || "new"}>
           <input
+            key={`title-${editingId}`}
             type="text"
             placeholder="Title"
             value={form.title}
@@ -261,6 +266,7 @@ export default function MyProductsPage() {
           />
 
           <input
+            key={`price-${editingId}`}
             type="number"
             placeholder="Price"
             value={form.price}
@@ -272,6 +278,7 @@ export default function MyProductsPage() {
           />
 
           <input
+            key={`discount-${editingId}`}
             type="number"
             placeholder="Discount (%) - optional"
             value={form.discount}

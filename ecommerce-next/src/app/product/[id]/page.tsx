@@ -237,7 +237,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
           )}
 
           {/* ADD TO CART */}
-          <AddToCartButton productId={productId} availableSizes={availableSizes} sizeStock={sizeStock} />
+          <AddToCartButton productId={productId} availableSizes={availableSizes} sizeStock={sizeStock} categoryName={product.category?.name} />
 
           {/* BUY NOW
           <Link href={`/order/${productId}`} className="w-full mt-2">
