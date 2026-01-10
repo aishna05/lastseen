@@ -976,6 +976,7 @@ select:focus {
   max-width: 820px;
   box-shadow: 0 2px 0 rgba(176,137,80,0.06) inset;
   padding: 14px 20px;
+}
 .gallery-arrow:hover { background: rgba(0,0,0,0.5); }
 
 /* Thumbnails row spacing tweak */
@@ -2850,5 +2851,5 @@ select:focus {
 @media (max-width: 900px) {
   .footer-columns { grid-template-columns: 1fr; }
 }
-};
+
 
