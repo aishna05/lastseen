@@ -2846,6 +2846,9 @@ select:focus {
 .footer-links a:hover, .social-list a:hover { color: var(--primary-light); }
 .footer-bottom { margin-top: 1.25rem; text-align: center; opacity: 0.95; font-size: 0.9rem; color: rgba(255,255,255,0.75); }
 
+
 @media (max-width: 900px) {
   .footer-columns { grid-template-columns: 1fr; }
 }
+};
+
