@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import AddToCartButton from "@/components/AddToCartButton";
+import ProductGallery from "@/components/ProductGallery";
 
 export const dynamic = 'force-dynamic';
 
@@ -73,32 +74,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
     <main className="product-detail-page">
       <section className="product-detail-layout">
         {/* LEFT: IMAGE GALLERY */}
-        <div className="product-detail-gallery">
-          <div className="product-detail-main-image-wrapper">
-            {mainImage ? (
-              <div
-                className="product-detail-main-image"
-                style={{ backgroundImage: `url(${mainImage})` }}
-              />
-            ) : (
-              <div className="product-detail-main-image fallback">
-                <span>No image available</span>
-              </div>
-            )}
-          </div>
-
-          {images.length > 1 && (
-            <div className="product-detail-thumbnails">
-              {images.map((src, index) => (
-                <div
-                  key={index}
-                  className="product-detail-thumb"
-                  style={{ backgroundImage: `url(${src})` }}
-                />
-              ))}
-            </div>
-          )}
-        </div>
+        <ProductGallery images={images} />
 
         {/* RIGHT: INFO PANEL */}
         <div className="product-detail-info">
@@ -203,15 +179,6 @@ export default async function ProductPage({ params }: ProductPageProps) {
             )}
           </div>
 
-          {/* DESCRIPTION / DETAILS */}
-          {(product.description || product.details) && (
-            <div className="product-detail-description">
-              <h2>About this piece</h2>
-              {product.description && <p>{product.description}</p>}
-              {product.details && <p>{product.details}</p>}
-            </div>
-          )}
-
           {/* SIZES + STOCK: selection handled inside AddToCartButton to keep UI consistent */}
 
           {/* COLORS
@@ -238,6 +205,15 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
           {/* ADD TO CART */}
           <AddToCartButton productId={productId} availableSizes={availableSizes} sizeStock={sizeStock} categoryName={product.category?.name} />
+
+          {/* DESCRIPTION / DETAILS (moved below sizes/add-to-cart as requested) */}
+          {(product.description || product.details) && (
+            <div className="product-detail-description">
+              <h2>About this piece</h2>
+              {product.description && <p>{product.description}</p>}
+              {product.details && <p>{product.details}</p>}
+            </div>
+          )}
 
           {/* BUY NOW
           <Link href={`/order/${productId}`} className="w-full mt-2">

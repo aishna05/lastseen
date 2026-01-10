@@ -835,6 +835,12 @@ select:focus {
     border-color: var(--primary); /* Gold hover border */
 }
 
+/* Active thumbnail state */
+.product-detail-thumb.active {
+  border: 2px solid var(--primary);
+  transform: translateY(-4px);
+}
+
 /* RIGHT – INFO PANEL */
 
 .product-detail-info {
@@ -2612,6 +2618,22 @@ select:focus {
 
 @media (max-width: 480px) {
   .size-button { min-width: 54px; padding: 0.45rem 0.7rem; font-size: var(--fs-xs); }
+}
+
+/* Selected size visual state */
+.size-button[aria-pressed="true"] {
+  background: linear-gradient(135deg, var(--primary-light), var(--primary) 85%);
+  color: #3C3C3C; /* dark text for contrast on gold */
+  transform: translateY(-3px);
+  box-shadow: 0 10px 22px rgba(138, 108, 53, 0.25);
+  border: 2px solid rgba(255,255,255,0.06);
+}
+
+/* Disabled size */
+.size-button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  filter: grayscale(0.2);
 }
 
 /* Extra spacing between size group and Add to Cart button */

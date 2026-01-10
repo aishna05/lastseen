@@ -7,17 +7,26 @@ export default function Footer() {
         <div className="footer-columns">
           <div className="footer-col">
             <h4>Contact Us</h4>
-            <p>support@lastseen.example</p>
-            <p>+1 (555) 123-4567</p>
-            <Link href="/contact-us" className="btn-ghost">Get in touch</Link>
+            <p>
+              <a href="mailto:Support@lastseen.co.in" style={{ color: 'inherit', textDecoration: 'none' }}>Support@lastseen.co.in</a>
+            </p>
+            <p>
+              <a href="tel:+919009690690" style={{ color: 'inherit', textDecoration: 'none' }}>+91 90096 90690</a>
+            </p>
+            <Link href="/contact-us" className="btn-ghost">Contact form</Link>
           </div>
 
           <div className="footer-col">
             <h4>Follow</h4>
             <ul className="social-list">
-              <li><a href="https://instagram.com/lastseen" target="_blank" rel="noreferrer">Instagram</a></li>
-              <li><a href="https://facebook.com/lastseen" target="_blank" rel="noreferrer">Facebook</a></li>
-              <li><a href="https://twitter.com/lastseen" target="_blank" rel="noreferrer">Twitter</a></li>
+              <li>
+                <a href="https://www.instagram.com/lastseen.co.in?igsh=MWZrdzhzMHRpMnF0Nw%3D%3D&utm_source=qr" target="_blank" rel="noreferrer">
+                  Instagram
+                </a>
+              </li>
+              <li>
+                <a href="https://wa.me/919009690690" target="_blank" rel="noreferrer">WhatsApp Support</a>
+              </li>
             </ul>
           </div>
 
