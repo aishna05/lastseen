@@ -62,25 +62,8 @@ const handleAddToCart = async (productId: number) => {
 
 
 const ProductListingClientWrapper: React.FC<ProductListingProps> = ({ products }) => {
-    const [categories, setCategories] = useState<Category[]>([]);
-    const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
-
-    useEffect(() => {
-        let mounted = true;
-        fetch('/api/categories')
-            .then(r => r.json())
-            .then(data => {
-                if (!mounted) return;
-                if (Array.isArray(data)) setCategories(data.map((c: any) => ({ id: c.id, name: c.name })));
-            })
-            .catch(() => {});
-        return () => { mounted = false };
-    }, []);
-
-    const filtered = useMemo(() => {
-        if (!selectedCategory) return products;
-        return products.filter(p => p.categoryId === selectedCategory);
-    }, [products, selectedCategory]);
+    // No client-side category filtering here; categories page handles filtering.
+    const filtered = products;
     return (
         <section className="product-listing-section">
             {/* 1. Replaced inline style with global CSS class for max-width and centering */}
@@ -91,16 +74,6 @@ const ProductListingClientWrapper: React.FC<ProductListingProps> = ({ products }
                 </h1>
                 
                 {/* 3. Replaced Tailwind grid with custom CSS class name */}
-                <div style={{display: 'flex', justifyContent: 'flex-end', marginBottom: '1rem'}}>
-                    <label style={{alignSelf: 'center', marginRight: 8}}>Category:</label>
-                    <select value={selectedCategory ?? ''} onChange={(e) => setSelectedCategory(e.target.value ? Number(e.target.value) : null)}>
-                        <option value="">All</option>
-                        {categories.map(c => (
-                            <option key={c.id} value={c.id}>{c.name}</option>
-                        ))}
-                    </select>
-                </div>
-
                 <div className="product-grid">
                     {filtered.map((p) => {
                         // Map to ProductCard props
