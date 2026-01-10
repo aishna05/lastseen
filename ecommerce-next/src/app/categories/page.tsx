@@ -1,59 +1,46 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import ProductCard from "@/components/ProductCard";
 
-type Category = { id: number; name: string; };
-type Product = {
-  id: number;
-  title: string;
-  price: number;
-  imageUrls: string[];
-  category: { id: number; name: string } | null;
-};
+type Category = { id: number; name: string };
 
 export default function CategoriesPage() {
   const [categories, setCategories] = useState<Category[]>([]);
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [selected, setSelected] = useState<number | null>(null);
+  const [selected, setSelected] = useState<number | string>("");
 
   useEffect(() => {
-    fetch('/api/categories')
+    let mounted = true;
+    fetch("/api/categories")
       .then((r) => r.json())
-      .then((data) => setCategories(Array.isArray(data) ? data.map((c: any) => ({ id: c.id, name: c.name })) : []))
+      .then((data) => {
+        if (!mounted) return;
+        if (Array.isArray(data)) {
+          setCategories(data.map((c: any) => ({ id: c.id, name: c.name })));
+          if (data.length > 0) setSelected(data[0].id);
+        }
+      })
       .catch(() => {});
-
-    fetch('/api/product')
-      .then((r) => r.json())
-      .then((data) => setProducts(Array.isArray(data) ? data : []))
-      .catch(() => {})
-      .finally(() => setLoading(false));
+    return () => { mounted = false };
   }, []);
 
-  const filtered = selected ? products.filter(p => p.category?.id === selected) : products;
-
   return (
-    <main className="page-shell" style={{ paddingBlock: '2.5rem' }}>
-      <h1 className="heading-main">Browse By Category</h1>
-
-      <div className="category-filter">
-        <label>Category</label>
-        <select className="category-select" value={selected ?? ''} onChange={(e) => setSelected(e.target.value ? Number(e.target.value) : null)}>
-          <option value="">All</option>
-          {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-        </select>
+    <main style={{ minHeight: '50vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '3rem 1rem' }}>
+      <div style={{ maxWidth: 1100, width: '100%' }}>
+        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+          <label style={{ fontSize: '1rem', color: 'var(--text-main)', marginRight: 8 }}>Category:</label>
+          <select
+            className="category-select large"
+            value={selected}
+            onChange={(e) => setSelected(e.target.value)}
+            aria-label="Select category"
+          >
+            {categories.length === 0 && <option value="">Loading…</option>}
+            {categories.map((c) => (
+              <option key={c.id} value={c.id}>{c.name}</option>
+            ))}
+          </select>
+        </div>
       </div>
-
-      {loading ? (
-        <p>Loading products…</p>
-      ) : (
-        <section className="product-grid">
-          {filtered.map(p => (
-            <ProductCard key={p.id} product={{ id: p.id, title: p.title, price: p.price, imageUrls: btoa(JSON.stringify(p.imageUrls)) }} onAddToCart={async () => { alert('Add to cart from categories page'); }} />
-          ))}
-        </section>
-      )}
     </main>
   );
 }
