@@ -31,7 +31,9 @@ export default async function ProductDataFetcher() {
         originalPrice: p.price,
         discount: p.discount,
         imageUrls: p.imageUrls,
-        sellerName: p.seller.name,
+      sellerName: p.seller.name,
+      categoryId: p.categoryId,
+      categoryName: p.category?.name ?? null,
     };
   });
 
