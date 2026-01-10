@@ -1,11 +1,12 @@
 // /src/components/products/ProductDataFetcher.tsx
 import { prisma } from "@/lib/prisma";
 import ProductListingClient from "./ProductListingClientWrapper";
-import { Product, User } from "@prisma/client";
+import { Product, User, Category } from "@prisma/client";
 
 // Define the type for the product data fetched with the seller relation
 type ProductWithSeller = Product & {
   seller: User;
+  category?: Category | null;
   discount: number | null; 
   imageUrls: string;
 };
@@ -16,6 +17,7 @@ export default async function ProductDataFetcher() {
     where: { isActive: true },
     include: { 
         seller: true,
+        category: true,
     }, 
     orderBy: { createdAt: "desc" },
   }) as ProductWithSeller[];
