@@ -269,7 +269,9 @@ button,
   font-size: 1rem;
   color: #3a3a3a;
   margin-right: 8px;
+  font-weight: 700;
 }
+.filter-row { justify-content: center; }
 .product-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -831,6 +833,9 @@ select:focus {
   border-radius: 999px;
   font-size: 1rem;
   color: var(--text-main, #2b2b2b);
+  font-weight: 700;
+  max-width: 760px;
+  box-shadow: 0 2px 0 rgba(176,137,80,0.06) inset;
   box-shadow: none;
   outline: none;
 }
@@ -843,6 +848,8 @@ select:focus {
   .category-select { width: 100%; }
 }
 
+  .filter-row { justify-content: stretch; }
+  .filter-label { align-self: flex-start; }
 /* Responsive adjustments for smaller screens */
 @media (max-width: 600px) {
     .product-grid {
