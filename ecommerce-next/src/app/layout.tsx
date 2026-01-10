@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import "./global.css";
 import Providers from "./providers";
 import RoleBasedHeader from "@/components/RoleBasedHeader";
+import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: "My Ecommerce",
@@ -19,6 +20,7 @@ export default function RootLayout({
       <body>
         <RoleBasedHeader />
         <Providers>{children}</Providers>
+        <Footer />
       </body>
     </html>
   );

@@ -2,6 +2,7 @@ export const dynamic = 'force-dynamic';
 
 import ProductListingClientWrapper from "@/components/ProductListingClientWrapper";
 import { prisma } from "@/lib/prisma";
+import Link from "next/link";
 
 export default async function HomePage() {
   const products = await prisma.product.findMany({
@@ -23,10 +24,11 @@ export default async function HomePage() {
     };
   });
 
+  // Show only a few products on home page, link to all products
+  const featured = productsForDisplay.slice(0, 6);
+
   return (
     <main className="space-y-16">
-      
-      {/* ✅ HERO VIDEO SECTION - IMPROVED & MOBILE RESPONSIVE */}
       <section className="hero-video-section">
         <div className="hero-video-wrapper">
           <video
@@ -38,12 +40,14 @@ export default async function HomePage() {
             className="hero-video"
           />
         </div>
-
       </section>
 
-      {/* ✅ PRODUCTS SECTION (CONSTRAINED & CENTERED) */}
-      <ProductListingClientWrapper products={productsForDisplay} />
-
+      <section className="page-shell">
+        <ProductListingClientWrapper products={featured} />
+        <div style={{display: 'flex', justifyContent: 'center', paddingBottom: '2rem'}}>
+          <Link href="/products" className="btn-primary" aria-label="View all products">More Products →</Link>
+        </div>
+      </section>
     </main>
   );
 }
