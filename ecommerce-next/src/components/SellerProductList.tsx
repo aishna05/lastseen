@@ -71,7 +71,16 @@ export default function SellerProductList() {
       setEditing(null);
       setIsAdding(false);
     } else {
-      alert("Update failed");
+      let msg = "Update failed";
+      try {
+        const body = await res.json();
+        if (body && body.error) msg = body.error;
+        else if (body && body.message) msg = body.message;
+      } catch (e) {
+        // ignore JSON parse errors
+      }
+      alert(msg);
+      console.error("Update error details:", res.status, await res.text());
     }
   }
 

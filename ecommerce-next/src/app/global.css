@@ -2625,15 +2625,22 @@ select:focus {
 
 /* ---------------- FOOTER (Dark, light text to match overall theme) ---------------- */
 .site-footer {
-  background: linear-gradient(180deg, #0b0b0b 0%, #0f0f10 100%);
+  /* Keep the page-level footer area light/cream so the inner card stands out */
+  background: var(--bg-elevated);
   color: var(--text-contrast);
-  padding-block: 2.25rem;
-  border-top: 1px solid rgba(255,255,255,0.04);
+  padding-block: 3rem;
+  border-top: 1px solid rgba(0,0,0,0.04);
 }
 .site-footer-inner {
   max-width: 1120px;
   margin: 0 auto;
   padding-inline: clamp(1rem, 4vw, 2rem);
+  /* Dark rounded card matching the screenshot */
+  background: linear-gradient(180deg, #2e2621 0%, #241d19 100%);
+  border-radius: 18px;
+  padding: 2.25rem;
+  box-shadow: 0 18px 40px rgba(15, 10, 8, 0.45);
+  border: 1px solid rgba(255,255,255,0.04);
 }
 .footer-columns {
   display: grid;
@@ -2649,7 +2656,7 @@ select:focus {
   text-transform: uppercase;
   letter-spacing: 0.12em;
 }
-.footer-col p { color: var(--text-contrast); margin: 0 0 0.4rem; }
+.footer-col p { color: rgba(255,255,255,0.92); margin: 0 0 0.4rem; }
 .footer-links, .social-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.45rem; }
 .footer-links a, .social-list a {
   color: rgba(255,255,255,0.9);
@@ -2657,7 +2664,7 @@ select:focus {
   transition: color var(--transition-fast);
 }
 .footer-links a:hover, .social-list a:hover { color: var(--primary-light); }
-.footer-bottom { margin-top: 1.25rem; text-align: center; opacity: 0.9; font-size: 0.9rem; }
+.footer-bottom { margin-top: 1.25rem; text-align: center; opacity: 0.95; font-size: 0.9rem; color: rgba(255,255,255,0.75); }
 
 @media (max-width: 900px) {
   .footer-columns { grid-template-columns: 1fr; }
