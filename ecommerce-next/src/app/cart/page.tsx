@@ -102,33 +102,9 @@ export default function CartPage() {
     try {
       const addressId = await createAddress();
 
-      const res = await fetch("/api/order/create", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ addressId }),
-      });
-
-      const text = await res.text();
-      let data;
-
-      try {
-        data = JSON.parse(text);
-      } catch {
-        alert("Order API returned invalid response");
-        return;
-      }
-
-      if (!res.ok) {
-        alert(data.message || "Order failed");
-        return;
-      }
-
-      alert("Order placed successfully!");
-      window.dispatchEvent(new Event("cartChange"));
-      router.push("/checkout");
+      // Redirect to checkout and let checkout initiate the payment and create the order
+      // Pass the newly created addressId so checkout can preselect it
+      router.push(`/checkout?addressId=${addressId}`);
     } catch (err: any) {
       console.error("ORDER ERROR:", err);
       alert(err.message || "Checkout failed");

@@ -39,6 +39,7 @@ function CheckoutContent() {
 
   const directProductId = searchParams.get("productId");
   const directQty = searchParams.get("quantity") || "1";
+  const preselectAddressId = searchParams.get("addressId");
 
   // --- API FETCHERS ---
 
@@ -51,7 +52,12 @@ function CheckoutContent() {
         const data = await res.json();
         const list = Array.isArray(data) ? data : (data.addresses || []);
         setAddresses(list);
-        if (list.length > 0) setSelectedAddressId(list[0].id);
+        if (preselectAddressId) {
+          const parsed = Number(preselectAddressId);
+          if (!isNaN(parsed)) setSelectedAddressId(parsed);
+        } else if (list.length > 0) {
+          setSelectedAddressId(list[0].id);
+        }
       }
     } catch (error) {
       console.error("Error fetching addresses:", error);
