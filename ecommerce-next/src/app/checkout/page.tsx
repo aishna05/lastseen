@@ -141,6 +141,14 @@ function CheckoutContent() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Order creation failed");
 
+      // Ensure amount is present and greater than zero before opening payment
+      // Razorpay expects amount in paise; server returns `amount` in paise.
+      if (!data?.amount || Number(data.amount) <= 0) {
+        alert("Order amount is zero or invalid. Please check your cart before proceeding.");
+        setLoading(false);
+        return;
+      }
+
       const options: any = {
         key: data.key,
         amount: data.amount,
@@ -255,7 +263,7 @@ function CheckoutContent() {
                 </div>
               </div>
 
-              <button className="pay-btn-luxe" onClick={handlePay} disabled={loading || cartItems.length === 0}>
+              <button className="pay-btn-luxe" onClick={handlePay} disabled={loading || cartItems.length === 0 || cartTotal <= 0}>
                 {loading ? "Authorizing..." : "Complete Purchase"}
               </button>
             </section>
