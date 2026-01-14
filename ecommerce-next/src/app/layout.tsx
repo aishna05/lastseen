@@ -6,7 +6,7 @@ import RoleBasedHeader from "@/components/RoleBasedHeader";
 import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: "My Ecommerce",
+  title: "LastSeen",
   description: "Ecommerce built with Next.js",
 };
 
