@@ -47,7 +47,6 @@ export async function POST(req: NextRequest) {
 
     // Payment is verified — update DB order and notify sellers
     if (!dbOrderId) {
-      // still successful but no DB order to update
       return NextResponse.json({ success: true });
     }
 
@@ -89,13 +88,11 @@ export async function POST(req: NextRequest) {
       const sellerId = Number(sellerIdStr);
       const itemsForSeller = sellerMap[sellerId];
 
-      // seller email & name
       const seller = itemsForSeller[0].product.seller;
       const sellerEmail = seller?.email;
 
       if (!sellerEmail) continue;
 
-      // Build email HTML
       const itemsHtml = itemsForSeller.map((it: any) => {
         const desc = it.product.description ? `<div>${it.product.description}</div>` : "";
         const details = it.product.details ? `<div><small>${it.product.details}</small></div>` : "";
