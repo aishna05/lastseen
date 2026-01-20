@@ -10,13 +10,20 @@ export default function CartPage() {
   const [items, setItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
+  
+  // Address State
   const [showAddressForm, setShowAddressForm] = useState(false);
+  const [savedAddresses, setSavedAddresses] = useState<any[]>([]);
+  const [useNewAddress, setUseNewAddress] = useState(false);
+  const [selectedAddressId, setSelectedAddressId] = useState<number | null>(null);
+  
   const [address, setAddress] = useState({
     address: "",
     city: "",
     state: "",
     country: "",
     zipcode: "",
+    phone: "", // Added phone
   });
 
   const fetchCart = async () => {
@@ -41,6 +48,30 @@ export default function CartPage() {
       setItems([]);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchAddresses = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    try {
+      const res = await fetch("/api/address", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      if (Array.isArray(data)) {
+        setSavedAddresses(data);
+        // Default to first address if exists
+        if (data.length > 0) {
+            setSelectedAddressId(data[0].id);
+            setUseNewAddress(false);
+        } else {
+            setUseNewAddress(true);
+        }
+      }
+    } catch (err) {
+      console.error("ADDRESS FETCH ERROR:", err);
     }
   };
 
@@ -102,11 +133,18 @@ export default function CartPage() {
     setCheckoutLoading(true);
 
     try {
-      const addressId = await createAddress();
+      let finalAddressId = selectedAddressId;
 
-      // Redirect to checkout and let checkout initiate the payment and create the order
-      // Pass the newly created addressId so checkout can preselect it
-      router.push(`/checkout?addressId=${addressId}`);
+      // If creating new address
+      if (useNewAddress) {
+         if(!address.phone) throw new Error("Phone number is required");
+         finalAddressId = await createAddress();
+      }
+
+      if (!finalAddressId) throw new Error("Please select or add an address");
+
+      // Redirect to checkout
+      router.push(`/checkout?addressId=${finalAddressId}`);
     } catch (err: any) {
       console.error("ORDER ERROR:", err);
       alert(err.message || "Checkout failed");
@@ -115,9 +153,17 @@ export default function CartPage() {
     }
   };
 
+  // Initial Fetch
   useEffect(() => {
     fetchCart();
   }, []);
+
+  // Fetch addresses when form opens
+  useEffect(() => {
+    if (showAddressForm) {
+      fetchAddresses();
+    }
+  }, [showAddressForm]);
 
   const total = items.reduce(
     (sum, item) =>
@@ -167,7 +213,6 @@ export default function CartPage() {
                      if (item.product.imageUrls.startsWith("[")) {
                          images = JSON.parse(item.product.imageUrls);
                      } else {
-                         // Fallback for some weird cases or just push the string
                          images = [item.product.imageUrls];
                      }
                   }
@@ -268,82 +313,132 @@ export default function CartPage() {
           </div>
         )}
 
-        {/* ✅ Only Address Form Shows Now */}
+        {/* ✅ Address & Checkout Form */}
         {showAddressForm && (
           <div className="max-w-md mx-auto">
-             {/* Reusing auth-card style or similar for consistency */}
           <div className="profile-card">
-          <form onSubmit={handleCheckout} className="w-full space-y-3">
-            <h3 className="font-semibold" style={{marginBottom: "1rem"}}>Delivery Address</h3>
+          <form onSubmit={handleCheckout} className="w-full space-y-4">
+            <h3 className="font-semibold text-center mb-4" style={{fontSize: "1.5rem"}}>Delivery Details</h3>
 
-            <div className="auth-field">
-              <label>Address</label>
-              <input
-                value={address.address}
-                onChange={(e) =>
-                  setAddress({ ...address, address: e.target.value })
-                }
-                required
-              />
-            </div>
+            {/* 🔥 Toggle: Saved vs New */}
+            {savedAddresses.length > 0 && (
+                <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', marginBottom: '1.5rem' }}>
+                    <button 
+                        type="button"
+                        className={!useNewAddress ? "btn-primary" : "btn-secondary"}
+                        onClick={() => setUseNewAddress(false)}
+                    >
+                        Saved Address
+                    </button>
+                    <button 
+                        type="button"
+                        className={useNewAddress ? "btn-primary" : "btn-secondary"}
+                        onClick={() => setUseNewAddress(true)}
+                    >
+                        New Address
+                    </button>
+                </div>
+            )}
 
-            <div className="auth-field">
-              <label>City</label>
-              <input
-                value={address.city}
-                onChange={(e) =>
-                  setAddress({ ...address, city: e.target.value })
-                }
-                required
-              />
-            </div>
+            {/* SCENARIO 1: Select Existing Address */}
+            {!useNewAddress && savedAddresses.length > 0 && (
+               <div className="space-y-3">
+                    <p className="text-sm text-gray-400 mb-2">Select a saved address:</p>
+                    {savedAddresses.map((addr) => (
+                        <div 
+                            key={addr.id} 
+                            onClick={() => setSelectedAddressId(addr.id)}
+                            style={{
+                                border: selectedAddressId === addr.id ? '2px solid var(--primary)' : '1px solid var(--border-subtle)',
+                                padding: '1rem',
+                                borderRadius: '8px',
+                                cursor: 'pointer',
+                                background: selectedAddressId === addr.id ? 'var(--bg-soft)' : 'transparent'
+                            }}
+                        >
+                            <p style={{fontWeight: 600}}>{addr.address}</p>
+                            <p className="text-sm">{addr.city}, {addr.state} - {addr.zipcode}</p>
+                            {addr.phone && <p className="text-sm text-gray-500">📞 {addr.phone}</p>}
+                        </div>
+                    ))}
+               </div>
+            )}
 
-            <div className="auth-field">
-              <label>State</label>
-              <input
-                value={address.state}
-                onChange={(e) =>
-                  setAddress({ ...address, state: e.target.value })
-                }
-                required
-              />
-            </div>
+            {/* SCENARIO 2: Create New Address */}
+            {useNewAddress && (
+                <div className="space-y-3 animation-fade-in">
+                    <div className="auth-field">
+                    <label>Address</label>
+                    <input
+                        value={address.address}
+                        onChange={(e) => setAddress({ ...address, address: e.target.value })}
+                        required
+                    />
+                    </div>
 
-            <div className="auth-field">
-              <label>Country</label>
-              <input
-                value={address.country}
-                onChange={(e) =>
-                  setAddress({ ...address, country: e.target.value })
-                }
-                required
-              />
-            </div>
+                    <div className="auth-field">
+                    <label>City</label>
+                    <input
+                        value={address.city}
+                        onChange={(e) => setAddress({ ...address, city: e.target.value })}
+                        required
+                    />
+                    </div>
 
-            <div className="auth-field">
-              <label>Zipcode</label>
-              <input
-                value={address.zipcode}
-                onChange={(e) =>
-                  setAddress({ ...address, zipcode: e.target.value })
-                }
-                required
-              />
-            </div>
+                    <div className="auth-field">
+                    <label>State</label>
+                    <input
+                        value={address.state}
+                        onChange={(e) => setAddress({ ...address, state: e.target.value })}
+                        required
+                    />
+                    </div>
 
-            <div className="flex gap-3 mt-6">
+                    <div className="auth-field">
+                    <label>Country</label>
+                    <input
+                        value={address.country}
+                        onChange={(e) => setAddress({ ...address, country: e.target.value })}
+                        required
+                    />
+                    </div>
 
+                    <div className="auth-field">
+                    <label>Zipcode</label>
+                    <input
+                        value={address.zipcode}
+                        onChange={(e) => setAddress({ ...address, zipcode: e.target.value })}
+                        required
+                    />
+                    </div>
+                    
+                    {/* ✅ New Phone Number Field */}
+                    <div className="auth-field">
+                    <label>Phone Number</label>
+                    <input
+                        type="tel"
+                        value={address.phone}
+                        onChange={(e) => setAddress({ ...address, phone: e.target.value })}
+                        required
+                        placeholder="+91 XXXXX XXXXX"
+                    />
+                    </div>
+                </div>
+            )}
+
+            {/* Actions with fixed spacing */}
+            <div className="flex gap-4 mt-8 pt-4 border-t border-gray-700" style={{ display: 'flex', gap: '1.5rem', marginTop: "2rem" }}>
               <button
                 type="submit"
-                className="btn-primary"
+                className="btn-primary flex-1"
                 disabled={checkoutLoading}
               >
-                {checkoutLoading ? "Processing..." : "Confirm Order"}
+                {checkoutLoading ? "Processing..." : "Confirm & Pay"}
               </button>
 
               <button
                 type="button"
-                className="btn-secondary"
+                className="btn-secondary flex-1"
                 onClick={() => setShowAddressForm(false)}
                 disabled={checkoutLoading}
               >
