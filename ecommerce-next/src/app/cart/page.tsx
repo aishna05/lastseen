@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { Buffer } from "buffer";
 
 export default function CartPage() {
   const router = useRouter();
@@ -146,44 +148,110 @@ export default function CartPage() {
 
         {/* ✅ Cart Items */}
         {!loading && items.length > 0 && !showAddressForm && (
-          <div className="mt-4 space-y-3">
-            {items.map((item) => (
-              <div
-                key={item.id}
-                className="profile-field flex justify-between items-center"
-              >
-                <div>
-                  <p className="font-medium">{item.product.title}</p>
-                  <p>Quantity: {item.quantity}</p>
-                  <p>
-                    Price: ₹
-                    {(
-                      item.product.price *
-                      (1 - (item.product.discount ?? 0) / 100)
-                    ).toFixed(2)}
-                  </p>
+          <div className="cart-advanced-container">
+            {/* Cart Items Grid */}
+            <div className="cart-items-grid">
+              {items.map((item) => {
+                // Decode images from base64
+                let images: string[] = [];
+                try {
+                  const jsonString = Buffer.from(item.product.imageUrls, "base64").toString();
+                  images = JSON.parse(jsonString);
+                } catch {
+                  images = [];
+                }
+                const mainImage = images[0] || "";
+
+                const itemPrice = item.product.price * (1 - (item.product.discount ?? 0) / 100);
+                const itemTotal = itemPrice * item.quantity;
+
+                return (
+                  <div key={item.id} className="cart-item-card">
+                    {/* Product Image - Clickable */}
+                    <Link href={`/product/${item.product.id}`}>
+                      <div className="cart-item-image-wrapper">
+                        {mainImage ? (
+                          <div
+                            className="cart-item-image"
+                            style={{
+                              backgroundImage: `url(${mainImage})`,
+                              backgroundSize: "cover",
+                              backgroundPosition: "center",
+                            }}
+                          />
+                        ) : (
+                          <div className="cart-item-image-placeholder">
+                            No Image
+                          </div>
+                        )}
+                      </div>
+                    </Link>
+
+                    {/* Product Details */}
+                    <div className="cart-item-details">
+                      <Link href={`/product/${item.product.id}`}>
+                        <h3 className="cart-item-title">{item.product.title}</h3>
+                      </Link>
+
+                      {item.size && (
+                        <p className="cart-item-size">Size: <strong>{item.size}</strong></p>
+                      )}
+
+                      <p className="cart-item-price">
+                        ₹{itemPrice.toFixed(2)} x {item.quantity} = <strong>₹{itemTotal.toFixed(2)}</strong>
+                      </p>
+
+                      {item.product.discount > 0 && (
+                        <p className="cart-item-discount">
+                          {item.product.discount}% OFF
+                        </p>
+                      )}
+
+                      <button
+                        className="cart-item-remove-btn"
+                        onClick={() => handleRemove(item.id)}
+                        disabled={checkoutLoading}
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Cart Summary */}
+            <div className="cart-summary-section">
+              <h2>Order Summary</h2>
+              <div className="cart-summary-details">
+                <div className="summary-row">
+                  <span>Subtotal:</span>
+                  <span>₹{total.toFixed(2)}</span>
                 </div>
-
-                <button
-                  className="btn-primary"
-                  onClick={() => handleRemove(item.id)}
-                  disabled={checkoutLoading}
-                >
-                  Remove
-                </button>
+                <div className="summary-row">
+                  <span>Shipping:</span>
+                  <span>Free</span>
+                </div>
+                <div className="summary-divider"></div>
+                <div className="summary-row summary-total">
+                  <span>Total:</span>
+                  <span>₹{total.toFixed(2)}</span>
+                </div>
               </div>
-            ))}
-
-            <div className="mt-4 flex flex-col items-start gap-2">
-              <p className="font-semibold">Total: ₹{total.toFixed(2)}</p>
 
               <button
-                className="btn-primary"
+                className="btn-primary w-full cart-checkout-btn"
                 onClick={() => setShowAddressForm(true)}
                 disabled={checkoutLoading}
               >
                 Proceed to Checkout
               </button>
+
+              <Link href="/products">
+                <button className="btn-secondary w-full" style={{ marginTop: "0.5rem" }}>
+                  Continue Shopping
+                </button>
+              </Link>
             </div>
           </div>
         )}

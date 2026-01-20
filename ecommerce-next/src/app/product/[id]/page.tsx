@@ -92,7 +92,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
             ₹{product.price.toLocaleString("en-IN")}
           </p>
 
-          {/* META BLOCK – now shows all extra fields */}
+          {/* META BLOCK – now shows key details only */}
           <div className="product-detail-meta">
             {product.seller?.name && (
               <p>
@@ -126,20 +126,6 @@ export default async function ProductPage({ params }: ProductPageProps) {
               <p>
                 <span>Subcategory</span>
                 <strong>{product.subcategory.name}</strong>
-              </p>
-            )}
-
-            {product.material && (
-              <p>
-                <span>Material</span>
-                <strong>{product.material}</strong>
-              </p>
-            )}
-
-            {product.fabricCare && (
-              <p>
-                <span>Fabric Care</span>
-                <strong>{product.fabricCare}</strong>
               </p>
             )}
 
@@ -205,6 +191,27 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
           {/* ADD TO CART */}
           <AddToCartButton productId={productId} availableSizes={availableSizes} sizeStock={sizeStock} categoryName={product.category?.name} />
+
+          {/* FABRIC DETAILS – below size selection */}
+          {(product.material || product.fabricCare) && (
+            <div className="product-detail-description">
+              <h2>Fabric Details</h2>
+              <div className="fabric-details-block">
+                {product.material && (
+                  <p>
+                    <span className="fabric-label">Material</span>
+                    <strong>{product.material}</strong>
+                  </p>
+                )}
+                {product.fabricCare && (
+                  <p>
+                    <span className="fabric-label">Fabric Care</span>
+                    <strong>{product.fabricCare}</strong>
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
 
           {/* DESCRIPTION / DETAILS (moved below sizes/add-to-cart as requested) */}
           {(product.description || product.details) && (

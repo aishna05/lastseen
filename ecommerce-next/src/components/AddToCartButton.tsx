@@ -61,14 +61,21 @@ export default function AddToCartButton({ productId, availableSizes = [], sizeSt
             {availableSizes.map((size) => {
               const qty = sizeStock?.[size] ?? 0;
               const disabled = qty <= 0;
+              const isSelected = selectedSize === size;
               return (
                 <button
                   key={size}
                   type="button"
                   onClick={() => !disabled && setSelectedSize(size)}
-                  className={`size-button btn-primary ${selectedSize === size ? 'opacity-90' : ''}`}
+                  style={isSelected ? {
+                    backgroundColor: "#3d2817",
+                    color: "#d4af37",
+                    fontWeight: "600",
+                    border: "2px solid #d4af37"
+                  } : {}}
+                  className={`size-button btn-primary`}
                   disabled={disabled}
-                  aria-pressed={selectedSize === size}
+                  aria-pressed={isSelected}
                 >
                   {size}
                 </button>
