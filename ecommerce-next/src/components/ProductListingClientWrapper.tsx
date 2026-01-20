@@ -4,7 +4,7 @@
 import React, { useEffect, useState } from "react";
 import ProductCard from "./ProductCard"; 
 import { Buffer } from "buffer";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation"; // Unused
 
 // Simplified product display type
 interface ProductDisplay {
@@ -63,7 +63,7 @@ const handleAddToCart = async (productId: number) => {
 
 
 const ProductListingClientWrapper: React.FC<ProductListingProps> = ({ products }) => {
-    const router = useRouter();
+    // router removed as we are filtering in-place
     const [categories, setCategories] = useState<Category[]>([]);
     const [selectedCategory, setSelectedCategory] = useState<number | string>("");
     const [loadingCategories, setLoadingCategories] = useState(true);
@@ -86,15 +86,10 @@ const ProductListingClientWrapper: React.FC<ProductListingProps> = ({ products }
         return () => { mounted = false };
     }, []);
 
-    // Handle category selection and navigate to category page
-    const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const categoryId = e.target.value;
+    // Handle category selection (IN-PLACE FILTERING)
+    const handleCategoryClick = (categoryId: number | string) => {
         setSelectedCategory(categoryId);
-        
-        if (categoryId) {
-            // Navigate to category detail page
-            router.push(`/categories/${categoryId}`);
-        }
+        // Removed router.push to keep filtering on the same page
     };
 
     // Filter products by selected category
@@ -104,42 +99,85 @@ const ProductListingClientWrapper: React.FC<ProductListingProps> = ({ products }
 
     return (
         <section className="product-listing-section">
-            {/* 1. Replaced inline style with global CSS class for max-width and centering */}
             <div className="page-shell"> 
-                {/* 2. Used h1 and the global CSS animation (fadeSlideUp) is assumed to be handled globally by h1 selector */}
                 <h1 className="heading-main">
                     All Products
                 </h1>
 
-                {/* Category Filter */}
-                <div className="filter-row" style={{ marginBottom: "2rem" }}>
-                    <label className="filter-label">Filter by Category:</label>
-                    <select
-                        className="category-select large"
-                        value={selectedCategory}
-                        onChange={handleCategoryChange}
-                        aria-label="Select category"
-                        disabled={loadingCategories}
+                {/* ✅ NEW: Category Navigation Bar */}
+                <div className="category-nav-container" style={{ 
+                    marginBottom: "2rem", 
+                    overflowX: "auto", 
+                    whiteSpace: "nowrap",
+                    display: "flex",
+                    gap: "1rem",
+                    paddingBottom: "1rem",
+                    borderBottom: "1px solid var(--border-subtle)",
+                    // Hide scrollbar for cleaner look
+                    scrollbarWidth: "none", 
+                    msOverflowStyle: "none"
+                }}>
+                    {/* "All" Option */}
+                    <button 
+                        onClick={() => handleCategoryClick("")}
+                        className={`category-nav-item ${selectedCategory === "" ? "active" : ""}`}
+                        style={{
+                            padding: "0.5rem 1.5rem",
+                            borderRadius: "30px",
+                            border: selectedCategory === "" ? "none" : "1px solid var(--border-subtle)",
+                            backgroundColor: selectedCategory === "" ? "var(--primary)" : "transparent",
+                            color: selectedCategory === "" ? "white" : "var(--text-main)",
+                            cursor: "pointer",
+                            fontSize: "0.9rem",
+                            transition: "all 0.3s ease",
+                            whiteSpace: "nowrap"
+                        }}
                     >
-                        <option value="">All Categories</option>
-                        {categories.map((c) => (
-                            <option key={c.id} value={c.id}>{c.name}</option>
-                        ))}
-                    </select>
+                        All
+                    </button>
+
+                    {/* Dynamic Categories */}
+                    {categories.map((c) => (
+                        <button 
+                            key={c.id}
+                            onClick={() => handleCategoryClick(c.id)}
+                            className={`category-nav-item ${selectedCategory === c.id ? "active" : ""}`}
+                            style={{
+                                padding: "0.5rem 1.5rem",
+                                borderRadius: "30px",
+                                border: selectedCategory === c.id ? "none" : "1px solid var(--border-subtle)",
+                                backgroundColor: selectedCategory === c.id ? "var(--primary)" : "transparent",
+                                color: selectedCategory === c.id ? "white" : "var(--text-main)",
+                                cursor: "pointer",
+                                fontSize: "0.9rem",
+                                transition: "all 0.3s ease",
+                                whiteSpace: "nowrap"
+                            }}
+                        >
+                            {c.name}
+                        </button>
+                    ))}
                 </div>
                 
-                {/* 3. Replaced Tailwind grid with custom CSS class name */}
                 <div className="product-grid">
                     {filtered.length === 0 ? (
-                        <p style={{ gridColumn: '1/-1', textAlign: 'center' }}>No products found in this category.</p>
+                        <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: "3rem" }}>
+                            <p style={{ fontSize: "1.2rem", color: "var(--text-muted)" }}>No products found in this category.</p>
+                            <button 
+                                onClick={() => setSelectedCategory("")}
+                                style={{ marginTop: "1rem", color: "var(--primary)", background: "none", border: "none", cursor: "pointer", textDecoration: "underline" }}
+                            >
+                                View all products
+                            </button>
+                        </div>
                     ) : (
                         filtered.map((p) => {
                             // Map to ProductCard props
                             const cardProps = {
-                                id: p.id,
                                 title: p.title,
                                 price: p.price,
-                                imageUrls: Buffer.from(p.imageUrls).toString("base64"), 
+                                imageUrls: Buffer.from(p.imageUrls).toString("base64"),
+                                id: p.id,
                             };
                             return (
                                 <ProductCard

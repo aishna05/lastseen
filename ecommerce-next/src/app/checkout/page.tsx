@@ -211,32 +211,53 @@ function CheckoutContent() {
           <main className="checkout-main">
             <section className="luxe-card">
               <h2 className="card-label">01. Delivery Destination</h2>
-              <div className="address-grid">
-                {addresses.length === 0 ? (
-                  <div className="empty-addresses">
-                    <p>No addresses found.</p>
-                    <button onClick={() => router.push("/profile/addresses")}>Add Address</button>
-                  </div>
-                ) : (
-                  addresses.map((addr) => (
-                    <label key={addr.id} className={`address-item ${selectedAddressId === addr.id ? 'active' : ''}`}>
-                      <input
-                        type="radio"
-                        name="address"
-                        className="hidden"
-                        onChange={() => setSelectedAddressId(addr.id)}
-                        checked={selectedAddressId === addr.id}
-                      />
-                      <div className="address-content">
-                        <p className="addr-main">{addr.address}</p>
-                        <p className="addr-sub">{addr.city}, {addr.state} {addr.zipcode}</p>
-                        <p className="addr-phone"><strong>Phone:</strong> {addr.phone}</p>
+              
+              {/* Show only selected address details */}
+              {selectedAddressId && addresses.find(a => a.id === selectedAddressId) ? (
+                 (() => {
+                    const selectedAddr = addresses.find(a => a.id === selectedAddressId)!;
+                    return (
+                        <div className="address-confirmation p-4 rounded-lg" style={{ background: 'var(--bg-soft)', border: '1px solid var(--border-subtle)' }}>
+                            <p className="addr-main font-bold text-lg mb-1">{selectedAddr.address}</p>
+                            <p className="addr-sub text-gray-400 mb-2">{selectedAddr.city}, {selectedAddr.state} - {selectedAddr.zipcode}</p>
+                            <p className="addr-phone text-sm">
+                                <span className="text-gray-500">Contact:</span> {selectedAddr.phone}
+                            </p>
+                            <p className="text-xs text-green-500 mt-2 flex items-center gap-1">
+                                ✓ Shipping Address Confirmed
+                            </p>
+                        </div>
+                    );
+                 })()
+              ) : (
+                 /* Fallback if somehow no address is selected (shouldn't happen via correct flow) */
+                 <div className="address-grid">
+                    {addresses.length === 0 ? (
+                      <div className="empty-addresses">
+                        <p>No addresses found.</p>
+                        <button onClick={() => router.push("/profile/addresses")}>Add Address</button>
                       </div>
-                      <div className="selection-indicator"></div>
-                    </label>
-                  ))
-                )}
-              </div>
+                    ) : (
+                      addresses.map((addr) => (
+                        <label key={addr.id} className={`address-item ${selectedAddressId === addr.id ? 'active' : ''}`}>
+                          <input
+                            type="radio"
+                            name="address"
+                            className="hidden"
+                            onChange={() => setSelectedAddressId(addr.id)}
+                            checked={selectedAddressId === addr.id}
+                          />
+                          <div className="address-content">
+                            <p className="addr-main">{addr.address}</p>
+                            <p className="addr-sub">{addr.city}, {addr.state} {addr.zipcode}</p>
+                            <p className="addr-phone"><strong>Phone:</strong> {addr.phone}</p>
+                          </div>
+                          <div className="selection-indicator"></div>
+                        </label>
+                      ))
+                    )}
+                 </div>
+              )}
             </section>
           </main>
 
