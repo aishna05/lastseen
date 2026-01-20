@@ -1694,6 +1694,23 @@ select:focus {
     margin-bottom: 0.2rem;
 }
 
+/* Phone Number */
+.order-phone {
+    font-size: var(--fs-sm);
+    color: var(--text-main);
+    line-height: 1.4;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px dashed var(--border-subtle);
+}
+.order-phone small {
+    display: block;
+    font-weight: 600;
+    color: var(--primary);
+    letter-spacing: 0.05em;
+    margin-bottom: 0.2rem;
+}
+
 /* Items List */
 .order-items-list {
     list-style: none;
@@ -2392,6 +2409,13 @@ select:focus {
 .addr-sub {
   font-size: 0.75rem;
   color: #666;
+}
+
+.addr-phone {
+  font-size: 0.85rem;
+  color: #B08B48;
+  margin-top: 0.5rem;
+  font-weight: 500;
 }
 
 .selection-indicator {

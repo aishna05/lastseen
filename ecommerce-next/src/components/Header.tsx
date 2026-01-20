@@ -126,6 +126,10 @@ const Header: React.FC = () => {
                           <User size={18} color="#A68A55" />
                           <span>View Profile</span>
                         </Link>
+                        <Link href="/profile/addresses" className="dropdown-item flex items-center gap-2 px-4 py-2 hover:bg-gray-100" onClick={() => setIsDropdownOpen(false)}>
+                          <User size={18} color="#A68A55" />
+                          <span>Manage Addresses</span>
+                        </Link>
                         <Link href="/orders" className="dropdown-item flex items-center gap-2 px-4 py-2 hover:bg-gray-100" onClick={() => setIsDropdownOpen(false)}>
                           <Package size={18} color="#A68A55" />
                           <span>My Orders</span>

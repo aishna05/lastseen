@@ -250,6 +250,16 @@ export default function ProfilePage() {
 
         <hr className="profile-divider" />
 
+        {/* Manage Addresses */}
+        <button
+          type="button"
+          onClick={() => router.push("/profile/addresses")}
+          className="btn-secondary mt-2"
+          style={{ marginRight: "10px" }}
+        >
+          Manage Addresses
+        </button>
+
         {/* Delete Account */}
         <button
           type="button"

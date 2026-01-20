@@ -23,6 +23,7 @@ interface Address {
   state: string;
   zipcode: string;
   country: string;
+  phone: string;
 }
 
 // --- INNER CONTENT COMPONENT ---
@@ -229,6 +230,7 @@ function CheckoutContent() {
                       <div className="address-content">
                         <p className="addr-main">{addr.address}</p>
                         <p className="addr-sub">{addr.city}, {addr.state} {addr.zipcode}</p>
+                        <p className="addr-phone"><strong>Phone:</strong> {addr.phone}</p>
                       </div>
                       <div className="selection-indicator"></div>
                     </label>

@@ -20,6 +20,7 @@ interface Order {
     state: string;
     country: string;
     zipcode: string;
+    phone: string;
   };
 }
 
@@ -120,6 +121,11 @@ export default function OrdersPage() {
                     <p className="order-address">
                         <small>Shipping To:</small><br/>
                         {order.address.address}, {order.address.city}, {order.address.state}, {order.address.country} - {order.address.zipcode}
+                    </p>
+
+                    <p className="order-phone">
+                        <small>Phone:</small><br/>
+                        {order.address.phone}
                     </p>
 
                     <ul className="order-items-list">

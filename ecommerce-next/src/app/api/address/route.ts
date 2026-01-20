@@ -15,8 +15,11 @@ export async function GET(req: NextRequest) {
     const secret = process.env.JWT_SECRET!;
     const decoded = jwt.verify(token, secret) as { userId: number; role: string };
 
-    // Return all customer addresses
+    // Return only the current user's addresses
     const addresses = await prisma.customerAddress.findMany({
+      where: {
+        userId: decoded.userId,
+      },
       select: {
         id: true,
         userId: true, 
@@ -25,6 +28,7 @@ export async function GET(req: NextRequest) {
         state: true,
         country: true,
         zipcode: true,
+        phone: true,
       },
     });
 
@@ -49,9 +53,9 @@ export async function POST(req: NextRequest) {
     if (decoded.role !== "CUSTOMER")
       return NextResponse.json({ message: "Only CUSTOMER can add address" }, { status: 403 });
 
-    const { address, city, state, country, zipcode } = await req.json();
+    const { address, city, state, country, zipcode, phone } = await req.json();
 
-    if (!address || !city || !state || !country || !zipcode)
+    if (!address || !city || !state || !country || !zipcode || !phone)
       return NextResponse.json({ error: "All fields are required" }, { status: 400 });
 
     const newAddress = await prisma.customerAddress.create({
@@ -62,6 +66,7 @@ export async function POST(req: NextRequest) {
         state,
         country,
         zipcode,
+        phone,
       },
       select: {
         id: true,
@@ -71,6 +76,7 @@ export async function POST(req: NextRequest) {
         state: true,
         country: true,
         zipcode: true,
+        phone: true,
       },
     });
 
