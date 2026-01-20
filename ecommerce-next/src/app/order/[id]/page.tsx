@@ -46,19 +46,28 @@ export default function OrderPage() {
 
     const fetchAddresses = async () => {
       try {
+        console.log("Fetching addresses with token:", token);
         const res = await fetch("/api/address", {
           headers: { Authorization: `Bearer ${token}` },
         });
+        console.log("Address API response status:", res.status);
+        
         if (res.ok) {
           const data = await res.json();
+          console.log("Addresses received:", data);
           const addresses = Array.isArray(data) ? data : data.addresses || [];
           setSavedAddresses(addresses);
           if (addresses.length > 0) {
             setSelectedAddressId(addresses[0].id);
           }
+        } else {
+          const errorData = await res.json();
+          console.error("Address API error:", errorData);
+          setMessage(`Failed to load addresses: ${errorData.error || errorData.message}`);
         }
       } catch (err) {
         console.error("Error fetching addresses:", err);
+        setMessage("Error loading addresses. Please try again.");
       } finally {
         setLoadingAddresses(false);
       }
@@ -69,6 +78,7 @@ export default function OrderPage() {
 
   // Create new address
   async function createAddress() {
+    console.log("Creating address:", newAddress);
     const res = await fetch("/api/address", {
       method: "POST",
       headers: {
@@ -78,7 +88,10 @@ export default function OrderPage() {
       body: JSON.stringify(newAddress),
     });
 
+    console.log("Create address response status:", res.status);
     const data = await res.json();
+    console.log("Create address response:", data);
+    
     if (!res.ok) throw new Error(data.error || "Address creation failed");
 
     return data.newAddress.id;
@@ -109,13 +122,21 @@ export default function OrderPage() {
       setLoading(true);
       setMessage("");
 
+      if (!token) {
+        throw new Error("Not authenticated. Please log in first.");
+      }
+
       // Use selected address or create new one
       let addressId: number;
-      if (showNewAddressForm) {
+      if (showNewAddressForm || savedAddresses.length === 0) {
+        // Validate new address fields
+        if (!newAddress.phone || !newAddress.address || !newAddress.city || !newAddress.state || !newAddress.country || !newAddress.zipcode) {
+          throw new Error("Please fill in all address fields");
+        }
         addressId = await createAddress();
       } else {
         if (!selectedAddressId) {
-          throw new Error("Please select an address or add a new one");
+          throw new Error("Please select an address");
         }
         addressId = selectedAddressId;
       }
@@ -123,7 +144,8 @@ export default function OrderPage() {
       await addToCart();
       router.push(`/checkout?productId=${productId}&quantity=${quantity}`);
     } catch (err: any) {
-      setMessage(err.message);
+      console.error("Order submission error:", err);
+      setMessage(err.message || "An error occurred. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -307,39 +329,69 @@ export default function OrderPage() {
 
       <style jsx>{`
         .order-card {
-          max-width: 600px;
+          max-width: 650px;
+          margin: 2rem auto;
+        }
+
+        .auth-field {
+          margin-bottom: 1.75rem;
+        }
+
+        .auth-field label {
+          display: block;
+          margin-bottom: 0.65rem;
+          font-size: 0.95rem;
+          font-weight: 600;
+          color: #333;
+          letter-spacing: 0.02em;
+        }
+
+        .auth-field input {
+          width: 100%;
+          padding: 0.85rem;
+          border: 1px solid #ddd;
+          border-radius: 6px;
+          font-size: 0.95rem;
+          transition: all 0.3s ease;
+        }
+
+        .auth-field input:focus {
+          outline: none;
+          border-color: #B08B48;
+          box-shadow: 0 0 0 3px rgba(176, 139, 72, 0.1);
         }
 
         .address-section {
-          margin: 2rem 0;
-          padding: 1.5rem;
-          background: rgba(176, 139, 72, 0.05);
-          border-radius: 8px;
+          margin: 2.5rem 0;
+          padding: 2rem;
+          background: rgba(176, 139, 72, 0.06);
+          border: 1px solid rgba(176, 139, 72, 0.15);
+          border-radius: 10px;
         }
 
         .section-title {
           display: block;
-          font-size: 1rem;
+          font-size: 1.05rem;
           font-weight: 600;
           color: #333;
-          margin-bottom: 1.25rem;
-          letter-spacing: 0.02em;
+          margin-bottom: 1.75rem;
+          letter-spacing: 0.03em;
         }
 
         .saved-addresses {
           display: flex;
           flex-direction: column;
-          gap: 1rem;
-          margin-bottom: 1.5rem;
+          gap: 1.25rem;
+          margin-bottom: 2rem;
         }
 
         .address-option {
           display: flex;
           align-items: flex-start;
-          gap: 1rem;
-          padding: 1.25rem;
+          gap: 1.25rem;
+          padding: 1.5rem;
           border: 2px solid #ddd;
-          border-radius: 8px;
+          border-radius: 10px;
           background: #fff;
           cursor: pointer;
           transition: all 0.3s ease;
@@ -348,60 +400,119 @@ export default function OrderPage() {
         .address-option:hover {
           border-color: #B08B48;
           background: #fafaf8;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
         }
 
         .address-option input[type="radio"] {
-          margin-top: 0.35rem;
+          margin-top: 0.5rem;
           cursor: pointer;
           accent-color: #B08B48;
+          width: 18px;
+          height: 18px;
+          flex-shrink: 0;
         }
 
         .address-content-box {
           flex: 1;
           display: flex;
           flex-direction: column;
-          gap: 0.4rem;
+          gap: 0.5rem;
         }
 
         .addr-text {
           margin: 0;
-          font-size: 0.9rem;
+          font-size: 0.95rem;
           color: #333;
-          line-height: 1.4;
+          line-height: 1.5;
+        }
+
+        .addr-text strong {
+          font-weight: 600;
         }
 
         .addr-phone-text {
-          margin: 0.5rem 0 0 0;
-          font-size: 0.85rem;
+          margin: 0.75rem 0 0 0;
+          font-size: 0.9rem;
           color: #B08B48;
-          font-weight: 500;
+          font-weight: 600;
         }
 
         .address-form-section {
-          margin: 2rem 0;
-          padding: 1.5rem;
-          background: rgba(176, 139, 72, 0.05);
-          border-radius: 8px;
+          margin: 2.5rem 0;
+          padding: 2rem;
+          background: rgba(176, 139, 72, 0.06);
+          border: 1px solid rgba(176, 139, 72, 0.15);
+          border-radius: 10px;
         }
 
         .form-section-title {
-          font-size: 1rem;
+          font-size: 1.05rem;
           font-weight: 600;
           color: #333;
-          margin-bottom: 1.5rem;
-          letter-spacing: 0.02em;
+          margin-bottom: 2rem;
+          letter-spacing: 0.03em;
         }
 
         .mt-3 {
-          margin-top: 1.5rem;
+          margin-top: 1.75rem;
         }
 
         .mb-3 {
-          margin-bottom: 1.5rem;
+          margin-bottom: 1.75rem;
         }
 
         .mt-4 {
-          margin-top: 2rem;
+          margin-top: 2.5rem;
+        }
+
+        .btn-primary {
+          width: 100%;
+          padding: 1rem;
+          background: #B08B48;
+          color: white;
+          border: none;
+          border-radius: 6px;
+          font-size: 1rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          margin-top: 2.5rem;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+          background: #9a7a3d;
+        }
+
+        .btn-secondary {
+          width: 100%;
+          padding: 0.85rem;
+          background: #B08B48;
+          color: white;
+          border: 1px solid #B08B48;
+          border-radius: 6px;
+          font-size: 0.95rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+          background: #9a7a3d;
+          border-color: #9a7a3d;
+        }
+
+        .auth-error {
+          background: #fee;
+          color: #c33;
+          padding: 1rem;
+          border-radius: 6px;
+          margin-bottom: 1.5rem;
+          border: 1px solid #c33;
+          font-weight: 500;
+        }
+
+        .auth-subtitle {
+          margin-bottom: 2rem;
         }
       `}</style>
     </div>
