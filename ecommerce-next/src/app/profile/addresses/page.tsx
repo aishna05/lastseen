@@ -279,7 +279,7 @@ export default function AddressesPage() {
               />
             </div>
 
-            <div style={{ display: "flex", gap: "10px" }}>
+            <div style={{ display: "flex", gap: "1rem", marginTop: "1.5rem" }}>
               <button type="submit" disabled={savingForm} className="btn-primary">
                 {savingForm ? "Saving..." : "Save Address"}
               </button>
@@ -347,19 +347,25 @@ export default function AddressesPage() {
       <style jsx>{`
         .addresses-list {
           display: grid;
-          gap: 1rem;
-          margin-top: 1.5rem;
+          gap: 1.5rem;
+          margin-top: 2rem;
         }
 
         .address-card {
           border: 1px solid #ddd;
           border-radius: 8px;
-          padding: 1.5rem;
+          padding: 1.75rem;
           display: flex;
           justify-content: space-between;
           align-items: flex-start;
-          gap: 1rem;
+          gap: 1.5rem;
           background: #f9f9f9;
+          transition: all 0.3s ease;
+        }
+
+        .address-card:hover {
+          border-color: #B08B48;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
         .address-info {
@@ -367,9 +373,10 @@ export default function AddressesPage() {
         }
 
         .address-info p {
-          margin: 0.5rem 0;
+          margin: 0.6rem 0;
           font-size: 0.95rem;
           color: #333;
+          line-height: 1.5;
         }
 
         .btn-primary {
@@ -387,8 +394,8 @@ export default function AddressesPage() {
         }
 
         .btn-secondary {
-          background: #ccc;
-          color: #333;
+          background: #B08B48;
+          color: white;
           border: none;
           padding: 0.75rem 1.5rem;
           border-radius: 4px;
@@ -397,7 +404,7 @@ export default function AddressesPage() {
         }
 
         .btn-secondary:hover {
-          background: #bbb;
+          background: #9a7a3d;
         }
 
         .btn-delete {
@@ -432,6 +439,30 @@ export default function AddressesPage() {
         .profile-message.success {
           background: #efe;
           color: #3c3;
+        }
+
+        input[type="text"],
+        input[type="tel"],
+        input[type="email"],
+        select,
+        textarea {
+          width: 100%;
+          padding: 0.75rem;
+          border: 1px solid #ddd;
+          border-radius: 4px;
+          font-family: inherit;
+          font-size: 0.95rem;
+          transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="tel"]:focus,
+        input[type="email"]:focus,
+        select:focus,
+        textarea:focus {
+          outline: none;
+          border-color: #B08B48;
+          box-shadow: 0 0 0 3px rgba(176, 139, 72, 0.1);
         }
       `}</style>
     </div>
