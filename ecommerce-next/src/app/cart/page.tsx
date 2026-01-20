@@ -129,21 +129,25 @@ export default function CartPage() {
   );
 
   return (
-    <div className="profile-container">
-      <div className="profile-card">
-
+    <div className="page-shell" style={{ paddingBlock: "4rem", minHeight: "80vh" }}>
+      
         {/* ✅ HIDE CART HEADER WHEN ADDRESS FORM IS OPEN */}
         {!showAddressForm && (
-          <>
-            <h1 className="profile-title">Your Cart</h1>
+          <div style={{ marginBottom: "2rem", textAlign: "center" }}>
+            <h1 className="profile-title" style={{ fontSize: "2.5rem" }}>Your Cart</h1>
             <p className="profile-subtitle">Review your items before checkout</p>
-          </>
+          </div>
         )}
 
         {loading && <p className="profile-message">Loading cart...</p>}
 
         {!loading && items.length === 0 && !showAddressForm && (
-          <p className="profile-message error">Your cart is empty</p>
+          <div className="order-empty">
+            <p>Your cart is empty</p>
+            <Link href="/products" className="btn-primary" style={{ marginTop: "1rem" }}>
+              Continue Shopping
+            </Link>
+          </div>
         )}
 
         {/* ✅ Cart Items */}
@@ -152,12 +156,23 @@ export default function CartPage() {
             {/* Cart Items Grid */}
             <div className="cart-items-grid">
               {items.map((item) => {
-                // Decode images from base64
+                // Decode images: Parse JSON string directly
                 let images: string[] = [];
                 try {
-                  const jsonString = Buffer.from(item.product.imageUrls, "base64").toString();
-                  images = JSON.parse(jsonString);
-                } catch {
+                  // If it's already an array, use it; otherwise parse it
+                  if (Array.isArray(item.product.imageUrls)) {
+                    images = item.product.imageUrls;
+                  } else if (typeof item.product.imageUrls === "string") {
+                     // Check if it looks like JSON
+                     if (item.product.imageUrls.startsWith("[")) {
+                         images = JSON.parse(item.product.imageUrls);
+                     } else {
+                         // Fallback for some weird cases or just push the string
+                         images = [item.product.imageUrls];
+                     }
+                  }
+                } catch (e) {
+                  console.error("Image parse error", e);
                   images = [];
                 }
                 const mainImage = images[0] || "";
@@ -255,8 +270,11 @@ export default function CartPage() {
 
         {/* ✅ Only Address Form Shows Now */}
         {showAddressForm && (
-          <form onSubmit={handleCheckout} className="w-full mt-4 space-y-3">
-            <h3 className="font-semibold">Delivery Address</h3>
+          <div className="max-w-md mx-auto">
+             {/* Reusing auth-card style or similar for consistency */}
+          <div className="profile-card">
+          <form onSubmit={handleCheckout} className="w-full space-y-3">
+            <h3 className="font-semibold" style={{marginBottom: "1rem"}}>Delivery Address</h3>
 
             <div className="auth-field">
               <label>Address</label>
@@ -325,7 +343,7 @@ export default function CartPage() {
 
               <button
                 type="button"
-                className="btn-primary"
+                className="btn-secondary"
                 onClick={() => setShowAddressForm(false)}
                 disabled={checkoutLoading}
               >
@@ -333,8 +351,9 @@ export default function CartPage() {
               </button>
             </div>
           </form>
+          </div>
+          </div>
         )}
-      </div>
     </div>
   );
 }
