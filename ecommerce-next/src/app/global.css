@@ -2857,15 +2857,17 @@ select:focus {
 ================================ */
 .cart-advanced-container {
   display: grid;
-  grid-template-columns: 1fr 380px;
+  grid-template-columns: 1fr 350px;
   gap: 2rem;
   margin-top: 2rem;
+  align-items: start;
 }
 
 .cart-items-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 1.5rem;
+  width: 100%;
 }
 
 .cart-item-card {
@@ -2875,6 +2877,9 @@ select:focus {
   overflow: hidden;
   transition: all var(--transition-med);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .cart-item-card:hover {
@@ -2885,16 +2890,22 @@ select:focus {
 .cart-item-image-wrapper {
   position: relative;
   width: 100%;
-  height: 240px;
+  height: 220px;
   overflow: hidden;
   background: var(--bg-soft);
   cursor: pointer;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .cart-item-image {
   width: 100%;
   height: 100%;
+  object-fit: cover;
   transition: transform var(--transition-med);
+  display: block;
 }
 
 .cart-item-image-wrapper:hover .cart-item-image {
@@ -2914,6 +2925,9 @@ select:focus {
 
 .cart-item-details {
   padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
 }
 
 .cart-item-title {
@@ -2926,6 +2940,9 @@ select:focus {
   letter-spacing: 0.04em;
   line-height: 1.3;
   transition: color var(--transition-fast);
+  min-height: 2.6rem;
+  display: flex;
+  align-items: center;
 }
 
 .cart-item-title:hover {
@@ -2965,7 +2982,7 @@ select:focus {
 }
 
 .cart-item-remove-btn {
-  margin-top: 1rem;
+  margin-top: auto;
   width: 100%;
   padding: 0.6rem;
   background: var(--bg-page);
@@ -2999,6 +3016,7 @@ select:focus {
   padding: 1.75rem;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
   height: fit-content;
+  width: 100%;
 }
 
 .cart-summary-section h2 {
@@ -3014,13 +3032,16 @@ select:focus {
 .summary-row {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   padding: 0.75rem 0;
   font-size: var(--fs-sm);
   color: var(--text-main);
+  gap: 1rem;
 }
 
 .summary-row span:last-child {
   font-weight: 600;
+  text-align: right;
 }
 
 .summary-divider {
@@ -3041,6 +3062,7 @@ select:focus {
   background: var(--primary);
   color: white;
   border: none;
+  width: 100%;
 }
 
 .cart-checkout-btn:hover:not(:disabled) {
@@ -3056,6 +3078,7 @@ select:focus {
   cursor: pointer;
   font-weight: 500;
   transition: all var(--transition-fast);
+  width: 100%;
 }
 
 .btn-secondary:hover:not(:disabled) {
@@ -3065,6 +3088,17 @@ select:focus {
 }
 
 /* Responsive Cart Layout */
+@media (max-width: 1200px) {
+  .cart-advanced-container {
+    grid-template-columns: 1fr 320px;
+    gap: 1.5rem;
+  }
+
+  .cart-items-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  }
+}
+
 @media (max-width: 1024px) {
   .cart-advanced-container {
     grid-template-columns: 1fr;
@@ -3072,10 +3106,41 @@ select:focus {
 
   .cart-summary-section {
     position: static;
+    top: auto;
+    width: 100%;
   }
 
   .cart-items-grid {
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .cart-items-grid {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1rem;
+  }
+
+  .cart-item-image-wrapper {
+    height: 180px;
+  }
+
+  .cart-item-details {
+    padding: 1rem;
+  }
+
+  .cart-item-title {
+    font-size: var(--fs-sm);
+    min-height: 2.2rem;
+  }
+
+  .cart-advanced-container {
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+
+  .cart-summary-section {
+    padding: 1.5rem;
   }
 }
 
@@ -3085,11 +3150,29 @@ select:focus {
   }
 
   .cart-item-image-wrapper {
-    height: 200px;
+    height: 240px;
   }
 
-  .cart-advanced-container {
-    gap: 1.5rem;
+  .cart-item-card {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    align-items: start;
+  }
+
+  .cart-item-image-wrapper {
+    height: 180px;
+  }
+
+  .cart-item-details {
+    padding: 1rem;
+  }
+
+  .cart-item-remove-btn {
+    margin-top: 0.5rem;
+  }
+
+  .cart-summary-section {
+    padding: 1.25rem;
   }
 }
 

@@ -171,13 +171,10 @@ export default function CartPage() {
                     <Link href={`/product/${item.product.id}`}>
                       <div className="cart-item-image-wrapper">
                         {mainImage ? (
-                          <div
+                          <img
+                            src={mainImage}
+                            alt={item.product.title}
                             className="cart-item-image"
-                            style={{
-                              backgroundImage: `url(${mainImage})`,
-                              backgroundSize: "cover",
-                              backgroundPosition: "center",
-                            }}
                           />
                         ) : (
                           <div className="cart-item-image-placeholder">
