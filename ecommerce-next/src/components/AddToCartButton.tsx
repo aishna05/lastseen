@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { getSizesForCategory } from "@/lib/sizeUtils";
+import SizeChartModal from "./SizeChartModal";
 
 interface AddToCartButtonProps {
   productId: number;
@@ -57,6 +58,9 @@ export default function AddToCartButton({ productId, availableSizes = [], sizeSt
       {message && <p className="text-green-600 mb-2">{message}</p>}
       {availableSizes && availableSizes.length > 0 && (
         <div className="mb-2">
+          {/* Size Chart Button inserted here */}
+          <SizeChartModal />
+          
           <div className="size-checkbox-group">
             {availableSizes.map((size) => {
               const qty = sizeStock?.[size] ?? 0;
@@ -68,10 +72,12 @@ export default function AddToCartButton({ productId, availableSizes = [], sizeSt
                   type="button"
                   onClick={() => !disabled && setSelectedSize(size)}
                   style={isSelected ? {
-                    backgroundColor: "#3d2817",
-                    color: "#d4af37",
+                    background: "#3A1F17", // Brown theme (var(--bg-elevated))
+                    backgroundImage: "none", // Override btn-primary gradient
+                    color: "#D4BC84", // Golden theme (var(--primary-strong))
                     fontWeight: "600",
-                    border: "2px solid #d4af37"
+                    border: "2px solid #D4BC84",
+                    boxShadow: "0 0 10px rgba(212, 188, 132, 0.4)" // Optional glow for effect
                   } : {}}
                   className={`size-button btn-primary`}
                   disabled={disabled}

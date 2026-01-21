@@ -18,6 +18,7 @@ const Header: React.FC = () => {
     { href: "/seller/dashboard", label: "Add Product", roles: ["SELLER"] },
     { href: "/seller/myorder", label: "My Orders", roles: ["SELLER"] },
     { href: "/seller/myproduct", label: "My Products", roles: ["SELLER"] },
+    { href: "/seller/users", label: "Users", roles: ["SELLER"] },
   ];
 
   const handleLogout = () => {

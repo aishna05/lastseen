@@ -4,7 +4,7 @@
 import React, { useEffect, useState } from "react";
 import ProductCard from "./ProductCard"; 
 import { Buffer } from "buffer";
-// import { useRouter } from "next/navigation"; // Unused
+import { useSearchParams, useRouter } from "next/navigation";
 
 // Simplified product display type
 interface ProductDisplay {
@@ -63,10 +63,21 @@ const handleAddToCart = async (productId: number) => {
 
 
 const ProductListingClientWrapper: React.FC<ProductListingProps> = ({ products }) => {
-    // router removed as we are filtering in-place
+    const searchParams = useSearchParams();
+    const router = useRouter();
     const [categories, setCategories] = useState<Category[]>([]);
     const [selectedCategory, setSelectedCategory] = useState<number | string>("");
     const [loadingCategories, setLoadingCategories] = useState(true);
+
+    // Sync with URL params
+    useEffect(() => {
+        const catParam = searchParams.get("category");
+        if (catParam) {
+            setSelectedCategory(Number(catParam));
+        } else {
+            setSelectedCategory("");
+        }
+    }, [searchParams]);
 
     useEffect(() => {
         let mounted = true;
@@ -77,7 +88,6 @@ const ProductListingClientWrapper: React.FC<ProductListingProps> = ({ products }
                 if (Array.isArray(data)) {
                     const cats = data.map((c: any) => ({ id: c.id, name: c.name }));
                     setCategories(cats);
-                    setSelectedCategory(""); // Show all products by default
                 }
             })
             .catch(() => {})
@@ -86,10 +96,25 @@ const ProductListingClientWrapper: React.FC<ProductListingProps> = ({ products }
         return () => { mounted = false };
     }, []);
 
-    // Handle category selection (IN-PLACE FILTERING)
+    // Handle category selection
     const handleCategoryClick = (categoryId: number | string) => {
+        // If clicking same category, deselect (show all)
+        if (selectedCategory === categoryId) {
+             const params = new URLSearchParams(searchParams.toString());
+             params.delete("category");
+             router.push(`/products?${params.toString()}`);
+             return;
+        }
+
         setSelectedCategory(categoryId);
-        // Removed router.push to keep filtering on the same page
+        // Also update URL so it's shareable
+        const params = new URLSearchParams(searchParams.toString());
+        if (categoryId) {
+            params.set("category", String(categoryId));
+        } else {
+            params.delete("category");
+        }
+        router.push(`/products?${params.toString()}`);
     };
 
     // Filter products by selected category
@@ -101,10 +126,10 @@ const ProductListingClientWrapper: React.FC<ProductListingProps> = ({ products }
         <section className="product-listing-section">
             <div className="page-shell"> 
                 <h1 className="heading-main">
-                    All Products
+                    {selectedCategory && categories.find(c => c.id === Number(selectedCategory))?.name || "All Products"}
                 </h1>
 
-                {/* ✅ NEW: Category Navigation Bar */}
+                {/* Category Navigation Bar (Pills) */}
                 <div className="category-nav-container" style={{ 
                     marginBottom: "2rem", 
                     overflowX: "auto", 
@@ -117,25 +142,7 @@ const ProductListingClientWrapper: React.FC<ProductListingProps> = ({ products }
                     scrollbarWidth: "none", 
                     msOverflowStyle: "none"
                 }}>
-                    {/* "All" Option */}
-                    <button 
-                        onClick={() => handleCategoryClick("")}
-                        className={`category-nav-item ${selectedCategory === "" ? "active" : ""}`}
-                        style={{
-                            padding: "0.5rem 1.5rem",
-                            borderRadius: "30px",
-                            border: selectedCategory === "" ? "none" : "1px solid var(--border-subtle)",
-                            backgroundColor: selectedCategory === "" ? "var(--primary)" : "transparent",
-                            color: selectedCategory === "" ? "white" : "var(--text-main)",
-                            cursor: "pointer",
-                            fontSize: "0.9rem",
-                            transition: "all 0.3s ease",
-                            whiteSpace: "nowrap"
-                        }}
-                    >
-                        All
-                    </button>
-
+                    
                     {/* Dynamic Categories */}
                     {categories.map((c) => (
                         <button 
@@ -164,7 +171,7 @@ const ProductListingClientWrapper: React.FC<ProductListingProps> = ({ products }
                         <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: "3rem" }}>
                             <p style={{ fontSize: "1.2rem", color: "var(--text-muted)" }}>No products found in this category.</p>
                             <button 
-                                onClick={() => setSelectedCategory("")}
+                                onClick={() => handleCategoryClick("")}
                                 style={{ marginTop: "1rem", color: "var(--primary)", background: "none", border: "none", cursor: "pointer", textDecoration: "underline" }}
                             >
                                 View all products

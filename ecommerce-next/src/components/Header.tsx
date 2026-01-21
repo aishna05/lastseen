@@ -5,7 +5,12 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { useRouter } from 'next/navigation';
-import { User, Package, LogOut, ShoppingCart } from 'lucide-react';
+import { User, Package, LogOut, ShoppingCart, ChevronDown } from 'lucide-react';
+
+interface Category {
+  id: number;
+  name: string;
+}
 
 const Header: React.FC = () => {
   const { user, isLoading } = useAuth();
@@ -13,6 +18,11 @@ const Header: React.FC = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [cartCount, setCartCount] = useState(0);
+
+  // Categories state
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
+  const categoriesRef = useRef<HTMLDivElement>(null);
 
   // ✅ Fetch total cart quantity
   const fetchCartCount = async () => {
@@ -38,6 +48,18 @@ const Header: React.FC = () => {
     }
   };
 
+  // ✅ Fetch categories
+  useEffect(() => {
+    fetch('/api/categories')
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setCategories(data);
+        }
+      })
+      .catch((err) => console.error('Failed to fetch categories:', err));
+  }, []);
+
   // Listen for token or cart changes
   useEffect(() => {
     fetchCartCount();
@@ -60,22 +82,19 @@ const Header: React.FC = () => {
     router.push('/login');
   };
 
-  // Close dropdown when clicking outside
+  // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsDropdownOpen(false);
       }
+      if (categoriesRef.current && !categoriesRef.current.contains(event.target as Node)) {
+        setIsCategoriesOpen(false);
+      }
     };
-    if (isDropdownOpen) document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [isDropdownOpen]);
-
-  const navLinks = [
-    { href: "/products", label: "Products" },
-    { href: "/about-us", label: "About Us" },
-    { href: "/contact-us", label: "Contact Us" },
-  ];
+  }, []);
 
   return (
     <header className="site-header">
@@ -92,11 +111,55 @@ const Header: React.FC = () => {
         </Link>
 
         <nav className="site-nav">
-          {navLinks.map(link => (
-            <Link key={link.href} href={link.href} className="nav-link">
-              {link.label}
-            </Link>
-          ))}
+          <Link href="/products" className="nav-link">
+            Products
+          </Link>
+
+          {/* Categories Dropdown */}
+          <div 
+            className="relative" 
+            ref={categoriesRef}
+            onMouseEnter={() => setIsCategoriesOpen(true)}
+            onMouseLeave={() => setIsCategoriesOpen(false)}
+          >
+            <button 
+              className="nav-link flex items-center gap-1 cursor-pointer bg-transparent border-none p-0"
+              onClick={() => setIsCategoriesOpen(!isCategoriesOpen)}
+            >
+              Categories <ChevronDown size={14} />
+            </button>
+            
+            {isCategoriesOpen && (
+              <div 
+                className="absolute left-0 top-full mt-2 w-48 bg-white border rounded shadow-lg z-50 animate-in fade-in zoom-in-95 duration-200"
+                style={{ backgroundColor: 'var(--bg-elevated)', borderColor: 'var(--border-strong)' }}
+              >
+                <div className="py-1">
+                  {categories.length > 0 ? (
+                    categories.map((cat) => (
+                      <Link 
+                        key={cat.id} 
+                        href={`/products?category=${cat.id}`} 
+                        className="block px-4 py-2 text-sm hover:bg-white/10 transition-colors"
+                        style={{ color: 'var(--text-main)' }}
+                      >
+                        {cat.name}
+                      </Link>
+                    ))
+                  ) : (
+                    <span className="block px-4 py-2 text-sm text-gray-500">Loading...</span>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+
+          <Link href="/about-us" className="nav-link">
+            About Us
+          </Link>
+          <Link href="/contact-us" className="nav-link">
+            Contact Us
+          </Link>
 
           {!isLoading && (
             <>
