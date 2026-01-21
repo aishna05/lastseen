@@ -115,7 +115,7 @@ const Header: React.FC = () => {
             Products
           </Link>
 
-          {/* Categories Dropdown */}
+          {/* Categories Dropdown Container */}
 <div 
   className="relative" 
   ref={categoriesRef}
@@ -123,33 +123,26 @@ const Header: React.FC = () => {
   onMouseLeave={() => setIsCategoriesOpen(false)}
 >
   <button 
-    className="luxe-category-btn" 
+    className="luxe-category-btn"
     onClick={() => setIsCategoriesOpen(!isCategoriesOpen)}
-    aria-expanded={isCategoriesOpen}
   >
-    <span>Categories</span>
-    <ChevronDown size={14} className={`chevron-icon ${isCategoriesOpen ? 'rotate-180' : ''}`} />
+    <span>CATEGORIES</span>
+    <ChevronDown size={14} className={`transition-transform duration-300 ${isCategoriesOpen ? 'rotate-180' : ''}`} />
   </button>
   
   {isCategoriesOpen && (
-    <div className="luxe-dropdown-panel animate-in fade-in zoom-in-95 duration-200">
+    <div className="luxe-dropdown-panel animate-in fade-in slide-in-from-top-2 duration-300">
       <div className="dropdown-inner-list">
-        {categories.length > 0 ? (
-          categories.map((cat) => (
-            <Link 
-              key={cat.id} 
-              href={`/products?category=${cat.id}`} 
-              className="luxe-dropdown-item"
-              onClick={() => setIsCategoriesOpen(false)}
-            >
-              {cat.name}
-            </Link>
-          ))
-        ) : (
-          <span className="dropdown-loading-text">
-            Fetching archives...
-          </span>
-        )}
+        {categories.map((cat) => (
+          <Link 
+            key={cat.id} 
+            href={`/products?category=${cat.id}`} 
+            className="luxe-dropdown-item"
+            onClick={() => setIsCategoriesOpen(false)}
+          >
+            {cat.name}
+          </Link>
+        ))}
       </div>
     </div>
   )}
