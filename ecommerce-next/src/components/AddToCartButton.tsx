@@ -61,7 +61,7 @@ export default function AddToCartButton({ productId, availableSizes = [], sizeSt
           {/* Size Chart Button inserted here */}
           <SizeChartModal />
           
-          <div className="size-checkbox-group">
+          <div className="size-checkbox-group mt-6">
             {availableSizes.map((size) => {
               const qty = sizeStock?.[size] ?? 0;
               const disabled = qty <= 0;
