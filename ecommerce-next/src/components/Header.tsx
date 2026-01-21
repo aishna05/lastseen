@@ -147,7 +147,7 @@ const Header: React.FC = () => {
                       <Link 
                         key={cat.id} 
                         href={`/products?category=${cat.id}`} 
-                        className="block w-full text-left px-6 py-3 text-sm transition-all duration-300 border-b border-[#523A24] last:border-none"
+                        className="block w-full text-left px-6 py-3 text-sm border-b border-[#523A24] last:border-none"
                         style={{ 
                           color: '#A68A55', // Muted Gold default
                           fontFamily: '"Cinzel", serif',
@@ -155,13 +155,11 @@ const Header: React.FC = () => {
                         }}
                         onMouseEnter={(e) => {
                            e.currentTarget.style.backgroundColor = '#3A1F17'; // Slightly lighter brown
-                           e.currentTarget.style.paddingLeft = '2rem';
                            e.currentTarget.style.color = '#D4BC84'; // Bright Gold
                            e.currentTarget.style.textDecoration = 'underline';
                         }}
                         onMouseLeave={(e) => {
                            e.currentTarget.style.backgroundColor = 'transparent';
-                           e.currentTarget.style.paddingLeft = '1.5rem';
                            e.currentTarget.style.color = '#A68A55';
                            e.currentTarget.style.textDecoration = 'none';
                         }}

@@ -91,12 +91,12 @@ export default function SellerUsersPage() {
                     color: "#D4BC84",
                   }}
                 >
-                  <th className="px-10 py-6 font-semibold border-b border-r border-[#523A24] last:border-r-0 whitespace-nowrap">ID</th>
-                  <th className="px-10 py-6 font-semibold border-b border-r border-[#523A24] last:border-r-0 whitespace-nowrap">Name</th>
-                  <th className="px-10 py-6 font-semibold border-b border-r border-[#523A24] last:border-r-0 whitespace-nowrap">Email</th>
-                  <th className="px-10 py-6 font-semibold border-b border-r border-[#523A24] last:border-r-0 whitespace-nowrap">Phone</th>
-                  <th className="px-10 py-6 font-semibold border-b border-r border-[#523A24] last:border-r-0 whitespace-nowrap">Role</th>
-                  <th className="px-10 py-6 font-semibold border-b border-[#523A24] text-right whitespace-nowrap">Joined Date</th>
+                  <th className="px-16 py-6 font-semibold border-b border-r border-[#523A24] last:border-r-0 whitespace-nowrap">ID</th>
+                  <th className="px-16 py-6 font-semibold border-b border-r border-[#523A24] last:border-r-0 whitespace-nowrap">Name</th>
+                  <th className="px-16 py-6 font-semibold border-b border-r border-[#523A24] last:border-r-0 whitespace-nowrap">Email</th>
+                  <th className="px-16 py-6 font-semibold border-b border-r border-[#523A24] last:border-r-0 whitespace-nowrap">Phone</th>
+                  <th className="px-16 py-6 font-semibold border-b border-r border-[#523A24] last:border-r-0 whitespace-nowrap">Role</th>
+                  <th className="px-16 py-6 font-semibold border-b border-[#523A24] text-right whitespace-nowrap">Joined Date</th>
                 </tr>
               </thead>
               <tbody className="text-base">
@@ -108,22 +108,22 @@ export default function SellerUsersPage() {
                       backgroundColor: index % 2 === 0 ? "rgba(58, 31, 23, 0.1)" : "transparent" 
                     }}
                   >
-                    <td className="px-10 py-6 font-mono text-sm text-[#A68A55] border-b border-r border-[#523A24]/40 last:border-r-0 whitespace-nowrap">
+                    <td className="px-16 py-6 font-mono text-sm text-[#A68A55] border-b border-r border-[#523A24]/40 last:border-r-0 whitespace-nowrap">
                       #{user.id}
                     </td>
                     <td 
-                      className="px-10 py-6 font-serif text-xl border-b border-r border-[#523A24]/40 last:border-r-0 whitespace-nowrap"
+                      className="px-16 py-6 font-serif text-xl border-b border-r border-[#523A24]/40 last:border-r-0 whitespace-nowrap"
                       style={{ color: "var(--text-main)" }}
                     >
                       {user.name}
                     </td>
-                    <td className="px-10 py-6 text-[#D4BC84]/90 border-b border-r border-[#523A24]/40 last:border-r-0 whitespace-nowrap">
+                    <td className="px-16 py-6 text-[#D4BC84]/90 border-b border-r border-[#523A24]/40 last:border-r-0 whitespace-nowrap">
                       {user.email}
                     </td>
-                    <td className="px-10 py-6 text-[#A68A55] border-b border-r border-[#523A24]/40 last:border-r-0 whitespace-nowrap">
+                    <td className="px-16 py-6 text-[#A68A55] border-b border-r border-[#523A24]/40 last:border-r-0 whitespace-nowrap">
                       {user.phone || <span className="opacity-30 italic">-</span>}
                     </td>
-                    <td className="px-10 py-6 border-b border-r border-[#523A24]/40 last:border-r-0 whitespace-nowrap">
+                    <td className="px-16 py-6 border-b border-r border-[#523A24]/40 last:border-r-0 whitespace-nowrap">
                       <span 
                         className={`inline-flex items-center px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider ${
                           user.role === "SELLER" 
@@ -134,7 +134,7 @@ export default function SellerUsersPage() {
                         {user.role}
                       </span>
                     </td>
-                    <td className="px-10 py-6 text-right text-[#A68A55] border-b border-[#523A24]/40 whitespace-nowrap">
+                    <td className="px-16 py-6 text-right text-[#A68A55] border-b border-[#523A24]/40 whitespace-nowrap">
                       {format(new Date(user.createdAt), "MMM dd, yyyy")}
                     </td>
                   </tr>
