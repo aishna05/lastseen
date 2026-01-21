@@ -134,9 +134,9 @@ const Header: React.FC = () => {
               <div 
                 className="absolute left-0 top-full mt-4 w-60 border rounded-lg shadow-2xl z-50 animate-in fade-in zoom-in-95 duration-200 overflow-hidden"
                 style={{ 
-                  backgroundColor: 'var(--bg-elevated)', 
-                  borderColor: 'var(--border-strong)',
-                  boxShadow: '0 10px 40px rgba(0,0,0,0.5)',
+                  backgroundColor: '#2E1711', // Explicit Dark Brown
+                  borderColor: '#523A24',
+                  boxShadow: '0 10px 40px rgba(0,0,0,0.8)',
                   display: 'flex',
                   flexDirection: 'column'
                 }}
@@ -147,21 +147,23 @@ const Header: React.FC = () => {
                       <Link 
                         key={cat.id} 
                         href={`/products?category=${cat.id}`} 
-                        className="block w-full text-left px-6 py-3 text-sm transition-all duration-300 border-b border-[#523A24]/30 last:border-none"
+                        className="block w-full text-left px-6 py-3 text-sm transition-all duration-300 border-b border-[#523A24] last:border-none"
                         style={{ 
-                          color: 'var(--text-main)',
+                          color: '#A68A55', // Muted Gold default
                           fontFamily: '"Cinzel", serif',
                           position: 'relative',
                         }}
                         onMouseEnter={(e) => {
-                           e.currentTarget.style.backgroundColor = 'rgba(212, 188, 132, 0.1)';
+                           e.currentTarget.style.backgroundColor = '#3A1F17'; // Slightly lighter brown
                            e.currentTarget.style.paddingLeft = '2rem';
-                           e.currentTarget.style.color = '#D4BC84';
+                           e.currentTarget.style.color = '#D4BC84'; // Bright Gold
+                           e.currentTarget.style.textDecoration = 'underline';
                         }}
                         onMouseLeave={(e) => {
                            e.currentTarget.style.backgroundColor = 'transparent';
                            e.currentTarget.style.paddingLeft = '1.5rem';
-                           e.currentTarget.style.color = 'var(--text-main)';
+                           e.currentTarget.style.color = '#A68A55';
+                           e.currentTarget.style.textDecoration = 'none';
                         }}
                       >
                         {cat.name}
