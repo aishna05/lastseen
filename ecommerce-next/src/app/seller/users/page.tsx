@@ -75,74 +75,75 @@ export default function SellerUsersPage() {
         </h1>
         
         <div 
-          className="overflow-hidden rounded-xl border shadow-2xl animate-in fade-in duration-500"
+          className="overflow-hidden rounded-xl border border-[var(--border-strong)] shadow-2xl animate-in fade-in duration-500"
           style={{ 
-            borderColor: "var(--border-strong)",
-            backgroundColor: "var(--bg-elevated)",
-            boxShadow: "0 10px 40px rgba(0,0,0,0.3)"
+            backgroundColor: "var(--bg-elevated)", 
+            boxShadow: "0 10px 30px -10px rgba(0,0,0,0.5)"
           }}
         >
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr 
-                  className="text-sm uppercase tracking-wider"
+                  className="text-sm uppercase tracking-[0.15em]"
                   style={{ 
                     backgroundColor: "#2E1711", 
-                    color: "var(--primary)",
-                    borderBottom: "2px solid var(--border-strong)" 
+                    color: "#D4BC84",
                   }}
                 >
-                  <th className="p-5 font-bold">ID</th>
-                  <th className="p-5 font-bold">Name</th>
-                  <th className="p-5 font-bold">Email</th>
-                  <th className="p-5 font-bold">Phone</th>
-                  <th className="p-5 font-bold">Role</th>
-                  <th className="p-5 font-bold text-right">Joined Date</th>
+                  <th className="p-6 font-semibold border-b border-r border-[#523A24] last:border-r-0">ID</th>
+                  <th className="p-6 font-semibold border-b border-r border-[#523A24] last:border-r-0">Name</th>
+                  <th className="p-6 font-semibold border-b border-r border-[#523A24] last:border-r-0">Email</th>
+                  <th className="p-6 font-semibold border-b border-r border-[#523A24] last:border-r-0">Phone</th>
+                  <th className="p-6 font-semibold border-b border-r border-[#523A24] last:border-r-0">Role</th>
+                  <th className="p-6 font-semibold border-b border-[#523A24] text-right">Joined Date</th>
                 </tr>
               </thead>
-              <tbody className="divide-y text-sm" style={{ borderColor: "#523A24" }}>
-                {users.map((user) => (
+              <tbody className="text-base">
+                {users.map((user, index) => (
                   <tr 
                     key={user.id} 
-                    className="hover:bg-[#523A24]/20 transition-colors group"
+                    className="group hover:bg-[#3A1F17]/40 transition-colors"
+                    style={{ 
+                      backgroundColor: index % 2 === 0 ? "rgba(58, 31, 23, 0.1)" : "transparent" 
+                    }}
                   >
-                    <td className="p-5 font-mono text-[#A68A55] opacity-70 group-hover:opacity-100">
+                    <td className="p-6 font-mono text-sm text-[#A68A55] border-b border-r border-[#523A24]/40 last:border-r-0">
                       #{user.id}
                     </td>
                     <td 
-                      className="p-5 font-serif text-lg font-medium"
+                      className="p-6 font-serif text-xl border-b border-r border-[#523A24]/40 last:border-r-0"
                       style={{ color: "var(--text-main)" }}
                     >
                       {user.name}
                     </td>
-                    <td className="p-5 font-medium" style={{ color: "var(--text-muted)" }}>
+                    <td className="p-6 text-[#D4BC84]/90 border-b border-r border-[#523A24]/40 last:border-r-0">
                       {user.email}
                     </td>
-                    <td className="p-5" style={{ color: "var(--text-muted)" }}>
-                      {user.phone || <span className="opacity-30 italic">N/A</span>}
+                    <td className="p-6 text-[#A68A55] border-b border-r border-[#523A24]/40 last:border-r-0">
+                      {user.phone || <span className="opacity-30 italic">-</span>}
                     </td>
-                    <td className="p-5">
+                    <td className="p-6 border-b border-r border-[#523A24]/40 last:border-r-0">
                       <span 
-                        className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider shadow-sm ${
+                        className={`inline-flex items-center px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider ${
                           user.role === "SELLER" 
-                            ? "bg-[#D4BC84] text-[#2E1711] ring-1 ring-[#D4BC84]/50" 
-                            : "bg-[#2E1711] text-[#A68A55] ring-1 ring-[#523A24]"
+                            ? "bg-[#D4BC84]/20 text-[#D4BC84] border border-[#D4BC84]/40" 
+                            : "bg-[#2E1711]/50 text-[#A68A55] border border-[#523A24]"
                         }`}
                       >
                         {user.role}
                       </span>
                     </td>
-                    <td className="p-5 text-right font-medium" style={{ color: "var(--text-muted)" }}>
-                      {format(new Date(user.createdAt), "MMM d, yyyy")}
+                    <td className="p-6 text-right text-[#A68A55] border-b border-[#523A24]/40">
+                      {format(new Date(user.createdAt), "MMM dd, yyyy")}
                     </td>
                   </tr>
                 ))}
                 
                 {users.length === 0 && (
                   <tr>
-                    <td colSpan={6} className="p-12 text-center text-lg italic opacity-60" style={{ color: "var(--text-muted)" }}>
-                      No users found.
+                    <td colSpan={6} className="p-12 text-center text-lg italic opacity-60 text-[#A68A55]">
+                       No users found.
                     </td>
                   </tr>
                 )}

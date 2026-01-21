@@ -129,42 +129,7 @@ const ProductListingClientWrapper: React.FC<ProductListingProps> = ({ products }
                     {selectedCategory && categories.find(c => c.id === Number(selectedCategory))?.name || "All Products"}
                 </h1>
 
-                {/* Category Navigation Bar (Pills) */}
-                <div className="category-nav-container" style={{ 
-                    marginBottom: "2rem", 
-                    overflowX: "auto", 
-                    whiteSpace: "nowrap",
-                    display: "flex",
-                    gap: "1rem",
-                    paddingBottom: "1rem",
-                    borderBottom: "1px solid var(--border-subtle)",
-                    // Hide scrollbar for cleaner look
-                    scrollbarWidth: "none", 
-                    msOverflowStyle: "none"
-                }}>
-                    
-                    {/* Dynamic Categories */}
-                    {categories.map((c) => (
-                        <button 
-                            key={c.id}
-                            onClick={() => handleCategoryClick(c.id)}
-                            className={`category-nav-item ${selectedCategory === c.id ? "active" : ""}`}
-                            style={{
-                                padding: "0.5rem 1.5rem",
-                                borderRadius: "30px",
-                                border: selectedCategory === c.id ? "none" : "1px solid var(--border-subtle)",
-                                backgroundColor: selectedCategory === c.id ? "var(--primary)" : "transparent",
-                                color: selectedCategory === c.id ? "white" : "var(--text-main)",
-                                cursor: "pointer",
-                                fontSize: "0.9rem",
-                                transition: "all 0.3s ease",
-                                whiteSpace: "nowrap"
-                            }}
-                        >
-                            {c.name}
-                        </button>
-                    ))}
-                </div>
+
                 
                 <div className="product-grid">
                     {filtered.length === 0 ? (

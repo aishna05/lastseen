@@ -1,190 +1,129 @@
 "use client";
 
 import { useState } from "react";
-import { Ruler, X } from "lucide-react";
+import { Ruler, X, Info } from "lucide-react";
 
 export default function SizeChartModal() {
   const [isOpen, setIsOpen] = useState(false);
+  const [unit, setUnit] = useState<"cm" | "in">("in");
 
   return (
     <>
-      {/* Trigger Button: Styled like a small pill/message popup */}
+      {/* Trigger Button: Added margin-bottom for spacing */}
       <button
         type="button"
         onClick={() => setIsOpen(true)}
-        className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold mb-3 hover:scale-105 transition-all shadow-md"
+        className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wide mb-6 hover:scale-105 transition-all shadow-lg group"
         style={{ 
-          backgroundColor: "var(--bg-elevated)", 
-          color: "var(--primary)",
-          border: "1px solid var(--border-strong)",
-          boxShadow: "0 4px 12px rgba(0,0,0,0.2)"
+          backgroundColor: "#F5E6D3", 
+          color: "#523A24",
+          border: "1px solid #D4BC84",
+          boxShadow: "0 4px 15px rgba(0,0,0,0.1)"
         }}
       >
-        <Ruler size={14} />
+        <Ruler size={14} className="group-hover:rotate-12 transition-transform" />
         <span>Size Guide</span>
       </button>
 
       {/* Modal Overlay */}
       {isOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-md animate-in fade-in duration-300">
           
-          {/* Modal Content - Reduced dimensions and font size */}
+          {/* Modal Content */}
           <div 
-            className="relative w-full max-w-lg max-h-[80vh] overflow-y-auto rounded-xl p-5 shadow-2xl animate-in zoom-in-95 duration-200 custom-scrollbar"
+            className="relative w-full max-w-2xl max-h-[85vh] overflow-hidden rounded-2xl shadow-2xl animate-in zoom-in-95 duration-300 flex flex-col"
             style={{ 
-              backgroundColor: "var(--bg-elevated)", 
-              color: "var(--text-main)",
-              border: "1px solid var(--border-strong)",
-              boxShadow: "0 20px 50px rgba(0,0,0,0.8)"
+              backgroundColor: "#FCFbf7", // Lighter paper-like background
+              color: "#3A1F17"
             }}
           >
-            {/* Close Button */}
-            <button
-              onClick={() => setIsOpen(false)}
-              className="absolute top-3 right-3 p-1 rounded-full hover:bg-[#523A24]/40 transition-colors"
-              aria-label="Close size chart"
-              style={{ color: "var(--primary)" }}
-            >
-              <X size={20} />
-            </button>
-
-            <h2 className="text-xl font-serif text-center mb-6 uppercase tracking-wider" style={{ color: "var(--primary-strong)" }}>
-              Size Guide
-            </h2>
-
-            <div className="space-y-8">
-              
-              {/* SHIRTS TABLE */}
-              <section>
-                <div className="flex items-center gap-2 mb-3 pb-1 border-b border-[#523A24]">
-                  <h3 className="text-sm font-semibold text-[#D4BC84]">
-                    👕 Men&apos;s Shirts
-                  </h3>
-                  <span className="text-xs opacity-70" style={{ color: "var(--text-muted)" }}>(XS – 5XL)</span>
+            {/* Header */}
+            <div className="p-6 pb-4 border-b border-[#D4BC84]/30 flex justify-between items-start bg-[#F5E6D3]/30">
+              <div>
+                <h2 className="text-2xl font-serif font-bold text-[#523A24]">Size Guide</h2>
+                <div className="flex gap-4 mt-2 text-xs font-medium text-[#8B7355]">
+                  <span className="opacity-50">Rigid</span>
+                  <span className="text-[#523A24] font-bold">Medium</span>
+                  <span className="opacity-50">High</span>
                 </div>
+              </div>
+              <button
+                onClick={() => setIsOpen(false)}
+                className="p-2 rounded-full hover:bg-black/5 transition-colors"
+              >
+                <X size={24} color="#523A24" />
+              </button>
+            </div>
+
+            {/* Controls */}
+            <div className="flex justify-between items-center px-6 py-4">
+              <h3 className="text-lg font-semibold text-[#523A24]">Product Size</h3>
+              
+              {/* Unit Toggle */}
+              <div className="flex items-center gap-2 text-sm font-medium">
+                <span className={`${unit === "cm" ? "text-[#523A24] font-bold" : "text-[#A68A55]"}`}>cm</span>
+                <button 
+                  onClick={() => setUnit(unit === "cm" ? "in" : "cm")}
+                  className="w-12 h-6 rounded-full relative transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-[#D4BC84]"
+                  style={{ backgroundColor: "#3A1F17" }}
+                >
+                  <div 
+                    className={`absolute top-1 w-4 h-4 rounded-full bg-[#D4BC84] shadow-md transition-transform duration-300 ${unit === "in" ? "left-7" : "left-1"}`}
+                  />
+                </button>
+                <span className={`${unit === "in" ? "text-[#523A24] font-bold" : "text-[#A68A55]"}`}>inch</span>
+              </div>
+            </div>
+
+            {/* Scrollable Content */}
+            <div className="flex-1 overflow-y-auto px-6 pb-6 custom-scrollbar">
+              <div className="space-y-8">
                 
-                <div className="overflow-x-auto">
-                  <table className="w-full text-xs text-left border-collapse">
+                {/* Generic Table Layout */}
+                <div className="border border-[#D4BC84]/40 rounded-lg overflow-hidden">
+                  <table className="w-full text-sm text-center">
                     <thead>
-                      <tr className="bg-[#2E1711]" style={{ color: "var(--text-muted)" }}>
-                        <th className="py-2 px-2 font-medium rounded-tl-md">Size</th>
-                        <th className="py-2 px-2 font-medium">Chest</th>
-                        <th className="py-2 px-2 font-medium">Shoulder</th>
-                        <th className="py-2 px-2 font-medium">Length</th>
-                        <th className="py-2 px-2 font-medium rounded-tr-md">Sleeve</th>
+                      <tr className="bg-[#F5E6D3]/50 text-[#523A24] border-b border-[#D4BC84]/40">
+                        <th className="py-3 px-2 font-bold border-r border-[#D4BC84]/20">Size</th>
+                        <th className="py-3 px-2 font-bold border-r border-[#D4BC84]/20">Shoulder</th>
+                        <th className="py-3 px-2 font-bold border-r border-[#D4BC84]/20">Bust</th>
+                        <th className="py-3 px-2 font-bold border-r border-[#D4BC84]/20">Length</th>
+                        <th className="py-3 px-2 font-bold">Sleeve</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-[#523A24]/30">
+                    <tbody className="divide-y divide-[#D4BC84]/20">
                       {[
-                        ["XS", "34", "16", "26", "23"],
-                        ["S", "36", "17", "27", "23.5"],
-                        ["M", "38", "18", "28", "24"],
-                        ["L", "40", "18.5", "29", "24.5"],
-                        ["XL", "42", "19", "30", "25"],
-                        ["2XL", "44", "19.5", "31", "25.5"],
-                        ["3XL", "46", "20", "31.5", "26"],
-                        ["4XL", "48", "20.5", "32", "26.5"],
-                        ["5XL", "50", "21", "33", "27"],
-                      ].map(([size, chest, shoulder, length, sleeve]) => (
-                        <tr key={size} className="hover:bg-[#523A24]/20 transition-colors even:bg-[#2E1711]/30">
-                          <td className="py-1.5 px-2 font-bold text-[#D4BC84]">{size}</td>
-                          <td className="py-1.5 px-2">{chest}&quot;</td>
-                          <td className="py-1.5 px-2">{shoulder}&quot;</td>
-                          <td className="py-1.5 px-2">{length}&quot;</td>
-                          <td className="py-1.5 px-2">{sleeve}&quot;</td>
+                        { size: "XS", shoulder: 16, bust: 34, length: 26, sleeve: 23 },
+                        { size: "S", shoulder: 17, bust: 36, length: 27, sleeve: 23.5 },
+                        { size: "M", shoulder: 18, bust: 38, length: 28, sleeve: 24 },
+                        { size: "L", shoulder: 18.5, bust: 40, length: 29, sleeve: 24.5 },
+                        { size: "XL", shoulder: 19, bust: 42, length: 30, sleeve: 25 },
+                      ].map((row) => (
+                        <tr key={row.size} className="hover:bg-[#F5E6D3]/20 transition-colors">
+                          <td className="py-3 font-bold text-[#523A24] border-r border-[#D4BC84]/20">{row.size}</td>
+                          <td className="py-3 text-[#6B5A4A] border-r border-[#D4BC84]/20">
+                            {unit === "in" ? row.shoulder : (row.shoulder * 2.54).toFixed(1)}
+                          </td>
+                          <td className="py-3 text-[#6B5A4A] border-r border-[#D4BC84]/20">
+                            {unit === "in" ? row.bust : (row.bust * 2.54).toFixed(1)}
+                          </td>
+                          <td className="py-3 text-[#6B5A4A] border-r border-[#D4BC84]/20">
+                            {unit === "in" ? row.length : (row.length * 2.54).toFixed(1)}
+                          </td>
+                          <td className="py-3 text-[#6B5A4A]">
+                            {unit === "in" ? row.sleeve : (row.sleeve * 2.54).toFixed(1)}
+                          </td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
                 </div>
-              </section>
 
-              {/* PANTS TABLE */}
-              <section>
-                <div className="flex flex-col mb-3 pb-1 border-b border-[#523A24]">
-                  <h3 className="text-sm font-semibold text-[#D4BC84]">
-                    👖 Men&apos;s Trousers
-                  </h3>
-                  <p className="text-[10px] mt-0.5 opacity-70" style={{ color: "var(--text-muted)" }}>
-                    Standard length: 40–42&quot; (Customizable)
-                  </p>
+                <div className="flex items-start gap-2 text-xs text-[#8B7355] bg-[#F5E6D3]/20 p-3 rounded-lg">
+                  <Info size={16} className="shrink-0 mt-0.5" />
+                  <p>* This data was obtained from manually measuring the product, it may be off by 1-2 CM.</p>
                 </div>
-
-                <div className="overflow-x-auto">
-                  <table className="w-full text-xs text-left border-collapse">
-                    <thead>
-                      <tr className="bg-[#2E1711]" style={{ color: "var(--text-muted)" }}>
-                        <th className="py-2 px-2 font-medium rounded-tl-md">Size</th>
-                        <th className="py-2 px-2 font-medium">Waist</th>
-                        <th className="py-2 px-2 font-medium rounded-tr-md">Hip</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-[#523A24]/30">
-                      {[
-                        ["26", "26", "34"],
-                        ["28", "28", "36"],
-                        ["30", "30", "38"],
-                        ["32", "32", "40"],
-                        ["34", "34", "42"],
-                        ["36", "36", "44"],
-                        ["38", "38", "46"],
-                        ["40", "40", "48"],
-                        ["42", "42", "50"],
-                        ["44", "44", "52"],
-                        ["46", "46", "54"],
-                      ].map(([size, waist, hip]) => (
-                        <tr key={size} className="hover:bg-[#523A24]/20 transition-colors even:bg-[#2E1711]/30">
-                          <td className="py-1.5 px-2 font-bold text-[#D4BC84]">{size}</td>
-                          <td className="py-1.5 px-2">{waist}&quot;</td>
-                          <td className="py-1.5 px-2">{hip}&quot;</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </section>
-
-              {/* JEANS TABLE */}
-              <section>
-                <div className="flex items-center gap-2 mb-3 pb-1 border-b border-[#523A24]">
-                  <h3 className="text-sm font-semibold text-[#D4BC84]">
-                    👖 Men&apos;s Jeans
-                  </h3>
-                  <span className="text-xs opacity-70" style={{ color: "var(--text-muted)" }}>(Waist 26–42)</span>
-                </div>
-
-                <div className="overflow-x-auto">
-                  <table className="w-full text-xs text-left border-collapse">
-                    <thead>
-                      <tr className="bg-[#2E1711]" style={{ color: "var(--text-muted)" }}>
-                        <th className="py-2 px-2 font-medium rounded-tl-md">Size</th>
-                        <th className="py-2 px-2 font-medium">Waist</th>
-                        <th className="py-2 px-2 font-medium rounded-tr-md">Hip</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-[#523A24]/30">
-                      {[
-                        ["26", "26", "34"],
-                        ["28", "28", "36"],
-                        ["30", "30", "38"],
-                        ["32", "32", "40"],
-                        ["34", "34", "42"],
-                        ["36", "36", "44"],
-                        ["38", "38", "46"],
-                        ["40", "40", "48"],
-                        ["42", "42", "50"],
-                      ].map(([size, waist, hip]) => (
-                        <tr key={size} className="hover:bg-[#523A24]/20 transition-colors even:bg-[#2E1711]/30">
-                          <td className="py-1.5 px-2 font-bold text-[#D4BC84]">{size}</td>
-                          <td className="py-1.5 px-2">{waist}&quot;</td>
-                          <td className="py-1.5 px-2">{hip}&quot;</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </section>
-              
+              </div>
             </div>
           </div>
         </div>

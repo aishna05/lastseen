@@ -123,49 +123,54 @@ const Header: React.FC = () => {
             onMouseLeave={() => setIsCategoriesOpen(false)}
           >
             <button 
-              className="nav-link flex items-center gap-1 cursor-pointer bg-transparent border-none p-0"
+              className="nav-link flex items-center gap-1 cursor-pointer bg-transparent border-none p-0 group"
               onClick={() => setIsCategoriesOpen(!isCategoriesOpen)}
             >
-              Categories <ChevronDown size={14} />
+              <span className="group-hover:text-[#D4BC84] transition-colors">Categories</span>
+              <ChevronDown size={14} className={`transition-transform duration-200 ${isCategoriesOpen ? 'rotate-180' : ''}`} />
             </button>
             
             {isCategoriesOpen && (
               <div 
-                className="absolute left-0 top-full mt-2 w-56 border rounded-lg shadow-2xl z-50 animate-in fade-in zoom-in-95 duration-200 overflow-hidden"
+                className="absolute left-0 top-full mt-4 w-60 border rounded-lg shadow-2xl z-50 animate-in fade-in zoom-in-95 duration-200 overflow-hidden"
                 style={{ 
                   backgroundColor: 'var(--bg-elevated)', 
                   borderColor: 'var(--border-strong)',
-                  boxShadow: '0 10px 40px rgba(0,0,0,0.5)' 
+                  boxShadow: '0 10px 40px rgba(0,0,0,0.5)',
+                  display: 'flex',
+                  flexDirection: 'column'
                 }}
               >
-                <div className="py-2 flex flex-col">
+                <div className="py-2 flex flex-col w-full">
                   {categories.length > 0 ? (
-                    categories.map((cat) => (
+                    categories.map((cat, idx) => (
                       <Link 
                         key={cat.id} 
                         href={`/products?category=${cat.id}`} 
-                        className="block px-5 py-3 text-sm transition-all duration-200 border-b border-transparent last:border-none"
+                        className="block w-full text-left px-6 py-3 text-sm transition-all duration-300 border-b border-[#523A24]/30 last:border-none"
                         style={{ 
                           color: 'var(--text-main)',
                           fontFamily: '"Cinzel", serif',
-                          letterSpacing: '0.05em'
+                          position: 'relative',
                         }}
                         onMouseEnter={(e) => {
-                          e.currentTarget.style.backgroundColor = 'var(--primary-soft)';
-                          e.currentTarget.style.color = 'var(--primary-strong)';
-                          e.currentTarget.style.paddingLeft = '1.5rem'; // Subtle slide effect
+                           e.currentTarget.style.backgroundColor = 'rgba(212, 188, 132, 0.1)';
+                           e.currentTarget.style.paddingLeft = '2rem';
+                           e.currentTarget.style.color = '#D4BC84';
                         }}
                         onMouseLeave={(e) => {
-                          e.currentTarget.style.backgroundColor = 'transparent';
-                          e.currentTarget.style.color = 'var(--text-main)';
-                          e.currentTarget.style.paddingLeft = '1.25rem';
+                           e.currentTarget.style.backgroundColor = 'transparent';
+                           e.currentTarget.style.paddingLeft = '1.5rem';
+                           e.currentTarget.style.color = 'var(--text-main)';
                         }}
                       >
                         {cat.name}
                       </Link>
                     ))
                   ) : (
-                    <span className="block px-5 py-3 text-sm text-[#A68A55] opacity-70">Loading...</span>
+                    <span className="block px-6 py-4 text-sm text-[#A68A55] opacity-70 italic text-center">
+                      Loading categories...
+                    </span>
                   )}
                 </div>
               </div>
