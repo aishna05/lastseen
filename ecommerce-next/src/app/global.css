@@ -3840,3 +3840,72 @@ select:focus {
   text-underline-offset: 4px;
   padding-left: 1.75rem; /* Subtle shift for elegance */
 }
+/* --- CATEGORY TRIGGER BUTTON --- */
+.luxe-category-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: none;
+  padding: 0.5rem 0; /* Vertical padding only to stay aligned with nav */
+  font-family: "Cinzel", serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: #B08B48; /* Brand Golden */
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+/* --- DROPDOWN PANEL POSITIONING --- */
+.luxe-dropdown-panel {
+  position: absolute;
+  top: 100%; /* Positions exactly below the button text */
+  left: 0;    /* Aligns exactly with the start of the 'C' in Categories */
+  min-width: 220px;
+  background-color: #2E1711; /* Deep Brown matching your theme */
+  border: 1px solid rgba(176, 139, 72, 0.3);
+  z-index: 100;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+  margin-top: 0.5rem;
+}
+
+.dropdown-inner-list {
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- GOLDEN DROPDOWN ITEMS --- */
+.luxe-dropdown-item {
+  display: block;
+  padding: 1rem 1.5rem;
+  font-family: "Cinzel", serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  color: #B08B48; /* Golden Font (Fixed from grey) */
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border-bottom: 1px solid rgba(176, 139, 72, 0.1);
+}
+
+.luxe-dropdown-item:last-child {
+  border-bottom: none;
+}
+
+/* --- HOVER & UNDERLINE EFFECT --- */
+.luxe-dropdown-item:hover {
+  background-color: rgba(176, 139, 72, 0.08); /* Very subtle gold tint */
+  color: #D4BC84; /* Brighter gold on hover */
+  text-decoration: underline; /* Highlight with underline */
+  text-underline-offset: 6px;
+  padding-left: 1.8rem; /* Sophisticated slight indent */
+}
+
+.dropdown-loading-text {
+  padding: 1rem;
+  color: #B08B48;
+  font-family: "Cinzel", serif;
+  font-size: 0.75rem;
+  text-align: center;
+}

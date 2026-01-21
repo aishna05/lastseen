@@ -116,6 +116,7 @@ const Header: React.FC = () => {
           </Link>
 
           {/* Categories Dropdown Container */}
+{/* Categories Dropdown */}
 <div 
   className="relative" 
   ref={categoriesRef}
@@ -123,26 +124,30 @@ const Header: React.FC = () => {
   onMouseLeave={() => setIsCategoriesOpen(false)}
 >
   <button 
-    className="luxe-category-btn"
+    className="luxe-category-btn" 
     onClick={() => setIsCategoriesOpen(!isCategoriesOpen)}
   >
     <span>CATEGORIES</span>
-    <ChevronDown size={14} className={`transition-transform duration-300 ${isCategoriesOpen ? 'rotate-180' : ''}`} />
+    <ChevronDown size={14} className={`chevron-icon ${isCategoriesOpen ? 'rotate-180' : ''}`} />
   </button>
   
   {isCategoriesOpen && (
     <div className="luxe-dropdown-panel animate-in fade-in slide-in-from-top-2 duration-300">
       <div className="dropdown-inner-list">
-        {categories.map((cat) => (
-          <Link 
-            key={cat.id} 
-            href={`/products?category=${cat.id}`} 
-            className="luxe-dropdown-item"
-            onClick={() => setIsCategoriesOpen(false)}
-          >
-            {cat.name}
-          </Link>
-        ))}
+        {categories.length > 0 ? (
+          categories.map((cat) => (
+            <Link 
+              key={cat.id} 
+              href={`/products?category=${cat.id}`} 
+              className="luxe-dropdown-item"
+              onClick={() => setIsCategoriesOpen(false)}
+            >
+              {cat.name}
+            </Link>
+          ))
+        ) : (
+          <span className="dropdown-loading-text">Loading...</span>
+        )}
       </div>
     </div>
   )}
