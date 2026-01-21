@@ -116,66 +116,44 @@ const Header: React.FC = () => {
           </Link>
 
           {/* Categories Dropdown */}
-          <div 
-            className="relative" 
-            ref={categoriesRef}
-            onMouseEnter={() => setIsCategoriesOpen(true)}
-            onMouseLeave={() => setIsCategoriesOpen(false)}
-          >
-            <button 
-              className="nav-link flex items-center gap-1 cursor-pointer bg-transparent border-none p-0 group"
-              onClick={() => setIsCategoriesOpen(!isCategoriesOpen)}
+<div 
+  className="relative" 
+  ref={categoriesRef}
+  onMouseEnter={() => setIsCategoriesOpen(true)}
+  onMouseLeave={() => setIsCategoriesOpen(false)}
+>
+  <button 
+    className="luxe-category-btn" 
+    onClick={() => setIsCategoriesOpen(!isCategoriesOpen)}
+    aria-expanded={isCategoriesOpen}
+  >
+    <span>Categories</span>
+    <ChevronDown size={14} className={`chevron-icon ${isCategoriesOpen ? 'rotate-180' : ''}`} />
+  </button>
+  
+  {isCategoriesOpen && (
+    <div className="luxe-dropdown-panel animate-in fade-in zoom-in-95 duration-200">
+      <div className="dropdown-inner-list">
+        {categories.length > 0 ? (
+          categories.map((cat) => (
+            <Link 
+              key={cat.id} 
+              href={`/products?category=${cat.id}`} 
+              className="luxe-dropdown-item"
+              onClick={() => setIsCategoriesOpen(false)}
             >
-              <span className="group-hover:text-[#D4BC84] transition-colors">Categories</span>
-              <ChevronDown size={14} className={`transition-transform duration-200 ${isCategoriesOpen ? 'rotate-180' : ''}`} />
-            </button>
-            
-            {isCategoriesOpen && (
-              <div 
-                className="absolute left-0 top-full mt-4 w-60 border rounded-lg shadow-2xl z-50 animate-in fade-in zoom-in-95 duration-200 overflow-hidden"
-                style={{ 
-                  backgroundColor: '#2E1711', // Explicit Dark Brown
-                  borderColor: '#523A24',
-                  boxShadow: '0 10px 40px rgba(0,0,0,0.8)',
-                  display: 'flex',
-                  flexDirection: 'column'
-                }}
-              >
-                <div className="py-2 flex flex-col w-full">
-                  {categories.length > 0 ? (
-                    categories.map((cat, idx) => (
-                      <Link 
-                        key={cat.id} 
-                        href={`/products?category=${cat.id}`} 
-                        className="block w-full text-left px-6 py-3 text-sm border-b border-[#523A24] last:border-none"
-                        style={{ 
-                          color: '#A68A55', // Muted Gold default
-                          fontFamily: '"Cinzel", serif',
-                          position: 'relative',
-                        }}
-                        onMouseEnter={(e) => {
-                           e.currentTarget.style.backgroundColor = '#3A1F17'; // Slightly lighter brown
-                           e.currentTarget.style.color = '#D4BC84'; // Bright Gold
-                           e.currentTarget.style.textDecoration = 'underline';
-                        }}
-                        onMouseLeave={(e) => {
-                           e.currentTarget.style.backgroundColor = 'transparent';
-                           e.currentTarget.style.color = '#A68A55';
-                           e.currentTarget.style.textDecoration = 'none';
-                        }}
-                      >
-                        {cat.name}
-                      </Link>
-                    ))
-                  ) : (
-                    <span className="block px-6 py-4 text-sm text-[#A68A55] opacity-70 italic text-center">
-                      Loading categories...
-                    </span>
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
+              {cat.name}
+            </Link>
+          ))
+        ) : (
+          <span className="dropdown-loading-text">
+            Fetching archives...
+          </span>
+        )}
+      </div>
+    </div>
+  )}
+</div>
 
           <Link href="/about-us" className="nav-link">
             About Us
