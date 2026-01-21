@@ -32,14 +32,16 @@ export default function SizeChartModal() {
 
   return (
     <>
-      <button
-        type="button"
-        onClick={() => setIsOpen(true)}
-        className="size-guide-trigger"
-      >
-        <Ruler size={14} />
-        <span>Size Guide</span>
-      </button>
+      <div className="mb-8">
+        <button
+          type="button"
+          onClick={() => setIsOpen(true)}
+          className="size-guide-trigger"
+        >
+          <Ruler size={14} />
+          <span>Size Guide</span>
+        </button>
+      </div>
 
       {isOpen && (
         <div className="luxe-modal-overlay">
