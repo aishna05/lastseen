@@ -3919,7 +3919,7 @@ select:focus {
   gap: 6px;
   font-size: 0.75rem;
   letter-spacing: 0.15em;
-  color: #d4bc84;
+  color:var(--text-main);
   background: none;
   border: none;
   cursor: pointer;
