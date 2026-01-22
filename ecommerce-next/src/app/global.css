@@ -3696,7 +3696,7 @@ select:focus {
 
 .luxe-category-btn .chevron-icon {
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  color: var(--primary-dark); /* Muted Gold #A68A55 */
+  color: var(--text-main); /* Muted Gold #A68A55 */
 }
 
 /* --- VERTICAL DROPDOWN PANEL --- */
