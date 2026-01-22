@@ -94,35 +94,34 @@ const Header: React.FC = () => {
           <Link href="/products" className="nav-link">Products</Link>
 
           {/* Categories Dropdown */}
-          <div
-            className="categories-container nav-link"
-            ref={categoriesRef}
-            onMouseEnter={() => setIsCategoriesOpen(true)}
-            onMouseLeave={() => setIsCategoriesOpen(false)}
-          >
-            <button className="luxe-category-btn">
-              <span>CATEGORIES</span>
-              <ChevronDown size={14} className={`chevron-icon ${isCategoriesOpen ? 'rotate' : ''}`} />
-            </button>
+          {/* Categories Dropdown */}
+<div
+  className="categories-container nav-link"
+  ref={categoriesRef}
+  onMouseEnter={() => setIsCategoriesOpen(true)}
+  onMouseLeave={() => setIsCategoriesOpen(false)}
+>
+  <button className="luxe-category-btn">
+    <span>CATEGORIES</span>
+    <ChevronDown size={14} className={`chevron-icon ${isCategoriesOpen ? 'rotate' : ''}`} />
+  </button>
 
-            {isCategoriesOpen && (
-              <div className="luxe-dropdown-panel">
-                {categories.length > 0 ? (
-                  categories.map((cat) => (
-                    <Link 
-                      key={cat.id} 
-                      href={`/products?category=${cat.id}`} 
-                      className="luxe-dropdown-item"
-                    >
-                      {cat.name}
-                    </Link>
-                  ))
-                ) : (
-                  <span className="dropdown-loading-text">Loading...</span>
-                )}
-              </div>
-            )}
-          </div>
+  <div className={`luxe-dropdown-panel ${isCategoriesOpen ? 'show' : ''}`}>
+    {categories.length > 0 ? (
+      categories.map((cat) => (
+        <Link 
+          key={cat.id} 
+          href={`/products?category=${cat.id}`} 
+          className="luxe-dropdown-item"
+        >
+          {cat.name}
+        </Link>
+      ))
+    ) : (
+      <span className="dropdown-loading-text">Loading...</span>
+    )}
+  </div>
+</div>
 
           <Link href="/about-us" className="nav-link">About Us</Link>
           <Link href="/contact-us" className="nav-link">Contact Us</Link>
