@@ -3978,6 +3978,10 @@ select:focus {
   pointer-events: auto;
 }
 
+.categories-container:not(:hover) .luxe-dropdown-panel {
+  pointer-events: none;
+}
+
 .luxe-dropdown-panel.show {
   display: block;
 }
