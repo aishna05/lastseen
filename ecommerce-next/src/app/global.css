@@ -3840,7 +3840,7 @@ select:focus {
   text-underline-offset: 4px;
   padding-left: 1.75rem; /* Subtle shift for elegance */
 }
-/* --- CATEGORY TRIGGER BUTTON --- */
+--- CATEGORY TRIGGER BUTTON ---
 .luxe-category-btn {
   display: flex;
   align-items: center;
@@ -3986,3 +3986,47 @@ select:focus {
   display: block;
 }
 
+.categories-container {
+  position: relative;
+}
+
+/* FINAL DROPDOWN PANEL */
+.luxe-dropdown-panel {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 220px;
+  background-color: #2E1711;
+  border: 1px solid rgba(176, 139, 72, 0.3);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+  margin-top: 0.5rem;
+  z-index: 9999;
+
+  display: none;          /* hidden by default */
+  pointer-events: auto;  /* clickable */
+}
+
+/* Show only on hover */
+.categories-container:hover .luxe-dropdown-panel {
+  display: block;
+}
+
+/* Dropdown items */
+.luxe-dropdown-item {
+  display: block;
+  padding: 1rem 1.5rem;
+  font-family: "Cinzel", serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  color: #B08B48;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(176, 139, 72, 0.1);
+  transition: all 0.3s ease;
+}
+
+.luxe-dropdown-item:hover {
+  background-color: rgba(176, 139, 72, 0.08);
+  color: #D4BC84;
+  text-decoration: underline;
+  text-underline-offset: 6px;
+}
