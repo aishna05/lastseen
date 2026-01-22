@@ -3969,3 +3969,95 @@ select:focus {
     transform: translateY(0);
   }
 }
+/* Parent container - ensure it spans the height of the nav */
+.categories-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 100%; /* Important: Keeps the hover area consistent */
+}
+
+/* Category button */
+.luxe-category-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: none;
+  padding: 0.5rem 0;
+  font-family: "Cinzel", serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--primary); /* Using your brand gold */
+  cursor: pointer;
+  transition: color var(--transition-fast);
+}
+
+.luxe-category-btn:hover {
+  color: var(--primary-strong);
+}
+
+/* Dropdown panel - Updated Colors */
+.luxe-dropdown-panel {
+  position: absolute;
+  top: 100%; /* Directly below button */
+  left: 0;
+  min-width: 220px;
+  background-color: var(--bg-elevated); /* Light Cream/Off-white */
+  border: 1px solid var(--border-subtle);
+  z-index: 1000;
+  box-shadow: var(--shadow-soft);
+  
+  /* The "Bridge": This invisible padding prevents the menu from 
+     closing when moving the mouse from button to menu */
+  padding-top: 10px; 
+  margin-top: -5px; 
+
+  display: none;
+  animation: fadeSlide var(--transition-fast);
+}
+
+.luxe-dropdown-panel.show {
+  display: block;
+}
+
+/* Dropdown items - Darker Text for Light Background */
+.luxe-dropdown-item {
+  display: block;
+  padding: 0.85rem 1.5rem;
+  font-family: "Cinzel", serif;
+  font-size: 0.8rem;
+  text-transform: capitalize;
+  letter-spacing: 0.1em;
+  color: var(--text-main); /* Dark grey for readability */
+  text-decoration: none;
+  transition: all var(--transition-med);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.luxe-dropdown-item:last-child {
+  border-bottom: none;
+}
+
+/* Hover effect on items */
+.luxe-dropdown-item:hover {
+  background-color: var(--bg-soft);
+  color: var(--primary);
+  padding-left: 1.8rem;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* Animation */
+@keyframes fadeSlide {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

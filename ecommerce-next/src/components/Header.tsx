@@ -94,8 +94,8 @@ const Header: React.FC = () => {
           <Link href="/products" className="nav-link">Products</Link>
 
           {/* Categories Dropdown */}
-     <div
-  className="categories-container nav-link"
+<div
+  className="categories-container" // Remove nav-link from here if it adds weird margins
   ref={categoriesRef}
   onMouseEnter={() => setIsCategoriesOpen(true)}
   onMouseLeave={() => setIsCategoriesOpen(false)}
@@ -105,23 +105,26 @@ const Header: React.FC = () => {
     <ChevronDown size={14} className={`chevron-icon ${isCategoriesOpen ? 'rotate' : ''}`} />
   </button>
 
+  {/* This is the panel that stays open because of the CSS bridge */}
   <div className={`luxe-dropdown-panel ${isCategoriesOpen ? 'show' : ''}`}>
-    {categories.length > 0 ? (
-      categories.map((cat) => (
-        <Link 
-          key={cat.id} 
-          href={`/products?category=${cat.id}`} 
-          className="luxe-dropdown-item"
-        >
-          {cat.name}
-        </Link>
-      ))
-    ) : (
-      <span className="dropdown-loading-text">Loading...</span>
-    )}
+    <div className="dropdown-inner-list">
+      {categories.length > 0 ? (
+        categories.map((cat) => (
+          <Link 
+            key={cat.id} 
+            href={`/products?category=${cat.id}`} 
+            className="luxe-dropdown-item"
+            onClick={() => setIsCategoriesOpen(false)} // Close when clicked
+          >
+            {cat.name}
+          </Link>
+        ))
+      ) : (
+        <span className="dropdown-loading-text">Loading...</span>
+      )}
+    </div>
   </div>
 </div>
-
           <Link href="/about-us" className="nav-link">About Us</Link>
           <Link href="/contact-us" className="nav-link">Contact Us</Link>
 
