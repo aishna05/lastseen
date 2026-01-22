@@ -3990,7 +3990,7 @@ select:focus {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.15em;
-  color: var(--primary); /* Using your brand gold */
+  color: var(--text-main); /* Using your brand gold */
   cursor: pointer;
   transition: color var(--transition-fast);
 }
