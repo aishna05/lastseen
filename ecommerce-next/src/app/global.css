@@ -3974,8 +3974,8 @@ select:focus {
   position: absolute;
   top: 100%;
   left: 0;
-  pointer-events: auto;   /* THIS IS IMPORTANT */
-  display: none;
+   z-index: 9999;        /* MOST IMPORTANT */
+  pointer-events: auto;
 }
 
 .luxe-dropdown-panel.show {
