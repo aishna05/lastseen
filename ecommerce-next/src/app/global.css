@@ -4025,6 +4025,7 @@ select:focus {
   transition: all 0.3s ease;
 }
 
+
 .luxe-dropdown-item:hover {
   background-color: rgba(176, 139, 72, 0.08);
   color: #D4BC84;
