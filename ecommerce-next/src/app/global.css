@@ -3986,11 +3986,12 @@ select:focus {
   display: block;
 }
 
+/* Parent */
 .categories-container {
   position: relative;
 }
 
-/* FINAL DROPDOWN PANEL */
+/* Dropdown */
 .luxe-dropdown-panel {
   position: absolute;
   top: 100%;
@@ -4006,12 +4007,12 @@ select:focus {
   pointer-events: auto;  /* clickable */
 }
 
-/* Show only on hover */
-.categories-container:hover .luxe-dropdown-panel {
+/* React se jo class aa rahi hai */
+.luxe-dropdown-panel.show {
   display: block;
 }
 
-/* Dropdown items */
+/* Items */
 .luxe-dropdown-item {
   display: block;
   padding: 1rem 1.5rem;
@@ -4027,6 +4028,4 @@ select:focus {
 .luxe-dropdown-item:hover {
   background-color: rgba(176, 139, 72, 0.08);
   color: #D4BC84;
-  text-decoration: underline;
-  text-underline-offset: 6px;
 }
