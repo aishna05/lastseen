@@ -3966,3 +3966,19 @@ select:focus {
     transform: translateY(0);
   }
 }
+.categories-container {
+  position: relative;
+}
+
+.luxe-dropdown-panel {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  pointer-events: auto;   /* THIS IS IMPORTANT */
+  display: none;
+}
+
+.luxe-dropdown-panel.show {
+  display: block;
+}
+

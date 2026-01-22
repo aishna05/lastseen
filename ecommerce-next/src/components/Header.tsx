@@ -94,8 +94,7 @@ const Header: React.FC = () => {
           <Link href="/products" className="nav-link">Products</Link>
 
           {/* Categories Dropdown */}
-          {/* Categories Dropdown */}
-<div
+     <div
   className="categories-container nav-link"
   ref={categoriesRef}
   onMouseEnter={() => setIsCategoriesOpen(true)}
